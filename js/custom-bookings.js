@@ -334,18 +334,7 @@ const manipulateDom = (function () {
                     <div class="booking-steps-title-wrapper">
                         <p>Kies tijd</p>
                     </div>
-                    <div class="radio-row">
-                        <input type="radio" id="first_half" value="first_half" name="booking_time" />
-                        <label for="first_half" class="light radio-label">
-                            <span class="am">ph Ochtend 09:00 - 13:00</span>
-                        </label>
-                    </div>
-                    <div class="radio-row">
-                        <input type="radio" id="second_half" value="second_half" name="booking_time" />
-                        <label for="second_half" class="light radio-label">
-                            <span class="pm">ph Middag 13:00 - 17:00</span>
-                        </label>
-                    </div>
+                    
                     <div class="radio-row">
                         <input type="radio" id="full_day" value="full_day" name="booking_time"/>
                         <label for="full_day" class="light radio-label">
