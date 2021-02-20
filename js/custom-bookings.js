@@ -334,7 +334,7 @@ const manipulateDom = (function () {
                     <div class="booking-steps-title-wrapper">
                         <p>Kies tijd</p>
                     </div>
-                    
+
                     <div class="radio-row">
                         <input type="radio" id="full_day" value="full_day" name="booking_time"/>
                         <label for="full_day" class="light radio-label">
@@ -729,6 +729,9 @@ const bookingTabSteps = (function () {
 
         $('.booking-time-options').on('change', () => {
 
+        //On 02/21/21, we changed booking time options to just one(full-day). So this one just works like a button now.
+        //Maybe just change this to a button instead later if time permits
+
             blocker.blockShoppingCart(1);
 
             // Update user selected booking times(start and end) only. Not yet the actual Form to be posted
@@ -813,29 +816,8 @@ const bookingTabSteps = (function () {
 
         // Todo: get from real data, make use of duration I think
         // We are just manually setting time programatically by setting the value of #wc-bookings-form-start-time. When plugin time block settings change later on, we have to update code here
-        var value = $("input[name='booking_time']:checked").val();
-        var index = null;
-
-        switch (value) {
-            case 'first_half':
-                setSelectedStartTime('09:00');
-                setSelectedEndTime('13:00');
-                break;
-
-            case 'second_half':
-                setSelectedStartTime('13:00');
-                setSelectedEndTime('17:00');
-                break;
-
-            case 'full_day':
-                setSelectedStartTime('09:00');
-                setSelectedEndTime('17:00');
-                break;
-
-            default:
-                console.warn('Check again your values.');
-                break;
-        }
+        setSelectedStartTime('09:00');
+        setSelectedEndTime('17:00');
     };
 
     // @params el = element current target on shopping cart click event
@@ -1682,8 +1664,6 @@ const uiText = {
     */
     updatingBookingTimeOptions() {
         console.log("updatingBookingTimeOptions called")
-        $('.booking-time-options .am').text('Ochtend 09:00 - 13:00');
-        $('.booking-time-options .pm').text('Middag 13:00 - ' + uiText.fullDayReturnTime());
         $('.booking-time-options .full-day').text('Hele dag 09:00 - ' + uiText.fullDayReturnTime());
     },
 
@@ -1710,8 +1690,8 @@ const uiText = {
             day = $('[name="wc_bookings_field_start_date_day"]').val(),
             year = $('[name="wc_bookings_field_start_date_year"]').val();
 
-        // Keep this to return empty string... do not put text here... using it on other parts of the code like
-        // If ( !uiText.getDate() set text to 'choose date' )
+        // Keep this as it is which returns an empty string. Do not put any text value here because..
+        //I'm using it on other parts of the codebase too - If ( !uiText.getDate() set text to 'choose date' )
         if (!month || !day || !year) {
             return '';
         }
@@ -1730,32 +1710,12 @@ const uiText = {
     },
 
     updateShoppingCartBookingInfo() {
+        //update UIs
 
-        // Todo: maybe set text to real data so we can see bugs, if there are any.
         $('#tab-4 .selected-time').text(uiText.displayDate());
 
-        var selectedOption = $("input[name='booking_time']:checked").val();
-
-        switch (selectedOption) {
-            // Todo make this in UI only or base on input?
-            case 'first_half':
-                $('.pickup-time').text('09:00');
-                $('.return-time').text('13:00');
-                // Code block
-                break;
-            case 'second_half':
-                $('.pickup-time').text('13:00');
-                $('.return-time').text(uiText.fullDayReturnTime());
-                // Code block
-                break;
-            case 'full_day':
-                $('.pickup-time').text('09:00');
-                $('.return-time').text(uiText.fullDayReturnTime());
-                break;
-            default:
-                console.error("check selected option value")
-                break;
-        }
+        $('.pickup-time').text('09:00');
+        $('.return-time').text(uiText.fullDayReturnTime());
     },
 
     // Change default text(product name) to the resource name
