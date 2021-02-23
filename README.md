@@ -7,7 +7,9 @@
 2. Bike description stuff - I updated the code that it's easy for you later on Edit it. Instead of matching the description with the resource id, I set it to match the resource name('M Elektrische mountainbike', 'L Mountainbike', etc. ) instead.
 
 3. A lot testing why sometimes the resources(bikes) are incomplete...
- - some findings:
+ - some findings: 
+
+	Here's video regarding resources not loading **test site** vs **actual site** : https://www.loom.com/share/134449c4792f40f0ac5d0ae88dccd279
 
      - it's a 503 Service Unavailable error. This indicates that a server is temporarily unable to handle the request. This may be due to the server being overloaded or down for maintenance. ).
      - I tested it on "test website" and it doesn't fail to load all the resources there unlike in the "mountainbikehurenschoorl site". It's more on server-related stuff but I did some research and I there are things we could try  like the ones mentioned here:
@@ -17,7 +19,7 @@
 
 I did try the  Heartbeat Control plugin (mentioned in the kingsta article above) but I am not sure if that's the reason why I'm no longer finding the issue with incomplete resources.
 
-Video regarding resources not loading **test site** vs **actual site** : https://www.loom.com/share/134449c4792f40f0ac5d0ae88dccd279
+
 
 **Here are my #nextThingsToDo**
 
