@@ -20,33 +20,33 @@ const mySettings = {
         mtb: 'Mountainbikes',
         electric: 'Elektrische mountainbikes'
     },
-    // Extra custom data for resources
-    customResourceData: {
-        'description-3943': `<span>Framemaat: 21 inch <br>
+    // todo Feb 2021: send Tycho instructions on how to update this part
+    bikeDescription: {
+        'XL Elektrische mountainbike': `<span>Framemaat: 21 inch <br>
                             Lichaamslengte: 1,87 - 1,96 m</span>`,
 
-        'description-3942': `<span>Framemaat: 19 inch <br>
+        'L Elektrische mountainbike': `<span>Framemaat: 19 inch <br>
                             Lichaamslengte: 1,77 - 1,90 m</span>`,
 
-        'description-3941': `<span>Framemaat: 17 inch <br>
+        'M Elektrische mountainbike': `<span>Framemaat: 17 inch <br>
                             Lichaamslengte: 1,67 - 1,83 m</span>`,
 
-        'description-3910': `<span>Framemaat: 15 inch <br>
+        'S Elektrische mountainbike': `<span>Framemaat: 15 inch <br>
                             Lichaamslengte: 1,57 - 1,73 m</span>`,
 
-        'description-3480': `<span>Framemaat: 23 inch <br>
+        'XXL Mountainbike': `<span>Framemaat: 23 inch <br>
                             Lichaamslengte: 1,92 m en langer</span>`,
 
-        'description-3479': `<span>Framemaat: 21 inch <br>
+        'XL Mountainbike': `<span>Framemaat: 21 inch <br>
                             Lichaamslengte: 1,87 - 1,96 m</span>`,
 
-        'description-3478': `<span>Framemaat: 19 inch <br>
+        'L Mountainbike': `<span>Framemaat: 19 inch <br>
                             Lichaamslengte: 1,77 - 1,90 m</span>`,
 
-        'description-1960': `<span>Framemaat: 17 inch <br>
+        'M Mountainbike': `<span>Framemaat: 17 inch <br>
                             Lichaamslengte: 1,67 - 1,83 m</span>`,
 
-        'description-7536': `<span>Framemaat: 15 inch <br>
+        'S Mountainbike': `<span>Framemaat: 15 inch <br>
                             Lichaamslengte: 1,57 - 1,73 m</span>`,
     },
 
@@ -1061,6 +1061,7 @@ const bookingTabSteps = (function () {
             const imageUrl = isElectricBike(slot.resource_data.name) ? electricBikeImgUrl : normalBikeImgUrl;
 
             console.log(`slot for [insert id] rendered`);
+
             return `
             <div class="item" data-resource-id="${slot.resource_data.id}">
                 <div class="image">
@@ -1070,7 +1071,7 @@ const bookingTabSteps = (function () {
                 <div class="description">
                     <span style="display: ${window.debugOn ? 'block' : 'none'}">${slot.date}</span>
                     <span class="wc-bookings-item-title resource-name">${slot.resource_data.name}</span>
-                    <div>${mySettings.customResourceData['description-' + slot.resource_data.id]}</div>
+                    <div>${printBikeDescription(slot.resource_data.name)}</div>
                    <span class="js-availability">Aantal beschikbaar: ${isWholedayBooking() ? getLowerAvailability(slot.resource_data.id) : slot.available} </span>
                 </div>
 
@@ -1097,6 +1098,16 @@ const bookingTabSteps = (function () {
         // Todo: temp here to avoid error when switching time. this input doesnt triggr a call thet returns something like... this input field is required
         // $('#wc_bookings_field_start_date_time').val(null);
     };
+
+    // shows the bike description on the shopping cart page
+    // params name = resource name of the bike ('S Mountainbike', 'M Elektrische mountainbike', etc)
+    const printBikeDescription = function (name) {
+
+        const keyValue = Object.keys(mySettings.bikeDescription).find( key =>  key.toLowerCase().includes(name.trim().toLowerCase()));
+
+        return mySettings.bikeDescription[keyValue];
+
+    }
 
     // Block All Shopping cart item controls except for the focused one
     const blockBikeItemControls = function (event) {
@@ -1874,7 +1885,7 @@ gPostDataStartDateTime.on('change', function () {
             <div class="description">
 
                 <span class="wc-bookings-item-title">${slot.resource_data.name}</span>
-                <div>${mySettings.customResourceData['description-' + slot.resource_data.id]}</div>
+                <div>${mySettings.bikeDescription['description-' + slot.resource_data.id]}</div>
                <span>Aantal beschikbaar: ${isWholedayBooking() ? getLowerAvailability(slot.resource_data.id) : slot.available} </span>
             </div>
 
