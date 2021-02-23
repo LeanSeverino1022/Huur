@@ -11,7 +11,7 @@
 
 	Here's video regarding resources not loading **test site** vs **actual site** : https://www.loom.com/share/134449c4792f40f0ac5d0ae88dccd279
 
-     - it's a 503 Service Unavailable error. This indicates that a server is temporarily unable to handle the request. This may be due to the server being overloaded or down for maintenance. ).
+     - it's a 503 Service Unavailable error. Based on the definition, this indicates that a server is temporarily unable to handle the request. This may be due to the server being overloaded or down for maintenance. ).
      - I tested it on "test website" and it doesn't fail to load all the resources there unlike in the "mountainbikehurenschoorl site". It's more on server-related stuff but I did some research and I there are things we could try  like the ones mentioned here:
 
 	1 - https://kinsta.com/blog/http-error-503/  
