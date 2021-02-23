@@ -1475,10 +1475,10 @@ li {
 
 /* TEMP SOLUTION (TODO) DEACTIVATE HALF DAYS
 --------------------------------------------- */
-.booking-time-container .booking-time-options .radio-row:nth-child(2) {
+/* .booking-time-container .booking-time-options .radio-row:nth-child(2) {
 	display: none !important;
 }
 
 .booking-time-container .booking-time-options .radio-row:nth-child(3) {
 	display: none !important;
-}
+} */
