@@ -34,10 +34,7 @@ I did try the  Heartbeat Control plugin (mentioned in the kingsta article above)
 
 
 
-# Huur
 
-
-- [x] Remove halfdays (09:00 - 13:00 & 13:00 - 17:00) in JS
 
 
 
