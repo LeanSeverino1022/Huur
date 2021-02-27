@@ -470,13 +470,9 @@ const manipulateDom = (function () {
         $('.wc-bookings-date-picker .start-date-label').hide();
     };
 
-    const randerShoppingCartItems = function (ui) {
-
-    };
-
     return {
         start,
-        randerShoppingCartItems
+
     };
 
 })(); /* menipulateDom */
