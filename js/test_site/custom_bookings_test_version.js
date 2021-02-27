@@ -1,10 +1,18 @@
 // for debugging
-window.debugOn = 0;
+window.debugOn = 1;
+
+
+$( document ).ready(function() {
 
 if (window.debugOn) {
     $('.wc_bookings_field_duration').attr('type', '')
     $('#wc_bookings_field_start_date').attr('type', '')
+    $('.form-field-wide').css('display', 'block')
+     $('.wc-bookings-date-picker-date-fields').css('display', 'block')
 }
+
+    console.log( "ready!" );
+});
 
 'use strict';
 
@@ -20,7 +28,8 @@ const mySettings = {
         mtb: 'Mountainbikes',
         electric: 'Elektrische mountainbikes'
     },
-    // todo Feb 2021: send Tycho instructions on how to update this part
+    // todo Feb 2021: send Tycho instructions on how to update this part..
+    // take note of https://mountainbikehurenschoorl.nl/wp-json/wc-bookings/v1/
     bikeDescription: {
         'XL Elektrische mountainbike': `<span>Framemaat: 21 inch <br>
                             Lichaamslengte: 1,87 - 1,96 m</span>`,
@@ -293,7 +302,8 @@ function updateFormResource(new_value) {
 }
 
 // Todo: aim to remove from global namespace if possible
-let gResourceIds = new Array(); // Format is { product[productid]: [array of resource ids]   }
+let gResourceIds = []; // Format is { product[productid]: [array of resource ids]   }
+let gResourcesData = [];
 
 let gCustomSlotsData = new Array(); // To contain slots available based on user selected date
 let gOneYearSlotsData = new Array(); // Contain slots  from today + 1year - this is a lot of data.
@@ -529,17 +539,17 @@ const bookingTabSteps = (function () {
             switch (event.currentTarget.getAttribute('href')) {
                 case '#tab-1':
                     $('input[name="booking_time"]').prop('checked', false);
-                    resetShoppingCartFormTimesAndResource();
+                    //resetShoppingCartFormTimesAndResource(); //02/26 commented out
                     break;
                 case '#tab-4':
                     uiText.updateShoppingCartBookingInfo();
                     $('.bikes-accordion-content').empty();
                     renderShoppingCartItems();
                     highlightNoAvailabilityItems(); //maybe this should  be inside render shopping cart
-                    resetShoppingCartFormTimesAndResource();
+//                     resetShoppingCartFormTimesAndResource();  //02/26 commented out
                     break;
                 case '#tab-5':
-                    resetShoppingCartFormTimesAndResource();
+//                     resetShoppingCartFormTimesAndResource();  //02/26 commented out
 
                     break;
                 default:
@@ -735,7 +745,7 @@ const bookingTabSteps = (function () {
             blocker.blockShoppingCart(1);
 
             // Update user selected booking times(start and end) only. Not yet the actual Form to be posted
-            updateUserSelectedBookingTimes();
+//             updateUserSelectedBookingTimes();
 
             // Switch tab, update time, and build new cart items
             $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
@@ -1051,35 +1061,38 @@ const bookingTabSteps = (function () {
 
         const electricBikeImgUrl = 'https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-e-mountainbike-small-product-image.png';
 
-        constructCustomSlotsData();
+        const date = '2021-04-20';
 
-        const filteredSlots = filterCustomSlotsDataByBookingTime() || []; // Must be called after constructCustomSlotsData()
+        //find the resource that matches the resource id.
+        //becasue we need some info like the name of the resource
+        const cartHTML = gResourceIds.map( x => {
 
-        console.log('drawing the items.');
-        const newItemHtml = filteredSlots.map(slot => {
+            debugger;
 
-            const imageUrl = isElectricBike(slot.resource_data.name) ? electricBikeImgUrl : normalBikeImgUrl;
+            let resource = gResourcesData.find( elem => elem.id === x );
 
-            console.log(`slot for [insert id] rendered`);
+            const imageUrl = isElectricBike(resource.name) ? electricBikeImgUrl : normalBikeImgUrl;
+
+            console.log(`${resource.name} rendered`);
 
             return `
-            <div class="item" data-resource-id="${slot.resource_data.id}">
+            <div class="item" data-resource-id="${resource.id}">
                 <div class="image">
                     <img src=${imageUrl} alt="" />
                 </div>
 
                 <div class="description">
-                    <span style="display: ${window.debugOn ? 'block' : 'none'}">${slot.date}</span>
-                    <span class="wc-bookings-item-title resource-name">${slot.resource_data.name}</span>
-                    <div>${printBikeDescription(slot.resource_data.name)}</div>
-                   <span class="js-availability">Aantal beschikbaar: ${isWholedayBooking() ? getLowerAvailability(slot.resource_data.id) : slot.available} </span>
+                    <span style="display: ${window.debugOn ? 'block' : 'none'}">${"slot.date"}</span>
+                    <span class="wc-bookings-item-title resource-name">${resource.name}</span>
+                    <div>${printBikeDescription(resource.name)}</div>
+                   <span class="js-availability">Aantal beschikbaar: [slot.available] </span>
                 </div>
 
                 <div class="js-quantity quantity">
                     <button class="plus-btn" type="button" name="button">
                         <span>+</span>
                     </button>
-                    <input type="number" name="qty" value="0" min="0" max="${isWholedayBooking() ? getLowerAvailability(slot.resource_data.id) : slot.available}">
+                    <input type="number" name="qty" value="0" min="0" max="${100}">
                     <button class="minus-btn" type="button" name="button">
                         <span>-</span>
                     </button>
@@ -1088,15 +1101,12 @@ const bookingTabSteps = (function () {
                 <div class="total-price"></div>
                 <div class="add-bike-to-cart disabled">Toevoegen aan reservering</div>
             </div>`;
-        });
+        })
 
-        $('.bikes-accordion-content').append(newItemHtml);
-        bookingTabSteps.sortCartItems();
+        $('.bikes-accordion-content').append(cartHTML);
+//         bookingTabSteps.sortCartItems();
         blocker.unblockShoppingCart(1);
 
-        // Todo: just t
-        // Todo: temp here to avoid error when switching time. this input doesnt triggr a call thet returns something like... this input field is required
-        // $('#wc_bookings_field_start_date_time').val(null);
     };
 
     // shows the bike description on the shopping cart page
@@ -1500,18 +1510,27 @@ $(document).ready(function () {
 
     // Construct customSlotsData
     // 1 get products -> getResourceIds from products -> constructSlotsData
+    // 02/26 // commented out getProducts
     dataService.getProducts()
         .done(function (result) {
             var product = result[0]; // We're only expecting 1 product(with mult resources)
             gResourceIds = product.resource_ids;
 
-            constructBigYearlySlotsData(gResourceIds);
+//             constructBigYearlySlotsData(gResourceIds);
 
         })
         .fail((jqXHR, textStatus, errorThrown) => {
             console.error('getProducts error')
             dataService.notifyConnectionErrorReload(jqXHR, textStatus);
         });
+
+
+        dataService.getResources().done(resources => {
+            gResourcesData = resources;
+        })
+
+
+
 });
 
 
@@ -1846,7 +1865,7 @@ function constructBigYearlySlotsData(resourceIds) {
 
     });
 
-
+    //used apply to call when() with arguments provided as an array
     $.when.apply(null, promises).done(function () {
         // When all promises are resolved
         // All available slots retrieved from the server and we should have successfully construced gCustomSlotsData
@@ -2001,7 +2020,14 @@ function highlightNoAvailabilityItems() {
     const numberPattern = /\d+/g;
 
     $('.shopping-cart-container .js-availability').each(function (idx, el) {
+
+        if( el.textContent.match(numberPattern) == null ) {
+            console.error('invalid availability amount');
+            return;
+        }
+
         const avail = el.textContent.match(numberPattern)[0];
+
         let isOutOfStock = Number(avail) < 1;
         $(this).css('color', isOutOfStock ? '#D83F35' : '#444')
     })
