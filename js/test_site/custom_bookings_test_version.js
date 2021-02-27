@@ -284,7 +284,7 @@ window.gMainUrl = 'https://wpbeter-ontwikkelt.nl';
 
 window.gPostDataNumPersons = $('input[name="wc_bookings_field_persons"]');
 window.gPostDataResource = $('select[name="wc_bookings_field_resource"]');
-window.gPostDataStartDateTime = $('input[name="wc_bookings_field_start_date_time"]');
+
 window.gPostDataDuration = $('input[name="wc_bookings_field_duration"]');
 
 
@@ -576,7 +576,7 @@ const bookingTabSteps = (function () {
                     // $('.bikes-accordion-content').empty();
                     $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
 
-                    // gPostDataStartDateTime.trigger('change');
+
                     $('.bikes-accordion input[name="qty"]').val(0);
                     $('.add-bike-to-cart').toggleClass('disabled', true);
                     $('.total-price').text("");
@@ -1491,7 +1491,6 @@ $(document).ready(function () {
 
     // Create our custom user experience. Stuff here can also be done in the theme files later when already familiar with WP
     manipulateDom.start();
-
     bookingTabSteps.init();
 
 
@@ -1508,9 +1507,7 @@ $(document).ready(function () {
         clickClose: false,
     });
 
-    // Construct customSlotsData
-    // 1 get products -> getResourceIds from products -> constructSlotsData
-    // 02/26 // commented out getProducts
+    //fetch producs and resources from api
     dataService.getProducts()
         .done(function (result) {
             var product = result[0]; // We're only expecting 1 product(with mult resources)
@@ -1883,50 +1880,6 @@ function constructBigYearlySlotsData(resourceIds) {
         });
 
 };
-
-
-gPostDataStartDateTime.on('change', function () {
-    return;
-    constructCustomSlotsData();
-
-    const filteredSlots = filterCustomSlotsDataByBookingTime() || [];
-
-    console.log('drawing the items.');
-    const newItemHtml = filteredSlots.map(slot => {
-
-        console.log(`slot for [insert id] rendered`);
-        return `
-        <div class="item" data-resource-id="${slot.resource_data.id}">
-            <div class="image">
-                <img src="https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-mountainbike-small-product-image.png" alt="" />
-            </div>
-
-            <div class="description">
-
-                <span class="wc-bookings-item-title">${slot.resource_data.name}</span>
-                <div>${mySettings.bikeDescription['description-' + slot.resource_data.id]}</div>
-               <span>Aantal beschikbaar: ${isWholedayBooking() ? getLowerAvailability(slot.resource_data.id) : slot.available} </span>
-            </div>
-
-            <div class="js-quantity quantity">
-                <button class="plus-btn" type="button" name="button">
-                    <span>+</span>
-                </button>
-                <input type="number" name="qty" value="0" min="0" max="${isWholedayBooking() ? getLowerAvailability(slot.resource_data.id) : slot.available}">
-                <button class="minus-btn" type="button" name="button">
-                    <span>-</span>
-                </button>
-            </div>
-
-            <div class="total-price"></div>
-            <div class="add-bike-to-cart disabled">Toevoegen aan reservering</div>
-        </div>`;
-    });
-    $('.bikes-accordion-content').append(newItemHtml);
-    bookingTabSteps.sortCartItems();
-    blocker.unblockShoppingCart(1);
-
-})
 
 /* Blocking user interactions. Shows loader/spinner */
 var blocker = {
