@@ -1,5 +1,6 @@
+// throw new error('x');
 // for debugging
-window.debugOn = 1;
+window.debugOn = 0;
 
 
 $( document ).ready(function() {
@@ -95,6 +96,7 @@ $(document).ajaxSend(function (event, request, settings) {
 $(document).ajaxSuccess(function (event, xhr, settings) {
 
     // THIS PART IS VERY IMPORTANT. A lot of bugs are caused by mishandling successful "wc_bookings_get_blocks" REQUEST
+    //todo: for cleanup: whole 'action=wc_bookings_get_blocks' can be removed i think
     if (
         typeof settings.data === 'string' &&
         settings.data.includes('action=wc_bookings_get_blocks')
@@ -134,8 +136,20 @@ $(document).ajaxSuccess(function (event, xhr, settings) {
         typeof settings.data === "string" &&
         settings.data.includes("action=wc_bookings_calculate_costs")
     ) {
+
+         if(getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.RESOURCE_CHANGE) {
+            $('body').trigger('afterResourceChangeSetDateAgain');
+
+            getBlocksRequest.resetInitiator();
+
+            return;
+        }
+
+
         myConsole.log("success wc_bookings_calculate_costs");
         $('body').trigger('afterCalculateCostRequest', [xhr.responseText]);
+
+
     }
 
 });
@@ -458,6 +472,7 @@ const manipulateDom = (function () {
         $('.wc_bookings_field_resource').hide(); /* Hide select bike form-field*/
         $('.wc-bookings-time-block-picker').hide(); /* Start and end time inputs container*/
         $('.wc-bookings-date-picker .booking-steps-title-wrapper').hide();//todo: check
+        $('.wc_bookings_field_duration').hide();
     };
 
     const hideElementsOnInit = function () {
@@ -658,6 +673,30 @@ const bookingTabSteps = (function () {
 
             // Lets start with selecting the start time
             bookingTabSteps.updateFormSelectStartTime();
+
+        });
+
+
+        $('body').on('afterResourceChangeSetDateAgain', function (event) {
+            // On resource change, there are cases that the date resets. What we do here is set the date again using our saved user-selected date(see custom event calendarDateWasClicked)
+            if (!$("[name=wc_bookings_field_start_date_year]").val()) {
+
+                if (!userSelect.date.year || !userSelect.date.month || !userSelect.date.day) {
+                    console.error('missing year || month || day');
+                    return;
+                }
+
+                $("[name=wc_bookings_field_start_date_year]").val(userSelect.date.year).change();
+                $("[name=wc_bookings_field_start_date_month]").val(userSelect.date.month).change();
+                $("[name=wc_bookings_field_start_date_day]").val(userSelect.date.day).change();
+            }
+
+            blocker.unblockContentTemp('filling up booking form');
+
+            addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
+
+            toggleAddToCartBtn();
+
 
         });
 
@@ -1054,17 +1093,17 @@ const bookingTabSteps = (function () {
     const renderShoppingCartItems = function () {
 
         const normalBikeImgUrl = 'https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-mountainbike-small-product-image.png';
-
         const electricBikeImgUrl = 'https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-e-mountainbike-small-product-image.png';
 
-        const date = '2021-04-20';
+        //let date = '2021-04-20'
+        let date = `${userSelect.date.year}-${userSelect.date.month}-${userSelect.date.day}`; //todo: maybe check if the same then no need to request again
 
-        //find the resource that matches the resource id.
-        //becasue we need some info like the name of the resource
+
+        //Build shopping cart UI
         const cartHTML = gResourceIds.map( x => {
 
-            debugger;
-
+            //we already have the resource ids, but we also need to get the resource data to
+            //get the retrieve the resource name
             let resource = gResourcesData.find( elem => elem.id === x );
 
             const imageUrl = isElectricBike(resource.name) ? electricBikeImgUrl : normalBikeImgUrl;
@@ -1078,7 +1117,7 @@ const bookingTabSteps = (function () {
                 </div>
 
                 <div class="description">
-                    <span style="display: ${window.debugOn ? 'block' : 'none'}">${"slot.date"}</span>
+                    <span class="js-slot-date" style="display: ${window.debugOn ? 'block' : 'none'}">${"[Date]"}</span>
                     <span class="wc-bookings-item-title resource-name">${resource.name}</span>
                     <div>${printBikeDescription(resource.name)}</div>
                    <span class="js-availability">Aantal beschikbaar: [slot.available] </span>
@@ -1103,6 +1142,22 @@ const bookingTabSteps = (function () {
 //         bookingTabSteps.sortCartItems();
         blocker.unblockShoppingCart(1);
 
+        //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
+          var slotsRequest = dataService.getSlotsByDate(date).then( function(result) {
+
+            //render
+
+            result.records.forEach( (slot,idx)=> {
+
+                let $item = $('.bikes-accordion-content .item').eq(idx);
+
+
+                $item.find('.js-slot-date').text(slot.date);
+                $item.find('[max]').attr("max", slot.available);
+                $item.find('.js-availability').text('Aantal beschikbaar: ' + slot.available);
+            })
+
+        })
     };
 
     // shows the bike description on the shopping cart page
@@ -1405,6 +1460,14 @@ const dataService = {
     getProducts() { return $.getJSON(`${gMainUrl}/wp-json/wc-bookings/v1/products`) },
 
     getResources() { return $.getJSON(`${gMainUrl}/wp-json/wc-bookings/v1/resources`) },
+
+    getSlotsByDate(date) {
+        //if there are issue, check if date args is already formatted as 'YYYY-MM-DD'
+        const maxDate = moment($('.picker').data("default_date")).add(12, 'M').format('YYYY-MM-DD');
+        const api = `${gMainUrl}/wp-json/wc-bookings/v1/products/slots?min_date=${date}&max_date=${maxDate}`;
+
+        return  $.getJSON(api);
+    },
 
 
     // @params id =  resource id. returns a promise... so you can do getResourcesDataById().done( function (new resource object))
@@ -1770,11 +1833,17 @@ function handleCalculateCostResponse(result = {}) {
         }
 
     } else if (result.result == "ERROR") {
+        //todo: 03/03/2021. review this more later re errors(english/dutch)
 
         // Remove the minimum persons = 1 error. take note that the message string may change so update here..
-        if (result.html.includes('minumum aantal personen')) {
+        if (result.html.includes('minumum aantal personen') ||
+            result.html.includes('minimum') ||
+            result.html.includes('Date is required') ||
+            result.html.includes('Datum')){
             return;
         }
+
+
 
         // Todo: handle Please choose a resource type ERROR)
         $('.generic-modal').html(result.html);
