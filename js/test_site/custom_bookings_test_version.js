@@ -13,6 +13,8 @@ if (window.debugOn) {
 }
 
     console.log( "ready!" );
+
+
 });
 
 'use strict';
@@ -90,6 +92,8 @@ $(document).ajaxSend(function (event, request, settings) {
         // Todo: test if maybe I can just call this right away without needing to use ajaxSend
         blocker.unblockCalendar(); // Remove default woocommerce spinner
         blocker.blockCalendar(); // And replace with our custom spinner
+
+
     }
 });
 
@@ -122,6 +126,15 @@ $(document).ajaxSuccess(function (event, xhr, settings) {
         }
 
         getBlocksRequest.resetInitiator();
+    }
+
+    //on when plugin knows what dates are booked
+    else if (typeof settings?.url === 'string' &&
+             settings.url?.includes('wc_bookings_find_booked_day_blocks'))
+     {
+        // Make sure no blocked dates / red dates... clear select bicycle dropdown
+        removeCalendarBlockedDates();
+
     }
 
     else if (
@@ -1834,12 +1847,14 @@ function handleCalculateCostResponse(result = {}) {
 
     } else if (result.result == "ERROR") {
         //todo: 03/03/2021. review this more later re errors(english/dutch)
-
+        debugger;
+        return;
         // Remove the minimum persons = 1 error. take note that the message string may change so update here..
         if (result.html.includes('minumum aantal personen') ||
             result.html.includes('minimum') ||
             result.html.includes('Date is required') ||
-            result.html.includes('Datum')){
+            result.html.includes('Datum') ||
+            result.html.includes('hulpmiddel')) { //please choose a resource
             return;
         }
 
@@ -2063,14 +2078,29 @@ const debounce = function (func, delay) {
     }
 }
 
+// Make sure no blocked dates / red dates... clear select bicycle dropdown
+function removeCalendarBlockedDates() {
+
+    if( $('.ui-datepicker-calendar .fully_booked').length > 0 ) {
+        debugger;
+        $('#wc_bookings_field_resource').prop('selectedIndex', -1).change();
+    }
+
+
+}
+
 window.myConsole = {};
 myConsole.log = msg => console.log('%c%s', 'color: #fff; background: red; font-size: 14px;', msg);
 
 
+//DISABLE ALERTS
+function disableAlerts() {
+    window.alert = function() {};
+    alert = function() {
+        console.error('alert called')
+    };
+}
 
-/* for later
-.fail(function(xhr, status, error) {
-    //Ajax request failed.
-    var errorMessage = xhr.status + ': ' + xhr.statusText
-    alert('Error - ' + errorMessage);
-}) */
+disableAlerts();
+
+
