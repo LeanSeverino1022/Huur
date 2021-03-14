@@ -2,7 +2,6 @@
 // for debugging
 window.debugOn = 0;
 
-
 $( document ).ready(function() {
 
 if (window.debugOn) {
@@ -746,6 +745,11 @@ const bookingTabSteps = (function () {
 
             // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
             const result = $.parseJSON(responseText);
+
+            // sometimes calendar dates become fully_booked and this is one
+            //part of the code that when reached, the blocked dates are already updated
+            removeCalendarBlockedDates();
+
             handleCalculateCostResponse(result);
         });
 
@@ -1847,7 +1851,7 @@ function handleCalculateCostResponse(result = {}) {
 
     } else if (result.result == "ERROR") {
         //todo: 03/03/2021. review this more later re errors(english/dutch)
-        debugger;
+
         return;
         // Remove the minimum persons = 1 error. take note that the message string may change so update here..
         if (result.html.includes('minumum aantal personen') ||
@@ -2080,17 +2084,18 @@ const debounce = function (func, delay) {
 
 // Make sure no blocked dates / red dates... clear select bicycle dropdown
 function removeCalendarBlockedDates() {
-
     if( $('.ui-datepicker-calendar .fully_booked').length > 0 ) {
-        debugger;
         $('#wc_bookings_field_resource').prop('selectedIndex', -1).change();
     }
 
 
 }
 
+
 window.myConsole = {};
-myConsole.log = msg => console.log('%c%s', 'color: #fff; background: red; font-size: 14px;', msg);
+myConsole.log = msg => {
+    console.log('%c%s', 'color: #fff; background: red; font-size: 14px;', msg);
+}
 
 
 //DISABLE ALERTS
@@ -2100,7 +2105,7 @@ function disableAlerts() {
         console.error('alert called')
     };
 }
-
 disableAlerts();
+
 
 
