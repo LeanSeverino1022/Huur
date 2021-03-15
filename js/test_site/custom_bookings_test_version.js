@@ -1413,18 +1413,6 @@ const dataService = {
         return  $.getJSON(api);
     },
 
-
-    // @params id =  resource id. returns a promise... so you can do getResourcesDataById().done( function (new resource object))
-    getResourcesDataById(targetId) {
-        return dataService.getResources().then(resources => {
-            // Todo: maybe change filter to find since we only expect one result
-            return resources.find(resource => {
-                return resource.id == targetId;
-            })
-        })
-
-    },
-
     logFail(jqXHR, textStatus, errorThrown) {
         console.error(textStatus);
     },
@@ -1801,6 +1789,7 @@ function handleCalculateCostResponse(result = {}) {
     }
 
 }
+
 
 /* Blocking user interactions. Shows loader/spinner */
 var blocker = {
