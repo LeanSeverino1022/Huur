@@ -836,32 +836,9 @@ const bookingTabSteps = (function () {
 
     // @params el = element current target on shopping cart click event
     const toggleAddToCartBtn = function () {
-
-
-
         const qty = parseInt(gCartItemToUpdateDisplayPrice.closest('.item').find('[name="qty"]').val());
         gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart').toggleClass("disabled", qty < 1);
     }
-
-    const sortCartItems = function () {
-
-        // Currently: Sort by resource ID
-        const parent = document.querySelector('.bikes-accordion-content');
-        // custom order cart items based on their dataset resource ids
-        const customOrder = [7536, 1960, 3478, 3479, 3480, 3910, 3941, 3942, 3943];
-        [].map.call(parent.children, Object).sort(function (a, b) {
-            // \d represents any digit, + for one or more - Extract a NUMBER from String, in cases we might compare values with strings
-            a = parseInt(a.dataset.resourceId);
-            b = parseInt(b.dataset.resourceId);
-            if (customOrder.indexOf(a) == -1) {
-                console.warn(a + " is not found in customOrder array");
-            }
-            return customOrder.indexOf(a) - customOrder.indexOf(b);
-        }).forEach(function (elem) {
-            parent.appendChild(elem);
-        });
-    };
-
 
     const updateCheckoutItems = function () {
 
@@ -1108,7 +1085,7 @@ const bookingTabSteps = (function () {
         })
 
         $('.bikes-accordion-content').append(cartHTML);
-//         bookingTabSteps.sortCartItems();
+
         blocker.unblockShoppingCart(1);
 
         //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
@@ -1375,7 +1352,6 @@ const bookingTabSteps = (function () {
         showPrimaryModal,
         toggleCalendarAndTimeOptions,
         toggleAddToCartBtn,
-        sortCartItems,
         getCalendarDate,
         getSelectedStartTime,
         updateFormSelectStartTime,
