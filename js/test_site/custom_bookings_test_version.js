@@ -12,8 +12,6 @@ if (window.debugOn) {
 }
 
     console.log( "ready!" );
-
-
 });
 
 'use strict';
@@ -1379,9 +1377,7 @@ const uiText = {
         // Render new opc msg with slidedown effect..
         wooMsg.hide().slideDown("fast");
     }
-
 }
-
 
 // Temporary for now. move somewhere later
 // For now this just copies amount from woocommerce-Price-amount amount. TEXT
@@ -1408,8 +1404,6 @@ function handleCalculateCostResponse(result = {}) {
             result.html.includes('hulpmiddel')) { //please choose a resource
             return;
         }
-
-
 
         // Todo: handle Please choose a resource type ERROR)
         $('.generic-modal').html(result.html);
@@ -1439,12 +1433,10 @@ var blocker = {
     },
 
     unblockShoppingCart() {
-
         $('form.cart').unblock();
     },
 
     blockContentTemp() {
-
         $('form.cart').block({
             message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
             overlayCSS: mySettings.spinner.blockUIOverlayCSS,
@@ -1453,13 +1445,11 @@ var blocker = {
     },
 
     unblockContentTemp() {
-
         $('form.cart').unblock();
     },
 
     // @params message - just a custom msg for devs in the future to track when the block happens and ends
     blockCalendar(msg = '') {
-
         $('.picker').block({
             message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
             overlayCSS: mySettings.spinner.blockUIOverlayCSS,
