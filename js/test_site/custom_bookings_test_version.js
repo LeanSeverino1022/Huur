@@ -1515,9 +1515,6 @@ $(document).ready(function () {
         .done(function (result) {
             var product = result[0]; // We're only expecting 1 product(with mult resources)
             gResourceIds = product.resource_ids;
-
-//             constructBigYearlySlotsData(gResourceIds);
-
         })
         .fail((jqXHR, textStatus, errorThrown) => {
             console.error('getProducts error')
@@ -1804,93 +1801,6 @@ function handleCalculateCostResponse(result = {}) {
     }
 
 }
-
-// If duration = 2(2 blocks), then is a whole day booking
-function isWholedayBooking() {
-    return gPostDataDuration.val() == 2;
-}
-
-function getLowerAvailability(resourceId) {
-
-    const pair = gCustomSlotsData.filter(slot => slot.resource_data.id == resourceId).map(slot => slot.available);
-
-    // Get the min value in an array
-    return Math.min.apply(null, pair);
-}
-
-function constructBigYearlySlotsData(resourceIds) {
-
-    if (resourceIds.length < 1) {
-        console.error("required resourceIds is empty")
-        return;
-    }
-
-    // IMP. Block interaction - make user unable to select time before data finished constructing
-    blocker.blockSelectTime();
-
-    // $.when to.. WAIT for all to slots to render, then we sort them.. note: filterSlotsByDateAndResource must return a promise to make this work
-    let promises = [];
-
-    // For each resource id..
-    resourceIds.forEach((id) => {
-        // Use the resource id to get resource data
-        var promise = dataService.getResourcesDataById(id).then(resourceData => {
-
-            if (!$('.picker').data("default_date")) {
-                return console.error("default_date data missing. Cannot compute max date");
-            }
-            // Todo: make + 12 months not hardcoded, must be working even when admin changes some settings. tip: convert +12m
-            // Var a = moment(x).format('YYYY-MM-DD')
-            // Var b = moment(a).add(1, 'M').format('YYYY-MM-DD');
-
-            var maxDate = moment($('.picker').data("default_date")).add(12, 'M').format('YYYY-MM-DD');
-
-            // This is just a hack, most of the time it works to get updated slots data, without this, sometimes requested slots data are not updated
-            var int = Math.floor(Math.random() * Math.floor(999));
-
-            const url = `https://wpbeter-ontwikkelt.nl/wp-json/wc-bookings/v1/products/slots?&max_date=${maxDate}&resource_ids=${int},${resourceData.id}`;
-
-            var jqxhr = $.getJSON(url, function (slots) {
-
-                var addData = {
-                    name: resourceData.name,
-                    id: resourceData.id
-                }
-
-                slots.records.forEach((slot) => {
-                    // Add resource id and name to the slot data
-                    slot.resource_data = addData;
-
-                    gOneYearSlotsData.push(slot);
-                    console.log('pushed resource ' + slot.resource_data.id + ' to gOneYearSlotsData');
-                });
-            })
-
-            return jqxhr;// Return promise
-        });
-
-        promises.push(promise);
-
-    });
-
-    //used apply to call when() with arguments provided as an array
-    $.when.apply(null, promises).done(function () {
-        // When all promises are resolved
-        // All available slots retrieved from the server and we should have successfully construced gCustomSlotsData
-        console.log("all promises are resolved; gCustomSlotsData successfully constructed");
-
-        // We are expecting actually 16 (numOfResources * 2(time slots)) elements
-        if (!gCustomSlotsData.length) console.warn("gCustomSlotsData not expected to be empty");
-        blocker.unblockSelectTime();
-    })
-        .fail((jqXHR, textStatus, errorThrown) => {
-
-            blocker.unblockSelectTime();
-            // Encountered Ajax error along the way of constructing available slots data
-            dataService.notifyConnectionErrorReload(jqXHR, textStatus);
-        });
-
-};
 
 /* Blocking user interactions. Shows loader/spinner */
 var blocker = {
