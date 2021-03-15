@@ -1,6 +1,6 @@
 // throw new error('x');
 // for debugging
-window.debugOn = 0;
+window.debugOn = 1;
 
 $( document ).ready(function() {
 
@@ -190,7 +190,7 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
 
     // Requests sent from date-picker.js
     else if (startTimeAvailabilityRequested) {
-
+        debugger;
         blocker.unblockCalendar();
         switch (getBlocksRequest.getInitiator()) {
             case getBlocksRequest.Triggers.DATE_SELECT:
@@ -327,7 +327,7 @@ function updateFormResource(new_value) {
     getBlocksRequest.setInitiator(getBlocksRequest.Triggers.RESOURCE_CHANGE);
 }
 
-// Todo: aim to remove from global namespace if possible
+
 let gResourceIds = []; // Format is { product[productid]: [array of resource ids]   }
 let gResourcesData = [];
 
@@ -473,7 +473,6 @@ const manipulateDom = (function () {
         $('<button class="btn-top-book-more">Meer fietsen reserveren</button>').insertAfter($('#order_review_heading'))
         $('<button class="btn-bottom-book-more">Meer fietsen reserveren</button>').insertAfter($('#order_review'));
 
-
         $('body').append(genericModal);
     };
 
@@ -499,7 +498,6 @@ const manipulateDom = (function () {
 
     return {
         start,
-
     };
 
 })(); /* menipulateDom */
@@ -796,9 +794,6 @@ const bookingTabSteps = (function () {
 
             blocker.blockShoppingCart(1);
 
-            // Update user selected booking times(start and end) only. Not yet the actual Form to be posted
-//             updateUserSelectedBookingTimes();
-
             // Switch tab, update time, and build new cart items
             $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
         });
@@ -872,14 +867,6 @@ const bookingTabSteps = (function () {
             timeOptionsContainer.toggleClass('hidden', false)
             $('.picker').toggleClass('hidden', true);
         }
-    };
-
-    const updateUserSelectedBookingTimes = function () {
-
-        // Todo: get from real data, make use of duration I think
-        // We are just manually setting time programatically by setting the value of #wc-bookings-form-start-time. When plugin time block settings change later on, we have to update code here
-        setSelectedStartTime('09:00');
-        setSelectedEndTime('17:00');
     };
 
     // @params el = element current target on shopping cart click event
@@ -1422,7 +1409,6 @@ const bookingTabSteps = (function () {
         init,
         showPrimaryModal,
         toggleCalendarAndTimeOptions,
-        updateUserSelectedBookingTimes,
         toggleAddToCartBtn,
         sortCartItems,
         getCalendarDate,
@@ -2084,6 +2070,7 @@ const debounce = function (func, delay) {
 
 // Make sure no blocked dates / red dates... clear select bicycle dropdown
 function removeCalendarBlockedDates() {
+    debugger;
     if( $('.ui-datepicker-calendar .fully_booked').length > 0 ) {
         $('#wc_bookings_field_resource').prop('selectedIndex', -1).change();
     }
@@ -2107,5 +2094,9 @@ function disableAlerts() {
 }
 disableAlerts();
 
+function log(msg) {
+    if(!window.debugOn) { return; }
+    console.log(msg)
+}
 
 
