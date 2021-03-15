@@ -668,17 +668,6 @@ const bookingTabSteps = (function () {
             handleCalculateCostResponse(result);
         });
 
-        $('body').on('onAfterUpdateFormSelectEndTime', function (event) {
-
-            // On the shopping cart disable spinner on after
-            blocker.unblockContentTemp('filling up booking form');
-
-            // Trigger add to reservation button if it's waiting to be triggered
-            addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
-
-            toggleAddToCartBtn();
-        });
-
         // On after review orders UI / fragments have been updated
         $('body').on('afterCartOrdersUiChanged', function (event) {
 
@@ -948,45 +937,6 @@ const bookingTabSteps = (function () {
             focusedItem.find('[name="qty"]').val(availability);
         }
     }
-
-    const updateFormSelectEndTime = function () {
-        if (!getSelectedEndTime()) {
-            return;  // If not yet available just skip / most probably user is still in the date selection
-        }
-
-        const selectEl = $('select#wc-bookings-form-end-time');
-
-        let endTimeHasAnyAvailability;
-
-        // Search for options with "data-value" attr. if no none, then it means no more availability
-        endTimeHasAnyAvailability = selectEl.find('option').toArray()
-            .some(el => hasDataAttribute(el, 'value'));
-
-        if (!endTimeHasAnyAvailability) {
-            console.error('no end time options available at all. Cannot find data-value on all options');
-
-            updateMaxAvailability(0);
-            gCartItemToUpdateDisplayPrice.closest('.item').find('[name="qty"]').val(0);
-            blocker.unblockContentTemp('filling up booking form');
-            return;
-        }
-
-        let result = getIndexOfChosenTimeInTheDropdown(selectEl, 'value', getSelectedEndTime());
-
-        if (result === -1) {
-            console.error(getSelectedEndTime() + ' not found in end time dropdown');
-
-            updateMaxAvailability(0);
-            gCartItemToUpdateDisplayPrice.closest('.item').find('[name="qty"]').val(0);
-            blocker.unblockContentTemp('filling up booking form');
-
-            return;
-        }
-
-        selectEl.prop('selectedIndex', result).change();
-
-        $('body').trigger('onAfterUpdateFormSelectEndTime');
-    };
 
     const renderShoppingCartItems = function () {
 
@@ -1862,10 +1812,3 @@ function disableAlerts() {
     };
 }
 disableAlerts();
-
-function log(msg) {
-    if(!window.debugOn) { return; }
-    console.log(msg)
-}
-
-
