@@ -136,13 +136,6 @@ $(document).ajaxSuccess(function (event, xhr, settings) {
 
     }
 
-    else if (
-        typeof settings.data === 'string' &&
-        settings.data.includes('wc_bookings_get_end_time_html')
-    ) {
-        $('body').trigger('afterGetEndTimeBlocksRequest');
-    }
-
     // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
     else if (
         typeof settings.data === "string" &&
@@ -710,34 +703,6 @@ const bookingTabSteps = (function () {
 
         });
 
-        $('body').on('afterGetEndTimeBlocksRequest', function (event) {
-            updateFormSelectEndTime();
-
-            if (gPostDataDuration.val() != 2) {
-                // If duration = 1, skip. we only need to check avilability on the first block if duration is just 1
-                return
-            }
-
-            availabiiityChoices = [];
-            $('#wc-bookings-form-start-time option[data-block]').each((idx, el) => {
-
-                const optionText = el.text; // 09:00 (20 left)
-                const extractedStartTime = optionText.match(/\(([^()]+)\)/g); // ex: (20 left)
-
-                // It will return null if in the string it can't find a word enclosed in () - ex:(9 left)
-                if (extractedStartTime == null) {
-                    // Null = max inventory available. maybe I can real time availabilty  next
-                    return;
-                }
-                availabiiityChoices.push(extractedStartTime[0].match(/(\d+)/)[0]) //20
-            });
-
-            if (availabiiityChoices.length < 1)
-                return;
-
-            // The lower number will be the availability of wholeday 9-5pm booking
-            updateMaxAvailability(Math.min.apply(null, availabiiityChoices));
-        });
 
         $('body').on('afterCalculateCostRequest', function (event, responseText) {
 
