@@ -1,6 +1,5 @@
 // throw new error('x');
-// for debugging
-window.debugOn = 1;
+window.debugOn = 0; // for debugging
 
 $( document ).ready(function() {
 
