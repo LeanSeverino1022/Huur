@@ -432,11 +432,6 @@ const bookingTabSteps = (function () {
         $('.tabs-nav a:first').trigger('switchActiveTab'); // Show the 1st tab by default
     };
 
-
-    const getSelectedStartTime = function () {
-        return userSelect.startTime;
-    };
-
     const initTabNavigation = function () {
 
         // Register Tab Navigation Event Handlers
@@ -1054,7 +1049,6 @@ const bookingTabSteps = (function () {
         toggleCalendarAndTimeOptions,
         toggleAddToCartBtn,
         getCalendarDate,
-        getSelectedStartTime,
         renderShoppingCartItems,
         resetShoppingCartFormTimesAndResource,
         resetBookingProcess,
@@ -1293,27 +1287,6 @@ function addToCartBtnTriggerIfReady(btn) {
 function updateFormBikeQuantity(value) {
     // Update and trigger change
     gPostDataNumPersons.val(value);
-}
-
-function filterCustomSlotsDataByBookingTime() {
-
-    if (!gCustomSlotsData.length) {
-        console.error("Cannot filter an empty gCustomSlotsData");
-        return;
-    }
-
-    const slots = gCustomSlotsData;
-
-    if (!bookingTabSteps.getSelectedStartTime()) {
-        console.error("Invalid date");
-        return;
-    }
-
-    // Convert the userinput and slot date/time to same format then compare if they match
-    return slots.filter(slot => {
-        // Return true;
-        return moment(slot.date).format('HH:mm') == moment(bookingTabSteps.getSelectedStartTime(), 'HH:mm').format('HH:mm');
-    })
 }
 
 // All hiding and showing of the prev button must be handled here...
