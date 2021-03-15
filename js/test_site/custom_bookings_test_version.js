@@ -78,37 +78,8 @@ $(document).ajaxSend(function (event, request, settings) {});
 
 $(document).ajaxSuccess(function (event, xhr, settings) {
 
-    // THIS PART IS VERY IMPORTANT. A lot of bugs are caused by mishandling successful "wc_bookings_get_blocks" REQUEST
-    //todo: for cleanup: whole 'action=wc_bookings_get_blocks' can be removed i think
-    if (
-        typeof settings.data === 'string' &&
-        settings.data.includes('action=wc_bookings_get_blocks')
-    ) {
-        // Can be triggered by date-select, resource change, or duration change
-        // Ajax call triggered(in time-picker.js) on calendar day click /date-select..
-
-        blocker.unblockCalendar();
-        switch (getBlocksRequest.getInitiator()) {
-            case getBlocksRequest.Triggers.DATE_SELECT:
-
-                break;
-            case getBlocksRequest.Triggers.RESOURCE_CHANGE:
-                $('body').trigger('afterGetStartTimeBlocksRequest');
-                break;
-            case getBlocksRequest.Triggers.DURATION_CHANGE:
-                // Examine(when it matters only) further why this doesn't trigger
-                break;
-
-            default:
-                console.error(getBlocksRequest.getInitiator());
-                break;
-        }
-
-        getBlocksRequest.resetInitiator();
-    }
-
     //on when plugin knows what dates are booked
-    else if (typeof settings?.url === 'string' &&
+    if (typeof settings?.url === 'string' &&
              settings.url?.includes('wc_bookings_find_booked_day_blocks'))
      {
         // Make sure no blocked dates / red dates... clear select bicycle dropdown
@@ -611,27 +582,6 @@ const bookingTabSteps = (function () {
             uiText.updatingBookingTimeOptions();
         });
 
-        // Currently, this should only trigger when we are on the shopping cart page
-        $('body').on('afterGetStartTimeBlocksRequest', function (event) {
-            // On resource change, there are cases that the date resets. What we do here is set the date again using our saved user-selected date(see custom event calendarDateWasClicked)
-            if (!$("[name=wc_bookings_field_start_date_year]").val()) {
-
-                if (!userSelect.date.year || !userSelect.date.month || !userSelect.date.day) {
-                    console.error('missing year || month || day');
-                    return;
-                }
-
-                $("[name=wc_bookings_field_start_date_year]").val(userSelect.date.year).change();
-                $("[name=wc_bookings_field_start_date_month]").val(userSelect.date.month).change();
-                $("[name=wc_bookings_field_start_date_day]").val(userSelect.date.day).change();
-            }
-
-            // Lets start with selecting the start time
-            bookingTabSteps.updateFormSelectStartTime();
-
-        });
-
-
         $('body').on('afterResourceChangeSetDateAgain', function (event) {
             // On resource change, there are cases that the date resets. What we do here is set the date again using our saved user-selected date(see custom event calendarDateWasClicked)
             if (!$("[name=wc_bookings_field_start_date_year]").val()) {
@@ -861,65 +811,6 @@ const bookingTabSteps = (function () {
     /* Get date picker DATE */
     const getCalendarDate = function () {
         return $('.picker').datepicker("getDate");
-    };
-
-    /* Set form's starttime data to user's chosen time */
-    const updateFormSelectStartTime = function () {
-
-        if (!getSelectedStartTime()) {
-            return; // If not yet available just skip / most probably user is still in the date selection
-        }
-
-        const selectEl = $('select#wc-bookings-form-start-time');
-
-        let startTimeHasAnyAvailability;
-
-        // If no select options have "data-block" attr, then it means no more availability
-        startTimeHasAnyAvailability = selectEl.find('option').toArray()
-            .some(el => hasDataAttribute(el, 'block'));
-
-        if (!startTimeHasAnyAvailability) {
-            console.error('no start time options available at all. Cannot find data-block on all options');
-
-            updateMaxAvailability(0);
-            gCartItemToUpdateDisplayPrice.closest('.item').find('[name="qty"]').val(0);
-            blocker.unblockContentTemp('filling up booking form');
-            return;
-        }
-
-        let startTimeBlockIdx = getIndexOfChosenTimeInTheDropdown(selectEl, 'block', getSelectedStartTime());
-
-        if (startTimeBlockIdx === -1) {
-            console.warn(getSelectedStartTime() + ' not found in start time dropdown');
-
-            updateMaxAvailability(0);
-            gCartItemToUpdateDisplayPrice.closest('.item').find('[name="qty"]').val(0);
-            blocker.unblockContentTemp('filling up booking form');
-
-            return;
-        }
-
-        // Select programmatically start time
-        selectEl.prop('selectedIndex', startTimeBlockIdx).change();
-
-        // Transfer later.. update availability UI
-        // Todo: EXAMINE if this should be called after updateFormSelectStartTime to naje sure what we need are already avail update availability for 1 block/ 1 duration TODO: make into a function update availability. see also selectend time if cases the duration > 1
-        if (gPostDataDuration.val() == 2) {
-            // If duration = 2, skip. we want all blocks availability to be available and then choose the shorter one
-            return
-        }
-
-        let str = $('#wc-bookings-form-start-time').find('option').eq(startTimeBlockIdx).text(); //'09:00 (12 left)'
-        let extractedStr = str.match(/\(([^()]+)\)/g); //(12 left)
-        // If null then all bikes are available.. for now just return but its better if we can get totol REAL time availability
-        if (extractedStr == null) {
-            return;
-        }
-
-        let availabilityString = extractedStr[0].match(/(\d+)/)[0]; //12
-        // https://www.geeksforgeeks.org/extract-a-number-from-a-string-using-javascript/
-        updateMaxAvailability(availabilityString);
-        // End of transfer later.. update availability UI
     };
 
     const updateMaxAvailability = function (availability, el) {
@@ -1256,7 +1147,6 @@ const bookingTabSteps = (function () {
         toggleAddToCartBtn,
         getCalendarDate,
         getSelectedStartTime,
-        updateFormSelectStartTime,
         renderShoppingCartItems,
         resetShoppingCartFormTimesAndResource,
         resetBookingProcess,
