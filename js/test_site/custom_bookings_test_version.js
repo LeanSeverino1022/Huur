@@ -343,15 +343,6 @@ const manipulateDom = (function () {
         // Generice messages
         const genericModal = `<div class="generic-modal text-center" style="display: none"></div>`;
 
-        // The popup/modal onafter add to cart
-        const opcAddedToCartHtml = `
-            <div class="opc-added-to-cart" style="display: none">
-                <div class="opc-added-to-cart-msg"></div>
-                <button class="btn-book-again">Meer fietsen reserveren</button>
-                <button class="btn-go-to-checkout">Reservering afronden</button>
-            </div>`
-
-
         $('fieldset.wc-bookings-date-picker').prepend(htmlDateLabel); //step/tab 1
 
         // We add the TABS NAV in the DOM
@@ -441,22 +432,10 @@ const bookingTabSteps = (function () {
         $('.tabs-nav a:first').trigger('switchActiveTab'); // Show the 1st tab by default
     };
 
-    const setSelectedStartTime = function (time) {
-        userSelect.startTime = moment(time, TIME_FORMAT).format(TIME_FORMAT);
-    };
 
     const getSelectedStartTime = function () {
         return userSelect.startTime;
     };
-
-    const setSelectedEndTime = function (time) {
-        userSelect.endTime = moment(time, TIME_FORMAT).format(TIME_FORMAT);
-    };
-
-    const getSelectedEndTime = function () {
-        return userSelect.endTime;
-    };
-
 
     const initTabNavigation = function () {
 
@@ -476,17 +455,17 @@ const bookingTabSteps = (function () {
             switch (event.currentTarget.getAttribute('href')) {
                 case '#tab-1':
                     $('input[name="booking_time"]').prop('checked', false);
-                    //resetShoppingCartFormTimesAndResource(); //02/26 commented out
+                    resetShoppingCartFormTimesAndResource(); //02/26 commented out
                     break;
                 case '#tab-4':
                     uiText.updateShoppingCartBookingInfo();
                     $('.bikes-accordion-content').empty();
                     renderShoppingCartItems();
                     highlightNoAvailabilityItems(); //maybe this should  be inside render shopping cart
-//                     resetShoppingCartFormTimesAndResource();  //02/26 commented out
+                    resetShoppingCartFormTimesAndResource();  //02/26 commented out
                     break;
                 case '#tab-5':
-//                     resetShoppingCartFormTimesAndResource();  //02/26 commented out
+                    resetShoppingCartFormTimesAndResource();  //02/26 commented out
 
                     break;
                 default:
@@ -551,7 +530,6 @@ const bookingTabSteps = (function () {
             blockBikeItemControls();
             resetUnfocusedBikesQuantity();
             resetAllBikesPriceUi();
-
         });
 
         $('body').on('startFillBookingForm', debounce(function (e, value, resource_id) {
@@ -709,7 +687,6 @@ const bookingTabSteps = (function () {
         var chooseDateLabel = $('.wc-bookings-date-picker .booking-steps-title-wrapper');
         var timeOptionsContainer = $('.booking-time-options');
 
-
         if (uiText.displayDate() == '') {
             calendarToggleBtn.hide();
             chooseDateLabel.show();
@@ -813,22 +790,6 @@ const bookingTabSteps = (function () {
         return $('.picker').datepicker("getDate");
     };
 
-    const updateMaxAvailability = function (availability, el) {
-        // For now just set el to fixed.. TODO: make this better
-        let focusedItem = gCartItemToUpdateDisplayPrice.closest('.item');
-
-        focusedItem.find('[name="qty"]').attr('max', availability);
-        focusedItem.find('.js-availability').text('Aantal beschikbaar: ' + availability).css('color', availability < 1 ? '#D83F35' : '#444');
-        // Todo: change name js-availability
-
-        // If current qty is larger than max availability, set it to max availability
-        let currentQty = focusedItem.find('[name="qty"]').val();
-
-        if (parseInt(currentQty) > parseInt(availability)) {
-            focusedItem.find('[name="qty"]').val(availability);
-        }
-    }
-
     const renderShoppingCartItems = function () {
 
         const normalBikeImgUrl = 'https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-mountainbike-small-product-image.png';
@@ -885,11 +846,9 @@ const bookingTabSteps = (function () {
           var slotsRequest = dataService.getSlotsByDate(date).then( function(result) {
 
             //render
-
             result.records.forEach( (slot,idx)=> {
 
                 let $item = $('.bikes-accordion-content .item').eq(idx);
-
 
                 $item.find('.js-slot-date').text(slot.date);
                 $item.find('[max]').attr("max", slot.available);
@@ -902,11 +861,9 @@ const bookingTabSteps = (function () {
     // shows the bike description on the shopping cart page
     // params name = resource name of the bike ('S Mountainbike', 'M Elektrische mountainbike', etc)
     const printBikeDescription = function (name) {
-
         const keyValue = Object.keys(mySettings.bikeDescription).find( key =>  key.toLowerCase().includes(name.trim().toLowerCase()));
 
         return mySettings.bikeDescription[keyValue];
-
     }
 
     // Block All Shopping cart item controls except for the focused one
@@ -923,12 +880,10 @@ const bookingTabSteps = (function () {
             ignoreIfBlocked: true
 
         });
-
     };
 
     // When user is active changing quantity, prevent add to reservation enabling... changing quantity uses debounce so this is needed.
     const unblockBikeItemControls = function (event) {
-
         // Make plus-minus btns of all bike items  clickable again
         $('.item .js-quantity').unblock();
     };
@@ -941,56 +896,9 @@ const bookingTabSteps = (function () {
         console.warn('Passed a non string. Check!')
     }
 
-    // checks whether the element has data-block attribute
-    // @params {el} - dom element, {attr} - data attribute to check if exists in the element
-    const hasDataAttribute = function (el, attr) {
-        return typeof $(el).data(attr) !== "undefined";
-    };
-
-    /*
-    checks whether user chosen time is still available in the hidden start/end time select/dropdown
-    returns -1 if chosen time cannot be found in start time dropdown
-    @params  {el} - the dropdown/select element, {dataAttr} - data-attribute to find to be able to compare. for start time, currently it is data-block, and data-option for end time, {time}- the time value to check if available in the dropdown,
-    */
-    const getIndexOfChosenTimeInTheDropdown = function (el, dataAttr, time) {
-
-        const dropdownOptions = el.find('option');
-        let result = -1;
-
-        // End time and start time must be different. end time(data-value) needs parseZone
-        if (dataAttr == 'block') {
-            // End time - requires parseZone
-            result = dropdownOptions.toArray().findIndex(optionEl => {
-
-                if ($(optionEl).data(dataAttr) == undefined) {
-                    return false;
-                }
-
-                return time === moment($(optionEl).data(dataAttr), TIME_FORMAT).format(TIME_FORMAT);
-            });
-
-        } else if (dataAttr == 'value') {
-            // Must have no parseZone
-            result = dropdownOptions.toArray().findIndex(optionEl => {
-
-                if ($(optionEl).data(dataAttr) == undefined) {
-                    return false;
-                }
-
-                return time === moment.parseZone($(optionEl).data(dataAttr)).format(TIME_FORMAT);
-            });
-
-        } else {
-            console.error('check data attribute passed as argument');
-        }
-
-        return result;
-    };
-
     // We need to reset some inputs because on calendar select time, it triggers booking cost calculation. bookingform.js - if some dates are missing it doesn't trigger wc_bookings_calculate_costs
     const resetShoppingCartFormTimesAndResource = function () {
-
-        $('select#wc-bookings-form-start-time, select#wc-bookings-form-end-time, select#wc_bookings_field_resource').prop('selectedIndex', -1);
+        $('select#wc_bookings_field_resource').prop('selectedIndex', -1);
         $('#wc_bookings_field_start_date').val('');
     }
 
@@ -1301,12 +1209,9 @@ $(document).ready(function () {
             dataService.notifyConnectionErrorReload(jqXHR, textStatus);
         });
 
-
         dataService.getResources().done(resources => {
             gResourcesData = resources;
         })
-
-
 
 });
 
@@ -1367,9 +1272,6 @@ gPostDataNumPersons.on('change', function () {
     $('.total-amount').text($('.woocommerce-Price-amount.amount').text());
 });
 
-
-
-
 // Add a class to add to cart btn so that it will be triggered once requirements(currently on end time is set) are fulfilled
 function addToCartBtnMakeReadyForTrigger(btn) {
 
@@ -1379,7 +1281,6 @@ function addToCartBtnMakeReadyForTrigger(btn) {
 
     // Todo check every form input later
     btn.addClass('js-ready-to-trigger');
-
 }
 
 function addToCartBtnTriggerIfReady(btn) {
@@ -1388,37 +1289,6 @@ function addToCartBtnTriggerIfReady(btn) {
         $('form.cart').find('button.single_add_to_cart_button').click();
     };
 }
-
-
-// Create custom slots based on user-selected options
-function constructCustomSlotsData() {
-
-    gCustomSlotsData = [];
-
-    // Filter slots by user selected date
-    var filteredSlotsByDate = gOneYearSlotsData.filter(filterByDate);
-
-    if (filteredSlotsByDate.length < 1) {
-        console.error("not expecting an empty array");
-    }
-
-    filteredSlotsByDate.forEach((slot) => {
-
-        gCustomSlotsData.push(slot);
-        console.log('pushing data to custom slots');
-
-    });
-
-}
-
-function filterByDate(slot) {
-
-    // Important get customer chosen data in the calendar rather than $('input[name="wc_bookings_field_start_date_time"]').val() since the latter sometimes has value of null if there is no availabity for a particula resource
-    const calendarDate = bookingTabSteps.getCalendarDate();
-    return moment.parseZone(calendarDate).format('YYYY-MM-DD') == moment.parseZone(slot.date).format('YYYY-MM-DD');
-}
-
-
 
 function updateFormBikeQuantity(value) {
     // Update and trigger change
@@ -1679,20 +1549,18 @@ const debounce = function (func, delay) {
 
 // Make sure no blocked dates / red dates... clear select bicycle dropdown
 function removeCalendarBlockedDates() {
-    debugger;
+
     if( $('.ui-datepicker-calendar .fully_booked').length > 0 ) {
         $('#wc_bookings_field_resource').prop('selectedIndex', -1).change();
     }
-
+    console.log('removeCalendarBlockedDates called');
 
 }
-
 
 window.myConsole = {};
 myConsole.log = msg => {
     console.log('%c%s', 'color: #fff; background: red; font-size: 14px;', msg);
 }
-
 
 //DISABLE ALERTS
 function disableAlerts() {
