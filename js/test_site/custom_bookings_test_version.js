@@ -74,27 +74,7 @@ const mySettings = {
 
 
 // Load right away. Don't put inside doc.ready since we need to verride default spinner by woocommerce right away
-$(document).ajaxSend(function (event, request, settings) {
-
-    // On change calendar day
-    let startTimeAvailabilityRequested = typeof settings.data === 'string' &&
-        settings.data.includes('action=wc_bookings_get_blocks');
-
-    // On change calendar month or year
-    let findBookedDayBlocksRequest = typeof settings.url == 'string' &&
-        settings.url.includes('wc_bookings_find_booked_day_blocks');
-
-    // Requests sent from date-picker.js
-    if (startTimeAvailabilityRequested || findBookedDayBlocksRequest) {
-        // Currently, the goal here is to just ovrride the default woocommerce spinner on 1st page load since the user will already
-        // See the default wc spinner in action on page load right away
-        // Todo: test if maybe I can just call this right away without needing to use ajaxSend
-        blocker.unblockCalendar(); // Remove default woocommerce spinner
-        blocker.blockCalendar(); // And replace with our custom spinner
-
-
-    }
-});
+$(document).ajaxSend(function (event, request, settings) {});
 
 $(document).ajaxSuccess(function (event, xhr, settings) {
 
@@ -161,9 +141,6 @@ $(document).ajaxSuccess(function (event, xhr, settings) {
 
 $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
 
-    let startTimeAvailabilityRequested = typeof settings.data === 'string' &&
-        settings.data.includes('action=wc_bookings_get_blocks');
-
     // On change calendar month or year
     let findBookedDayBlocksRequest = typeof settings.url == 'string' &&
         settings.url.includes('wc_bookings_find_booked_day_blocks');
@@ -181,32 +158,7 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
         dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
     }
 
-    // Requests sent from date-picker.js
-    else if (startTimeAvailabilityRequested) {
-        debugger;
-        blocker.unblockCalendar();
-        switch (getBlocksRequest.getInitiator()) {
-            case getBlocksRequest.Triggers.DATE_SELECT:
-                dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
-                break;
-            case getBlocksRequest.Triggers.RESOURCE_CHANGE:
-                // Shopping cart page - unblock, notify error, and reset quantity
-                dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
-                blocker.unblockContentTemp('filling up booking form');
-
-                break;
-            case getBlocksRequest.Triggers.DURATION_CHANGE:
-                // Nothing for now
-                break;
-            default:
-                console.error(getBlocksRequest.getInitiator());
-                break;
-        }
-
-        getBlocksRequest.resetInitiator();
-    }
-
-    else if (calculateBookingCostRequest) {
+   else if (calculateBookingCostRequest) {
         dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
         blocker.unblockContentTemp('filling up booking form');
     }
@@ -1793,29 +1745,6 @@ function handleCalculateCostResponse(result = {}) {
 
 /* Blocking user interactions. Shows loader/spinner */
 var blocker = {
-    blockSelectTime() {
-        // Issue with positioning
-        // Fix: position set to static and set time options' container's opacity to make it look disabled/ TODO: try to solve. low prio
-
-        // Block interactivity - disable select time to make sure required data gOneYearSlotsData Data is full loaded
-        $('.booking-time-options').block({
-            message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
-            overlayCSS: {
-                background: '#FFF',
-                opacity: 0,
-            },
-            css: { border: 0, position: 'static' }, // TODO: set to static to fix issue for now
-            ignoreIfBlocked: true,
-        });
-
-        $('.booking-time-options').css('opacity', 0.6);
-    },
-
-    // Make sure required data fully loaded
-    unblockSelectTime() {
-        $('.booking-time-options').unblock();
-        $('.booking-time-options').css('opacity', 1);
-    },
 
     blockShoppingCart() {
 
