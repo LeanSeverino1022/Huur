@@ -853,7 +853,9 @@ const bookingTabSteps = (function () {
     // shows the bike description on the shopping cart page
     // params name = resource name of the bike ('S Mountainbike', 'M Elektrische mountainbike', etc)
     const printBikeDescription = function (name) {
-        const keyValue = Object.keys(mySettings.bikeDescription).find( key =>  key.toLowerCase().includes(name.trim().toLowerCase()));
+        const keyValue = Object.keys(mySettings.bikeDescription).find( key => {
+            return key.toLowerCase() === name.trim().toLowerCase();
+        });
 
         return mySettings.bikeDescription[keyValue];
     }
