@@ -259,7 +259,7 @@ const manipulateDom = (function () {
 
     // Create and insert HTML on page load
     const createAndInsertHtmlOnPageLoad = function () {
-        // TODO: 1.create the tabs-nav 2. add tabs content by tab-[num]
+
         let htmlTabsNav = `
         <div class='booking-popup-header'>Mountainbike Huren Schoorl</div>
         <ul class="tabs-nav" style="display:none">
@@ -386,7 +386,7 @@ const manipulateDom = (function () {
         $('.wc_bookings_field_persons').hide(); /* Hide num of persons form-field */
         $('.wc_bookings_field_resource').hide(); /* Hide select bike form-field*/
         $('.wc-bookings-time-block-picker').hide(); /* Start and end time inputs container*/
-        $('.wc-bookings-date-picker .booking-steps-title-wrapper').hide();//todo: check
+        $('.wc-bookings-date-picker .booking-steps-title-wrapper').hide();
         $('.wc_bookings_field_duration').hide();
     };
 
@@ -726,7 +726,7 @@ const bookingTabSteps = (function () {
                 dropoffTime = uiText.fullDayReturnTime(orderPickupDate);
             } else {
                 // If 1pm,just get actual return time
-                // Todo: check if computedActualDropoffTime is valid date
+
                 dropoffTime = computedActualDropoffTime;
             }
 
@@ -782,7 +782,7 @@ const bookingTabSteps = (function () {
         const electricBikeImgUrl = 'https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-e-mountainbike-small-product-image.png';
 
         //let date = '2021-04-20'
-        let date = `${userSelect.date.year}-${userSelect.date.month}-${userSelect.date.day}`; //todo: maybe check if the same then no need to request again
+        let date = `${userSelect.date.year}-${userSelect.date.month}-${userSelect.date.day}`;
 
 
         //Build shopping cart UI
@@ -1226,7 +1226,6 @@ function bringBackFormCartToOriginalLocation() {
 };
 
 // ON MODAL OPEN EVENT
-// Todo: update some stuff here to be handled per tab-x siwtch
 gFormCart.on($.modal.OPEN, function (event, modal) {
 
     $('.booking-popup-header').show();
@@ -1291,7 +1290,7 @@ function updatePrevBtnVisibility() {
 /**
 * UI texts/label manager to encapsulate(not all) code related to setting dynamic labels/texts.
 * Don't put anything that doesn't return a string or not related to updating a text
-* todo:  place as much code related to setting dynamic strings here for one place access
+* reminder:  place as much code related to setting dynamic strings here for one place access
 */
 const uiText = {
 
