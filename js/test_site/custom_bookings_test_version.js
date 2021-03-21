@@ -27,7 +27,7 @@ const mySettings = {
         mtb: 'Mountainbikes',
         electric: 'Elektrische mountainbikes'
     },
-    // todo Feb 2021: send Tycho instructions on how to update this part..
+
     // take note of https://mountainbikehurenschoorl.nl/wp-json/wc-bookings/v1/
     bikeDescription: {
         'XL Elektrische mountainbike': `<span>Framemaat: 21 inch <br>
@@ -447,17 +447,17 @@ const bookingTabSteps = (function () {
             switch (event.currentTarget.getAttribute('href')) {
                 case '#tab-1':
                     $('input[name="booking_time"]').prop('checked', false);
-                    resetShoppingCartFormTimesAndResource(); //02/26 commented out
+                    resetShoppingCartFormTimesAndResource();
                     break;
                 case '#tab-4':
                     uiText.updateShoppingCartBookingInfo();
                     $('.bikes-accordion-content').empty();
                     renderShoppingCartItems();
                     highlightNoAvailabilityItems(); //maybe this should  be inside render shopping cart
-                    resetShoppingCartFormTimesAndResource();  //02/26 commented out
+                    resetShoppingCartFormTimesAndResource();
                     break;
                 case '#tab-5':
-                    resetShoppingCartFormTimesAndResource();  //02/26 commented out
+                    resetShoppingCartFormTimesAndResource();
 
                     break;
                 default:
@@ -512,7 +512,6 @@ const bookingTabSteps = (function () {
 
             // If user is still active / still waiting for debounced startFillBookingForm event to trigger
             if (isWaitingForDebounce()) {
-                myConsole.log("oooh baby")
                 return;
             }
 
@@ -567,12 +566,8 @@ const bookingTabSteps = (function () {
             }
 
             blocker.unblockContentTemp('filling up booking form');
-
             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
-
             toggleAddToCartBtn();
-
-
         });
 
 
@@ -615,8 +610,8 @@ const bookingTabSteps = (function () {
 
         $('.booking-time-options').on('change', () => {
 
-        //On 02/21/21, we changed booking time options to just one(full-day). So this one just works like a button now.
-        //Maybe just change this to a button instead later if time permits
+            //On 02/21/21, we changed booking time options to just one(full-day). So this one just works like a button now.
+            //Maybe just change this to a button instead later if time permits
 
             blocker.blockShoppingCart(1);
 
@@ -971,13 +966,6 @@ const bookingTabSteps = (function () {
 
             updateCartItemToUpdateDisplayPrice($(this).closest('.item'));
 
-            // //we just make sure for now, we cannot click on the button if  other form data are not ready yet
-            // if ( $('.single_add_to_cart_button').hasClass('disabled')) {
-            //     //let some plugin external js handle when to disable/enable a button, all we need to do is provide users error messages
-            //     console.warn('button not ready') ;
-            //     return;
-            // }
-
             // Update form fields then trigger  add to cart button
             var itemQuantity = $(this).closest('.item').find('[name="qty"]').val();
             updateFormBikeQuantity(itemQuantity);
@@ -998,7 +986,6 @@ const bookingTabSteps = (function () {
     };
 
     const resetBookingProcess = function () {
-
         // Close all active modals
         while ($.modal.getCurrent() != null) {
             $.modal.close();
@@ -1151,7 +1138,6 @@ const dataService = {
 
     // Show connection error msg when user attempts to checkout order
     notifyConnectionErrorOnCheckoutAttempt(jqXHR, textStatus) {
-
         if (jqXHR.readyState == 0 || textStatus == 'timeout') {
 
             $('.generic-modal').html(`
@@ -1168,7 +1154,6 @@ const dataService = {
             });
         }
     }
-
 }
 
 $(document).ready(function () {
@@ -1176,7 +1161,6 @@ $(document).ready(function () {
     // Create our custom user experience. Stuff here can also be done in the theme files later when already familiar with WP
     manipulateDom.start();
     bookingTabSteps.init();
-
 
     // Override datepicker defaults.
     $.datepicker.setDefaults({
@@ -1205,7 +1189,6 @@ $(document).ready(function () {
         dataService.getResources().done(resources => {
             gResourcesData = resources;
         })
-
 });
 
 
@@ -1470,12 +1453,12 @@ function isWeekend(date) {
 }
 
 $('.generic-modal').on($.modal.AFTER_CLOSE, function (event, modal) {
-    // TODO:TEMP HACK.. with the generic modal it takes twice to close to really close item
+    // HACK.. with the generic modal it takes twice to close to really close item
     var esc = $.Event("keydown", { keyCode: 27 });
     $(this).trigger(esc);
 });
 
-// TODO: this can just be done via css. checkout page hide the red text and and red border on Een account aanmaken? checkbox click
+// This can just be done via css. checkout page hide the red text and and red border on Een account aanmaken? checkbox click
 $('.create-account').on('change', function () {
     $('.woocommerce form .form-row.woocommerce-invalid input.input-text').css('border-color', 'rgb(221, 221, 221)');
     $('.woocommerce form .form-row.woocommerce-invalid label').css('color', '#444')
