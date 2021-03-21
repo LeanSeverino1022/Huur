@@ -453,7 +453,6 @@ const bookingTabSteps = (function () {
                     uiText.updateShoppingCartBookingInfo();
                     $('.bikes-accordion-content').empty();
                     renderShoppingCartItems();
-                    highlightNoAvailabilityItems(); //maybe this should  be inside render shopping cart
                     resetShoppingCartFormTimesAndResource();
                     break;
                 case '#tab-5':
@@ -831,7 +830,7 @@ const bookingTabSteps = (function () {
 
         //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
           var slotsRequest = dataService.getSlotsByDate(date).then( function(result) {
-
+                var tt;
             //render
             result.records.forEach( (slot,idx)=> {
 
@@ -840,8 +839,13 @@ const bookingTabSteps = (function () {
                 $item.find('.js-slot-date').text(slot.date);
                 $item.find('[max]').attr("max", slot.available);
                 $item.find('.js-availability').text('Aantal beschikbaar: ' + slot.available);
+
             })
 
+            return "OK: bike details set!"
+        }).then(function(status){
+            console.log(status)
+            highlightNoAvailabilityItems();
         })
     };
 
