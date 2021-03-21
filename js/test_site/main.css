@@ -1,0 +1,1140 @@
+
+/* WooCommerce (Bookings) hide stuff (TODO Puyih will move this to JS)
+--------------------------------------------- */
+
+.product-quantity {
+	display: none;
+}
+
+.cart-subtotal {
+	display: none;
+}
+
+.pswp {
+	display: none;
+}
+
+dd.variation-Duur {
+	display: none !important;
+}
+
+dt.variation-Duur {
+	display: none !important;
+}
+
+dt.variation-Fiets {
+	display: none !important;
+}
+
+
+
+/* WooCommerce Bookings plugin
+---------------------------------------------------------------------------- */
+
+
+/* WooCommerce Bookings form
+--------------------------------------------- */
+
+.wc-bookings-booking-form {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	max-width: 100%;
+}
+
+.wc-bookings-booking-form .form-field {
+	margin: 0 0 1em;
+}
+
+.wc-bookings-booking-form .form-field input[type=number] {
+	width: 25%;
+}
+
+.wc-bookings-booking-form label {
+	display: block;
+}
+
+.woocommerce-additional-fields__field-wrapper label {
+	max-width: fit-content;
+}
+
+.wc-bookings-booking-form select {
+	width: 100%;
+}
+
+.ui-datepicker .ui-datepicker-title .ui-datepicker-month {
+	margin-right: 10px;
+}
+
+.ui-datepicker .ui-datepicker-title select {
+	width: auto;
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+	border: 0;
+	outline: none;
+	cursor: pointer;
+}
+
+.wc-bookings-booking-form .block-picker {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	zoom: 1;
+}
+
+.wc-bookings-booking-form .block-picker li.block {
+	white-space: nowrap;
+	text-align: center;
+}
+
+.wc-bookings-booking-form .block-picker li.fully_booked a,
+.wc-bookings-booking-form .block-picker li.fully_booked a.selected {
+	background: var(--bookings-red-color);
+	background-image: none;
+	border-color: rgba(0, 0, 0, 0.1);
+	color: #FFF;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+	text-decoration: line-through;
+	cursor: not-allowed;
+	opacity: .35;
+}
+
+.wc-bookings-booking-form .block-picker li {
+	float: left;
+	margin: 0;
+	padding: 0;
+	min-width: 33%;
+}
+
+.wc-bookings-booking-form .block-picker li a {
+	margin: 0;
+	border: 0;
+	padding: .5em;
+	text-align: center;
+	display: block;
+	text-decoration: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.wc-bookings-booking-form .block-picker li a .booking-spaces-left {
+	display: block;
+}
+
+.wc-bookings-booking-form .block-picker li a.selected {
+	background: var(--bookings-green-color);
+	color: #FFF;
+}
+
+.wc-bookings-booking-form .block-picker li:nth-child(odd) a {
+	background: #FFF;
+}
+
+.wc-bookings-booking-form .block-picker li:nth-child(odd) a:hover,
+.wc-bookings-booking-form .block-picker li:nth-child(odd) a:focus {
+	background: var(--bookings-green-color);
+	color: #FFF;
+}
+
+.wc-bookings-booking-form .block-picker li:nth-child(even) a {
+	background: #F5F5F5;
+}
+
+.wc-bookings-booking-form .block-picker li:nth-child(even) a:hover,
+.wc-bookings-booking-form .block-picker li:nth-child(even) a:focus {
+	background: var(--bookings-green-color);
+	color: #FFF;
+}
+
+.wc-bookings-booking-form fieldset {
+	margin: 0 0 1em;
+	line-height: 2.25em;
+	width: calc(100vw - 30px);
+}
+
+.wc-bookings-booking-form fieldset .picker.hasDatepicker {
+	line-height: 1em;
+	margin-bottom: 1em;
+}
+
+.wc-bookings-booking-form fieldset input {
+	width: 100%;
+}
+
+.wc-bookings-booking-form fieldset input.error {
+	border-color: var(--bookings-red-color);
+}
+
+.wc-bookings-booking-form fieldset legend small {
+	text-decoration: underline;
+	padding-left: 1em;
+	color: #999;
+	cursor: pointer;
+	display: none;
+}
+
+.wc-bookings-booking-form fieldset label {
+	display: inline-block;
+	vertical-align: top;
+	line-height: 1.5em;
+	width: 25%;
+}
+
+.wc-bookings-booking-form fieldset label span {
+	display: block;
+	font-size: 0.75em;
+	color: #999;
+	padding: 0 2px;
+}
+
+.wc-bookings-booking-form .wc-bookings-booking-cost {
+	background: #F3F4F5;
+	position: relative;
+	margin: 0 -1em;
+	padding: 1em;
+}
+
+/* Booking steps title */
+.booking-steps-title-wrapper {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+
+/* Spinner loader
+--------------------------------------------- */
+
+.woocommerce.single .blockUI.blockOverlay::before {
+	all: unset;
+}
+
+.spinner {
+	animation: rotate 2s linear infinite;
+	z-index: 2;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -25px 0 0 -25px;
+	width: 60px;
+	height: 60px;
+	stroke-width: 3;
+}
+
+.spinner .path {
+	stroke: var(--bookings-dark-gray-color);
+	stroke-linecap: round;
+	animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes dash {
+	0% {
+		stroke-dasharray: 1, 150;
+		stroke-dashoffset: 0;
+	}
+
+	50% {
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -35;
+	}
+
+	100% {
+		stroke-dasharray: 90, 150;
+		stroke-dashoffset: -124;
+	}
+}
+
+
+/* Calendar
+--------------------------------------------- */
+
+.wc-bookings-date-picker {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.wc-bookings-date-picker .ui-datepicker {
+	padding: 0;
+	width: auto;
+}
+
+.wc-bookings-date-picker .ui-widget-content {
+	border: 0;
+	background: #FFF;
+}
+
+.wc-bookings-date-picker .ui-datepicker-header {
+	padding: 0;
+	overflow: hidden;
+	font-size: 18px;
+	text-transform: capitalize;
+	background: #FFF;
+	background-image: none;
+	border: 0;
+	color: #888;
+}
+
+.wc-bookings-date-picker .ui-datepicker-today a.ui-state-highlight {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.wc-bookings-date-picker .ui-datepicker-today.ui-datepicker-current-day a.ui-state-highlight {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.wc-bookings-date-picker .ui-datepicker-header .ui-state-hover {
+	background: transparent;
+	border-color: transparent;
+	cursor: pointer;
+}
+
+.wc-bookings-date-picker .ui-datepicker .ui-datepicker-title {
+	line-height: 1em;
+	font-weight: normal;
+	padding: 12px 0;
+}
+
+option {
+	position: relative;
+	cursor: pointer;
+	display: block;
+	border: none;
+	height: auto;
+	text-align: left;
+	border-top: none;
+	line-height: 1em;
+	color: var(--bookings-dark-gray-color);
+	text-transform: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	-webkit-touch-callout: none;
+}
+
+.ui-datepicker .ui-datepicker-prev {
+	left: 1px;
+}
+
+.wc-bookings-date-picker .ui-datepicker .ui-datepicker-prev,
+.wc-bookings-date-picker .ui-datepicker .ui-datepicker-next {
+	height: 45px;
+	width: 45px;
+	top: 0;
+	right: 1px;
+	border: 0;
+	border-radius: 50%;
+	background: #FFF;
+}
+
+.wc-bookings-date-picker .ui-datepicker .ui-datepicker-prev.ui-state-hover,
+.wc-bookings-date-picker .ui-datepicker .ui-datepicker-next.ui-state-hover {
+	background: var(--bookings-icon-background-color);
+}
+
+.wc-bookings-date-picker .ui-datepicker .ui-datepicker-prev span {
+	top: 21px;
+	left: 24px;
+}
+
+.wc-bookings-date-picker .ui-datepicker .ui-datepicker-next span {
+	top: 21px;
+	left: 25px;
+}
+
+/* Next month select icon (chevron right) */
+.wc-bookings-date-picker .ui-icon-circle-triangle-e {
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAUVBMVEUAAACIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIj+jGpIAAAAGnRSTlMAAQMEExYYJSs6PFJVVldYZmd3jqOlpsXT80ZZGOYAAABpSURBVDjL7crJEkAwFETRjpjnObz//1ALFBtJb5Qq3O09wFEwDRpE4SxiNOcYuTq39DfnlJ0IJxNhZfGoLD8sq7ulZ5P1SWYWp80JxqTLf/c2h5Z0aEgHNXIOUAPndul2gOo5B6g0up4LR9crgfnGwz4AAAAASUVORK5CYII=') no-repeat;
+	background-position: -4px 0;
+	background-size: 20px auto;
+	width: 20px;
+	height: 20px;
+}
+
+/* Previous month select icon (chevron left) */
+.wc-bookings-date-picker .ui-icon-circle-triangle-w {
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAYFBMVEUAAACIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIjMfMccAAAAH3RSTlMAAQIDBAUHCw0YGRotLkRHTVBkcXe+xcfa4Ojv8/X5oJruPQAAAHJJREFUOMvtykkKhEAUBNF0bmdt29ny3/+WDSVCbbRyIS7E2AU84Khi+oKpFpEf6Ri5ObvcnUhDOpGQdC3pOv91d7j+AleRLjDccOLgDIbMTyCi8ZUPlRkrV4+UswtKqhRgpEpgS0sVW52WC+OAsPyY+wfj7jOZLgHfNAAAAABJRU5ErkJggg==') no-repeat;
+	background-position: -4px 0;
+	background-size: 20px auto;
+	width: 20px;
+	height: 20px;
+}
+
+.ui-datepicker-other-month {
+	pointer-events: none;
+}
+
+.wc-bookings-date-picker .ui-datepicker table {
+	margin: 0;
+}
+
+.wc-bookings-date-picker .ui-datepicker th {
+	padding: .75em 4px .75em 0;
+	text-transform: uppercase;
+	border-top: none;
+	color: #888;
+	font-weight: normal;
+	background: #FFF;
+	display: table-cell;
+}
+
+.wc-bookings-date-picker .ui-datepicker th:last-child {
+	padding-right: 0;
+}
+
+.wc-bookings-date-picker .ui-datepicker td {
+	border: 0;
+	background: #FFF;
+	padding: 0 4px 10px 0;
+	display: table-cell;
+}
+
+.wc-bookings-date-picker .ui-datepicker td:nth-child(7n) {
+	padding-right: 0;
+}
+
+.wc-bookings-date-picker .ui-datepicker td:last-child {
+	border-right: 0;
+}
+
+.wc-bookings-date-picker .ui-datepicker td .ui-state-default {
+	width: 38px;
+	height: 38px;
+	background: transparent;
+	background-image: none;
+	color: var(--bookings-dark-gray-color);
+	margin: 0;
+	font-weight: normal;
+	text-align: center;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	line-height: 38px;
+	font-size: 16px;
+}
+
+a.ui-datepicker-prev.ui-corner-all.ui-state-disabled {
+	background: #FFF !important;
+}
+
+.wc-bookings-date-picker .ui-datepicker td.fully_booked span,
+.wc-bookings-date-picker .ui-datepicker td.fully_booked a {
+	background: var(--bookings-red-color);
+	background-image: none;
+	border-color: rgba(0, 0, 0, 0.1);
+	color: #FFF;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.wc-bookings-date-picker .ui-datepicker td.bookable a {
+	background: #FFF !important;
+	background-image: none;
+	color: var(--bookings-dark-gray-color);
+	border: 1px solid var(--bookings-dark-gray-color);
+}
+
+.wc-bookings-date-picker .ui-datepicker td.partial_booked a {
+	background: #FFF;
+	background-image: none;
+	border-color: var(--bookings-dark-gray-color);
+	color: var(--bookings-dark-gray-color);
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+	position: relative;
+	z-index: 1;
+}
+
+.wc-bookings-date-picker .ui-datepicker td.ui-datepicker-current-day a {
+	background: var(--bookings-green-color);
+	opacity: 1;
+}
+
+.wc-bookings-date-picker .ui-datepicker td.bookable-range .ui-state-default {
+	color: #FFF;
+}
+
+.wc-bookings-date-picker-timezone-block {
+	margin-bottom: 5px;
+}
+
+.wc-bookings-date-picker .ui-datepicker td.ui-datepicker-other-month {
+	background: #FFF;
+}
+
+.wc-bookings-date-picker .ui-widget-content {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.ui-datepicker-other-month .ui-state-default {
+	color: #FFF;
+	background: #FFF;
+}
+
+
+/* Pop-up booking screen
+--------------------------------------------- */
+
+.modal-primary {
+	display: none;
+	width: 100%;
+	max-width: 100%;
+	height: 100vh;
+	padding: 0;
+	border-radius: 0;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+
+/* Pop-up booking screen - background
+--------------------------------------------- */
+
+.blocker {
+	z-index: 9999;
+	padding: 0;
+}
+
+.blocker:before {
+	content: "";
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+	margin-right: -0.05em;
+}
+
+.blocker.behind {
+	background: transparent;
+}
+
+
+/* Pop-up booking screen - header
+--------------------------------------------- */
+
+.modal-primary .prev-btn {
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAYFBMVEUAAACIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIjMfMccAAAAH3RSTlMAAQIDBAUHCw0YGRotLkRHTVBkcXe+xcfa4Ojv8/X5oJruPQAAAHJJREFUOMvtykkKhEAUBNF0bmdt29ny3/+WDSVCbbRyIS7E2AU84Khi+oKpFpEf6Ri5ObvcnUhDOpGQdC3pOv91d7j+AleRLjDccOLgDIbMTyCi8ZUPlRkrV4+UswtKqhRgpEpgS0sVW52WC+OAsPyY+wfj7jOZLgHfNAAAAABJRU5ErkJggg==') no-repeat;
+	width: 20px;
+	height: 20px;
+	top: 16.5px;
+	left: 17px;
+	position: absolute;
+	background-size: contain;
+	background-position: center center;
+	margin: 0;
+	cursor: pointer;
+}
+
+.booking-popup-header {
+	display: flex;
+	justify-content: center;
+	margin: 0 0 30px;
+	padding: 12px 0 0;
+	height: 54px;
+	border-bottom: 1px solid #ddd;
+}
+
+/* Close button for Booking pop-up */
+.modal a.close-modal {
+	width: 16px;
+	height: 16px;
+	top: 18.5px;
+	right: 20.5px;
+	display: block;
+	text-indent: -9999px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAqFBMVEUAAACIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIgk08/uAAAAN3RSTlMAAQcIDQ4QERIYGRobHCAhIiMrLzEyMzQ1Njc4TU5PUFFSVFVvi46XnZ6jsLm6zNPg5uj1+fv9CN+HwgAAARBJREFUOMuN09lSwkAQQNGLGlGDC64oQVxwA2XJiP3/f+YDSZh0N4F+m1unKjXpBIpp4Y/qnanMLhx2NZefdnS+/BMR6RuXiYiEVDkrs1WuZOm0zMpcyLWry8E6hxToRC6WgziHBKYinnys509aIp5UTnKYeVI7GcO5WDnU6bcN9Iz8MO4MXOm7rbJyW2TkGmXNNUjlNkrjNkjHudJ1YN6zjFz36jy677gX9zIPOzorNzktnxtWeL+ji+WTNE9vR1dK45YjV14b13W2eQpz65y9T8x/vewCcKfyAr49Z+QbHAbPKbnYA46D5+A2cgcAnATPRbJwlVQOblYuT6qSBs8VMnKQfOXjI+drTif5+z4A/8rr1CSyo9FDAAAAAElFTkSuQmCC');
+}
+
+
+/* Connection error messages
+--------------------------------------------- */
+
+.modal .connection-error-message {
+	padding: 0 0 20px 0;
+}
+
+.modal .connection-error-btn {
+	display: inline-block;
+	padding: 10px 15px;
+	min-width: 120px;
+}
+
+
+/* Pop-up booking screen - bottom navigation bar
+--------------------------------------------- */
+
+/* DEACTIVATED (REMOVE?)
+.tab-footer {
+	border-top: 1px solid #DDD;
+	display: flex;
+	justify-content: space-evenly;
+	padding: 10px 0;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background: #FFF;
+	right: 0;
+}
+*/
+
+/* TODO */
+.wc-bookings-booking-cost {
+	display: none !important;
+}
+
+/* TODO */
+button.wc-bookings-booking-form-button {
+	display: none !important;
+}
+
+
+/* Booking step - Date & Time
+--------------------------------------------- */
+
+/* Selected date button */
+.start-date-label {
+	width: fit-content;
+	margin: 0 auto 20px auto;
+	padding: 5px 16px;
+	line-height: 1.7;
+	cursor: pointer;
+	background: #F7F7F7;
+	border: 2px solid var(--bookings-dark-gray-color);
+	border-radius: 30px;
+	user-select: none;
+}
+
+.radio-row {
+	margin-bottom: 20px;
+}
+
+.radio-row label {
+	padding: 6px 16px;
+	border: 1px solid #999;
+	border-radius: 30px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.radio-row label:hover {
+	border: 1px solid var(--bookings-dark-gray-color);
+}
+
+.radio-row input[type="radio"] {
+	display: none;
+}
+
+
+/* Booking step - Bicycle model & size
+--------------------------------------------- */
+
+.booking-steps-overview-wrapper p {
+	margin-bottom: 15px;
+}
+
+.booking-steps-overview-wrapper p:last-child {
+	margin-bottom: 0;
+}
+
+.cat-option-content {
+	padding: 6px 16px;
+	cursor: pointer;
+	border: 1px solid #999;
+	margin-bottom: 20px;
+	border-radius: 30px;
+	user-select: none;
+}
+
+.cat-option-content:hover {
+	border: 1px solid var(--bookings-dark-gray-color);
+}
+
+.bikes-accordion {
+	margin: 30px 0 0 0;
+}
+
+.bikes-accordion li{
+	margin: 0;
+}
+
+.bikes-accordion-content .item {
+	overflow-x: auto;
+	align-items: center;
+	margin-bottom: 30px;
+	padding: 25px 15px;
+	height: auto;
+	display: flex;
+	border: 1px solid #DDD;
+	border-radius: 5px;
+	overflow: hidden;
+	flex-wrap: wrap;
+}
+
+.wc-bookings-item-title {
+	font-weight: 700;
+}
+
+.bikes-accordion-content .image {
+	width: 100%;
+	max-width: none;
+	text-align: center;
+	margin: 0 0 15px;
+}
+
+.bikes-accordion-content .image img {
+	width: 100px;
+	height: auto;
+}
+
+.bikes-accordion-content .description {
+	width: 100%;
+	max-width: none;
+	margin: 0 0 15px;
+	text-align: center;
+}
+
+.bikes-accordion-content .quantity {
+	width: 100%;
+	height: auto;
+	max-width: none;
+	text-align: center;
+	margin: 0 0 15px 0;
+}
+
+/* Center amount number */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.bikes-accordion-content .description span {
+	display: block;
+	font-size: 16px;
+}
+
+.bikes-accordion-content .quantity input {
+	width: 34px;
+	height: 38px;
+	padding: 0;
+	-webkit-appearance: none;
+	border: 0;
+	font-size: 16px;
+	text-align: center;
+	vertical-align: top;
+	pointer-events: none;
+}
+
+/* Plus button */
+.plus-btn {
+	background: #FFF;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	position: relative;
+	border: 1px solid #999;
+	cursor: pointer;
+	outline: none;
+	vertical-align: top;
+}
+
+.plus-btn:hover {
+	background: #FFF;
+	border-color: var(--bookings-dark-gray-color);
+}
+
+.plus-btn:after {
+	background: var(--bookings-dark-gray-color);
+	width: 12px;
+	height: 2px;
+	border-radius: 1px;
+	position: absolute;
+	top: 18px;
+	left: 13px;
+	content:"";
+}
+
+.plus-btn:before {
+	background: var(--bookings-dark-gray-color);
+	width: 2px;
+	height: 12px;
+	border-radius: 1px;
+	position: absolute;
+	top: 13px;
+	left: 18px;
+	content:"";
+}
+
+/* Minus button */
+.minus-btn {
+	background: #FFF;
+	border-radius:50%;
+	width: 38px;
+	height: 38px;
+	position: relative;
+	border: 1px solid #999;
+	font-weight: 500;
+	font-size: 24px;
+	cursor: pointer;
+	outline: none;
+  }
+
+.minus-btn:hover {
+	background: #FFF;
+	border-color: var(--bookings-dark-gray-color);
+}
+
+.minus-btn:after {
+	background: var(--bookings-dark-gray-color);
+	width: 12px;
+	height: 2px;
+	border-radius: 1px;
+	position: absolute;
+	top: 18px;
+	left: 13px;
+	z-index: 4;
+	content:"";
+}
+
+.bikes-accordion-content .total-price {
+	width: 100%;
+	margin: 0 0 15px 0;
+	padding: 0;
+	color: var(--bookings-dark-gray-color);
+	font-size: 16px;
+	font-weight: 600;
+	text-align: center;
+}
+
+button,
+.modal .connection-error-btn,
+.bikes-accordion-content .add-bike-to-cart {
+	margin: 0 auto;
+	padding: 9px 15px;
+	color: #FFF;
+	background: var(--bookings-button-color);
+	font-size: 16px;
+	font-weight: 500;
+	text-decoration: none;
+	border: 0;
+	border-radius: 5px;
+	cursor: pointer;
+	user-select: none;
+}
+
+button:hover,
+.bikes-accordion-content .add-bike-to-cart:hover {
+	background: var(--bookings-button-hover-color);
+}
+
+.bikes-accordion-content.js-user-is-active .add-bike-to-cart,
+.bikes-accordion-content .add-bike-to-cart.disabled {
+	pointer-events: none;
+	opacity: .3;
+}
+
+.minus-btn span{
+	top: 10px;
+}
+
+
+/* Booking step - Customer info & checkout
+--------------------------------------------- */
+
+th.product-total {
+	min-width: 61px;
+}
+
+.woocommerce-checkout {
+	max-width: 610px;
+}
+
+.btn-top-book-more {
+	margin-bottom: 30px;
+}
+
+.btn-bottom-book-more {
+	margin-bottom: 30px;
+}
+
+
+/* WooCommerce Bookings summary
+--------------------------------------------- */
+
+.wc-booking-summary {
+	margin: 1em 1em 1em 0;
+	border: 2px solid #DDD;
+	padding: 1em;
+	color: #888;
+	border-radius: 5px;
+}
+
+.wc-booking-summary .wc-booking-summary-actions {
+	margin: 1em 0 0 0;
+}
+
+.wc-booking-summary .wc-booking-summary-actions a {
+	border-right: 1px solid #DDD;
+	margin: 0 3px 0 0;
+	padding: 0 4px 0 0;
+}
+
+.wc-booking-summary .wc-booking-summary-actions a:last-child {
+	border-right: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.wc-booking-summary .wc-booking-summary-number {
+	line-height: 1em;
+}
+
+.wc-booking-summary .wc-booking-summary-number span {
+	color: #FFF;
+	font-size: 0.8em;
+	background: #CCC;
+	padding: .4em .8em;
+	border-radius: 5px;
+	margin-left: 1em;
+	margin-top: -.2em;
+	float: right;
+}
+
+.wc-booking-summary .wc-booking-summary-number .status-unpaid,
+.wc-booking-summary .wc-booking-summary-number .status-incart {
+	background: #CCC;
+}
+
+.wc-booking-summary .wc-booking-summary-number .status-pending,
+.wc-booking-summary .wc-booking-summary-number .status-pending-confirmation {
+	background: var(--bookings-orange-color);
+}
+
+.wc-booking-summary .wc-booking-summary-number .status-confirmed {
+	background: var(--bookings-green-color);
+}
+
+.wc-booking-summary .wc-booking-summary-number .status-paid {
+	background: #2EA2CC;
+}
+
+.wc-booking-summary .wc-booking-summary-number .status-cancelled {
+	background: var(--bookings-red-color);
+}
+
+.wc-booking-summary .wc-booking-summary-number .status-complete {
+	background: #995;
+}
+
+.wc-booking-summary .wc-booking-summary-list {
+	margin: 1em 0 0 0;
+	list-style: none outside;
+}
+
+.wc-booking-summary .wc-booking-summary-list li {
+	margin: 0 0 .5em;
+}
+
+.bikes-accordion-content img {
+	width: 100%;
+	height: auto;
+}
+
+.receipt {
+	background: #FFF;
+	width: 280px;
+	height: 425px;
+	margin: 0 auto;
+}
+
+.receipt h1 {
+	text-align: center;
+}
+
+.payments table {
+	width: 100%;
+}
+
+.payments table tr td {
+	margin: 0;
+	padding: 1px 20px;
+}
+
+.payments table tr td:nth-child(1) {
+	text-align: left;
+}
+
+.payments table tr td:nth-child(2) {
+	text-align: right;
+}
+
+.total {
+	background: #E6E6E6;
+}
+
+.total p {
+	color: #171717;
+}
+
+.pay:hover div {
+	background: var(--bookings-red-color);
+	cursor: pointer;
+}
+
+.pay div {
+	background: var(--bookings-red-color);
+	width: 100%;
+	height: 40px;
+	text-align: center;
+	padding: 20px 0;
+}
+
+.pay div p {
+	color: white;
+}
+
+.start-time {
+	font-size: 14px;
+}
+
+li {
+	display: list-item;
+	text-align: -webkit-match-parent;
+}
+
+.wc-bookings-date-picker {
+	max-width: 320px;
+}
+
+.modal-primary .tab-step {
+	display: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow-y: auto;
+	max-height: 85vh;
+	justify-content: space-between;
+	padding: 0 20px;
+}
+
+
+
+/* Media screen
+---------------------------------------------------------------------------- */
+
+@media screen and (min-width: 768px) {
+
+	/* Non WooCommerce (Bookings) CSS, relevant to WooCommerce (Bookings) pages
+	--------------------------------------------- */
+
+	.entry-header-wrapper {
+		padding: 20px 0 50px;
+	}
+
+	.content .entry {
+		padding: 50px 75px;
+	}
+
+	/* WooCommerce
+	--------------------------------------------- */
+
+
+
+	/* WooCommerce Bookings plugin
+	--------------------------------------------- */
+
+	.wc-bookings-booking-form fieldset {
+		width: calc(100vw - 20px);
+	}
+
+	.wc-bookings-date-picker .ui-datepicker td .ui-state-default {
+		width: 42px;
+		height: 42px;
+		line-height: 40px;
+		font-size: 18px;
+	}
+
+	.blocker {
+		padding: 20px;
+	}
+
+	.tab-footer {
+		visibility: hidden;
+	}
+
+	.bikes-accordion-content .item {
+		padding: 15px;
+	}
+
+	.bikes-accordion-content .image {
+		margin: 0 20px 0 0;
+		max-width: 120px;
+	}
+
+	.bikes-accordion-content .image img {
+		width: auto;
+	}
+
+	.bikes-accordion-content .description {
+		width: 245px;
+		margin: 0 20px 0 0;
+		text-align: left;
+	}
+
+	.bikes-accordion-content .quantity {
+		width: auto;
+		margin: 0 20px 0 0;
+	}
+
+	.bikes-accordion-content .total-price {
+		width: auto;
+		min-width: 67px;
+		margin: 0 20px 0 0;
+	}
+
+	.bikes-accordion-content .add-bike-to-cart {
+		margin: 0 0 0 auto;
+	}
+
+	.modal-primary {
+		height: calc(100vh - 40px);
+	}
+
+	.modal-primary .tab-step {
+		max-height: calc(100vh - 124px); /* Header hight + header bottom margin + 2 times 20px .blocker padding */
+	}
+}
+
+/* Helper classes
+--------------------------------------------- */
+
+.hidden {
+	display: none;
+}
+
+.text-center {
+	text-align: center;
+}
+
+
+
+
