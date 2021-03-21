@@ -1,3 +1,334 @@
+/*
+Theme Name:					WPbeter
+Theme URI:					https://wpbeter.nl
+Description:				WooCommerce & Booking plugin Child Theme for Mountainbike Huren Schoorl
+Author:						WPbeter - Tycho Maarschall
+Author URI:					https://wpbeter.nl
+
+Version: 5.4.4
+
+Template: genesis
+
+Text Domain: mountainbike-huren-schoorl
+*/
+
+
+
+/* Jquery.modal.min.css - Version: 0.9.1 https://jquerymodal.com/
+---------------------------------------------------------------------------- */
+
+.blocker{position:fixed;top:0;right:0;bottom:0;left:0;width:100%;height:100%;overflow:auto;z-index:1;padding:20px;box-sizing:border-box;background-color:#000;background-color:rgba(0,0,0,0.75);text-align:center}.blocker:before{content:"";display:inline-block;height:100%;vertical-align:middle;margin-right:-0.05em}.blocker.behind{background-color:transparent}.modal{display:none;vertical-align:middle;position:relative;z-index:2;max-width:500px;box-sizing:border-box;width:90%;background:#fff;padding:15px 30px;-webkit-border-radius:8px;-moz-border-radius:8px;-o-border-radius:8px;-ms-border-radius:8px;border-radius:8px;-webkit-box-shadow:0 0 10px #000;-moz-box-shadow:0 0 10px #000;-o-box-shadow:0 0 10px #000;-ms-box-shadow:0 0 10px #000;box-shadow:0 0 10px #000;text-align:left}.modal a.close-modal{position:absolute;top:-12.5px;right:-12.5px;display:block;width:30px;height:30px;text-indent:-9999px;background-size:contain;background-repeat:no-repeat;background-position:center center;background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAA3hJREFUaAXlm8+K00Acx7MiCIJH/yw+gA9g25O49SL4AO3Bp1jw5NvktC+wF88qevK4BU97EmzxUBCEolK/n5gp3W6TTJPfpNPNF37MNsl85/vN/DaTmU6PknC4K+pniqeKJ3k8UnkvDxXJzzy+q/yaxxeVHxW/FNHjgRSeKt4rFoplzaAuHHDBGR2eS9G54reirsmienDCTRt7xwsp+KAoEmt9nLaGitZxrBbPFNaGfPloGw2t4JVamSt8xYW6Dg1oCYo3Yv+rCGViV160oMkcd8SYKnYV1Nb1aEOjCe6L5ZOiLfF120EjWhuBu3YIZt1NQmujnk5F4MgOpURzLfAwOBSTmzp3fpDxuI/pabxpqOoz2r2HLAb0GMbZKlNV5/Hg9XJypguryA7lPF5KMdTZQzHjqxNPhWhzIuAruOl1eNqKEx1tSh5rfbxdw7mOxCq4qS68ZTjKS1YVvilu559vWvFHhh4rZrdyZ69Vmpgdj8fJbDZLJpNJ0uv1cnr/gjrUhQMuI+ANjyuwftQ0bbL6Erp0mM/ny8Fg4M3LtdRxgMtKl3jwmIHVxYXChFy94/Rmpa/pTbNUhstKV+4Rr8lLQ9KlUvJKLyG8yvQ2s9SBy1Jb7jV5a0yapfF6apaZLjLLcWtd4sNrmJUMHyM+1xibTjH82Zh01TNlhsrOhdKTe00uAzZQmN6+KW+sDa/JD2PSVQ873m29yf+1Q9VDzfEYlHi1G5LKBBWZbtEsHbFwb1oYDwr1ZiF/2bnCSg1OBE/pfr9/bWx26UxJL3ONPISOLKUvQza0LZUxSKyjpdTGa/vDEr25rddbMM0Q3O6Lx3rqFvU+x6UrRKQY7tyrZecmD9FODy8uLizTmilwNj0kraNcAJhOp5aGVwsAGD5VmJBrWWbJSgWT9zrzWepQF47RaGSiKfeGx6Szi3gzmX/HHbihwBser4B9UJYpFBNX4R6vTn3VQnez0SymnrHQMsRYGTr1dSk34ljRqS/EMd2pLQ8YBp3a1PLfcqCpo8gtHkZFHKkTX6fs3MY0blKnth66rKCnU0VRGu37ONrQaA4eZDFtWAu2fXj9zjFkxTBOo8F7t926gTp/83Kyzzcy2kZD6xiqxTYnHLRFm3vHiRSwNSjkz3hoIzo8lCKWUlg/YtGs7tObunDAZfpDLbfEI15zsEIY3U/x/gHHc/G1zltnAgAAAABJRU5ErkJggg==')}.modal-spinner{display:none;position:fixed;top:50%;left:50%;transform:translateY(-50%) translateX(-50%);padding:12px 16px;border-radius:5px;background-color:#111;height:20px}.modal-spinner>div{border-radius:100px;background-color:#fff;height:20px;width:2px;margin:0 1px;display:inline-block;-webkit-animation:sk-stretchdelay 1.2s infinite ease-in-out;animation:sk-stretchdelay 1.2s infinite ease-in-out}.modal-spinner .rect2{-webkit-animation-delay:-1.1s;animation-delay:-1.1s}.modal-spinner .rect3{-webkit-animation-delay:-1.0s;animation-delay:-1.0s}.modal-spinner .rect4{-webkit-animation-delay:-0.9s;animation-delay:-0.9s}@-webkit-keyframes sk-stretchdelay{0%,40%,100%{-webkit-transform:scaleY(0.5)}20%{-webkit-transform:scaleY(1.0)}}@keyframes sk-stretchdelay{0%,40%,100%{transform:scaleY(0.5);-webkit-transform:scaleY(0.5)}20%{transform:scaleY(1.0);-webkit-transform:scaleY(1.0)}}
+
+
+
+/* CSS Variables
+---------------------------------------------------------------------------- */
+
+:root {
+	--bookings-dark-gray-color: #444;
+	--bookings-green-color: #51BB7B;
+	--bookings-orange-color: #F57E20;
+	--bookings-red-color: #F44336;
+	--bookings-blue-color: #0078D4;
+	--bookings-button-color: #4CAF50;
+	--bookings-button-hover-color: #419544;
+	--bookings-icon-background-color: #F1F3F4;
+}
+
+
+
+/* Style.css override
+---------------------------------------------------------------------------- */
+
+html {
+	scroll-behavior: initial;
+}
+
+.site-header {
+	position: relative;
+}
+
+.nav-primary {
+	display: none;
+}
+
+.title-area {
+	padding: 13px 0 0;
+	margin: 0 auto;
+	max-width: 100;
+	width: 100%;
+	float: none;
+	text-align: center;
+}
+
+.site-title a {
+	background-size: 200px auto;
+	width: 200px;
+	height: 40px;
+	float: left;
+}
+
+.entry-header-wrapper {
+	padding: 20px 0 30px;
+}
+
+/* Fixes contact covered by fixed header after scroll to anker */
+:target:before {
+	height: 20px;
+	margin: -20px 0 0;
+}
+
+.content .entry {
+	padding: 15px;
+}
+
+/* Custom unordered list green ticks */
+.site-inner div:not(.pagination) ul li::before {
+	content: '';
+	margin-left: -25px;
+	margin-top: 5px;
+	position: absolute;
+	display: inline-block;
+	transform: rotate(45deg);
+	height: 18px;
+	width: 11px;
+	border-bottom: 5px solid var(--bookings-green-color);
+	border-right: 5px solid var(--bookings-green-color);
+	border-radius: 0;
+	background: none;
+}
+
+li {
+	margin-left: 8px;
+}
+
+
+
+/* WooCommerce
+---------------------------------------------------------------------------- */
+
+.wc-tabs {
+	display: none;
+}
+
+.woocommerce div.product .woocommerce-tabs .panel h2:first-of-type {
+	display: none;
+}
+
+.price {
+	display: none;
+}
+
+.woocommerce div.product {
+	padding: 0;
+}
+
+.woocommerce div.product p.price,
+.woocommerce div.product span.price {
+	color: var(--bookings-green-color);
+}
+
+.woocommerce div.product div.images.woocommerce-product-gallery {
+	width: 100%;
+}
+
+.woocommerce div.product div.summary {
+	width: 100%;
+}
+
+.woocommerce #respond input#submit.alt.disabled,
+.woocommerce #respond input#submit.alt.disabled:hover,
+.woocommerce #respond input#submit.alt:disabled,
+.woocommerce #respond input#submit.alt:disabled:hover,
+.woocommerce #respond input#submit.alt:disabled[disabled],
+.woocommerce #respond input#submit.alt:disabled[disabled]:hover,
+.woocommerce a.button.alt.disabled,
+.woocommerce a.button.alt.disabled:hover,
+.woocommerce a.button.alt:disabled,
+.woocommerce a.button.alt:disabled:hover,
+.woocommerce a.button.alt:disabled[disabled],
+.woocommerce a.button.alt:disabled[disabled]:hover,
+.woocommerce button.button.alt.disabled,
+.woocommerce button.button.alt.disabled:hover,
+.woocommerce button.button.alt:disabled,
+.woocommerce button.button.alt:disabled:hover,
+.woocommerce button.button.alt:disabled[disabled],
+.woocommerce button.button.alt:disabled[disabled]:hover,
+.woocommerce input.button.alt.disabled,
+.woocommerce input.button.alt.disabled:hover,
+.woocommerce input.button.alt:disabled,
+.woocommerce input.button.alt:disabled:hover,
+.woocommerce input.button.alt:disabled[disabled],
+.woocommerce input.button.alt:disabled[disabled]:hover {
+	background: var(--bookings-button-color);
+}
+
+.woocommerce #respond input#submit,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button {
+	font-size: 18px;
+	margin: 0;
+	line-height: unset;
+	padding: 12px 24px;
+	font-weight: 500;
+	border-radius: 5px;
+	color: #FFF;
+	background-color: var(--bookings-button-color);
+}
+
+.woocommerce #respond input#submit.alt,
+.woocommerce a.button.alt,
+.woocommerce button.button.alt,
+.woocommerce input.button.alt {
+	background: var(--bookings-button-color);
+}
+
+.woocommerce #respond input#submit.alt:hover,
+.woocommerce a.button.alt:hover,
+.woocommerce button.button.alt:hover,
+.woocommerce input.button.alt:hover {
+	background: var(--bookings-button-hover-color);
+}
+
+.woocommerce .col2-set .col-1,
+.woocommerce-page .col2-set .col-1 {
+	width: 100%;
+}
+
+.woocommerce .col2-set .col-2,
+.woocommerce-page .col2-set .col-2 {
+	width: 100%;
+	margin: 28px 0;
+}
+
+.woocommerce form .form-row .required {
+	color: var(--bookings-red-color);
+}
+
+.woocommerce-error {
+	border-top-color: var(--bookings-red-color);
+}
+
+.woocommerce-error::before {
+	color: var(--bookings-red-color);
+}
+
+.woocommerce form .form-row.woocommerce-invalid label {
+	color: var(--bookings-red-color);
+}
+
+.woocommerce form .form-row.woocommerce-invalid .select2-container,
+.woocommerce form .form-row.woocommerce-invalid input.input-text,
+.woocommerce form .form-row.woocommerce-invalid select {
+	border-color: var(--bookings-red-color);
+}
+
+.woocommerce form .form-row.woocommerce-validated .select2-container,
+.woocommerce form .form-row.woocommerce-validated input.input-text,
+.woocommerce form .form-row.woocommerce-validated select {
+	border-color: var(--bookings-green-color);
+}
+
+input,
+.input-text {
+	width: 100%;
+	height: 40px;
+	padding: 0 15px;
+	font-size: 17px;
+	color: #555;
+	border: 1px solid #DDD;
+	border-radius: 3px;
+}
+
+.woocommerce form .form-row textarea {
+	padding: 15px;
+	height: auto;
+	min-height: 120px;
+}
+
+.product_meta {
+	display: none;
+}
+
+:not(article).entry {
+	padding: 0;
+}
+
+.woocommerce-checkout #payment {
+	background: #F7F7F7;
+	margin-bottom: 50px;
+	border-radius: 5px;
+}
+
+.woocommerce-checkout #payment ul.payment_methods {
+	padding: 15px;
+    border-bottom: 0;
+}
+
+/* Make account? Checkbox */
+.woocommerce form .form-row label.checkbox, .woocommerce-page form .form-row label.checkbox {
+	display: flex;
+}
+
+.woocommerce form .form-row .input-checkbox {
+	margin: 10px 0 0 13px;
+	order: 2;
+	width: 20px;
+	height: 20px;
+}
+
+/* WooCommerce modal pop-up (add to shopping card) */
+.modal-secondary {
+	padding: 15px;
+}
+
+.woocommerce-error::before,
+.woocommerce-info::before,
+.woocommerce-message::before {
+	content: none;
+}
+
+.woocommerce-message {
+	border-top-color: var(--bookings-green-color);
+}
+
+.woocommerce-info {
+	border-top-color: var(--bookings-blue-color);
+}
+
+.woocommerce-error {
+	border-top-color: var(--bookings-red-color);
+}
+
+.woocommerce-error, .woocommerce-info, .woocommerce-message {
+	padding: 10px;
+	margin: 0 0 20px;
+	background-color: #F7F7F7;
+	color: var(--bookings-dark-gray-color);
+}
+
+.woocommerce a.remove {
+	color: #444 !important;
+	line-height: 0.8;
+	float: right;
+}
+
+.woocommerce a.remove:hover {
+	background: var(--bookings-red-color) !important;
+}
+
+.woocommerce-checkout #payment div.payment_box {
+	background: #E9E9E9;
+}
+
+.woocommerce-checkout #payment div.payment_box::before {
+	border: 1em solid #E9E9E9;
+	border-right-color: transparent;
+	border-left-color: transparent;
+	border-top-color: transparent;
+}
+
 
 /* WooCommerce (Bookings) hide stuff (TODO Puyih will move this to JS)
 --------------------------------------------- */
@@ -1138,3 +1469,16 @@ li {
 
 
 
+
+
+
+
+/* TEMP SOLUTION (TODO) DEACTIVATE HALF DAYS
+--------------------------------------------- */
+.booking-time-container .booking-time-options .radio-row:nth-child(2) {
+	display: none !important;
+}
+
+.booking-time-container .booking-time-options .radio-row:nth-child(3) {
+	display: none !important;
+}
