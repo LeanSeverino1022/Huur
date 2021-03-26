@@ -1,3 +1,4 @@
+$ = jQuery.noConflict();
 // throw new error('x');
 window.debugOn = 0; // for debugging
 
@@ -559,8 +560,8 @@ const bookingTabSteps = (function () {
                     return;
                 }
 
-                $("[name=wc_bookings_field_start_date_year]").val(userSelect.date.year).change();
-                $("[name=wc_bookings_field_start_date_month]").val(userSelect.date.month).change();
+                $("[name=wc_bookings_field_start_date_year]").val(userSelect.date.year);
+                $("[name=wc_bookings_field_start_date_month]").val(userSelect.date.month);
                 $("[name=wc_bookings_field_start_date_day]").val(userSelect.date.day).change();
             }
 
@@ -1091,7 +1092,7 @@ const dataService = {
 
     getSlotsByDate(date) {
         //if there are issue, check if date args is already formatted as 'YYYY-MM-DD'
-        const maxDate = moment($('.picker').data("default_date")).add(12, 'M').format('YYYY-MM-DD');
+        const maxDate =moment(date, "YYYY-MM-DD").add(1, 'days').format('YYYY-MM-DD');
         const api = `${gMainUrl}/wp-json/wc-bookings/v1/products/slots?min_date=${date}&max_date=${maxDate}`;
 
         return  $.getJSON(api);
