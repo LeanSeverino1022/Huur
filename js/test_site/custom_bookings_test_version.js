@@ -969,7 +969,10 @@ const bookingTabSteps = (function () {
 
         itemsContainer.on('click', '.add-bike-to-cart', function (e) {
             //non-disabled single_add_to_cart_button means everything is ok/ready for booking - see booking-form.js
-            if($('.single_add_to_cart_button').is(':disabled') ){
+            if (
+                $('.single_add_to_cart_button').is(':disabled') ||
+                $('.single_add_to_cart_button.disabled').length > 0
+               ){
                  //show some kind of error message to the user to reload... for the developer: this should not happen. check updates.
                  $('.generic-modal').html("<br><p> Is iets fout gegaan. U kunt de pagina opnieuw laden en het opnieuw proberen.</p>")
                  .modal({
