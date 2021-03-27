@@ -279,20 +279,7 @@ const manipulateDom = (function () {
         // 2. Create the tab contents
         const tab1Content = `
         <div id='tab-1' class='tab-step'>
-            <div class="booking-time-container">
-                <div class="booking-time-options">
-                    <div class="booking-steps-title-wrapper">
-                        <p>Kies tijd</p>
-                    </div>
 
-                    <div class="radio-row">
-                        <input type="radio" id="full_day" value="full_day" name="booking_time"/>
-                        <label for="full_day" class="light radio-label">
-                            <span class="full-day">ph Hele dag 09:00 - 17:00</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
         </div>`;
 
         const tab3Content = `
@@ -336,7 +323,7 @@ const manipulateDom = (function () {
             <div class="booking-steps-title-wrapper">
                 <p>Kies tijd</p>
             </div>
-            <div class="start-date-label js-toggle-date-time"></div>`;
+            <div class="start-date-label"></div>`;
 
         // Generice messages
         const genericModal = `<div class="generic-modal text-center" style="display: none"></div>`;
@@ -396,7 +383,6 @@ const manipulateDom = (function () {
         // When modal-primary is closed which is the case on page init, hide these elements
         $('.booking-popup-header').hide();
         $('.tab-step').hide(); // Hide all tab-steps by default
-        $('.booking-time-container').hide();
         $('.single_add_to_cart_button').hide();
         $('.wc-bookings-date-picker .start-date-label').hide();
     };
@@ -447,6 +433,7 @@ const bookingTabSteps = (function () {
             // #tab-* - destination tab...
             switch (event.currentTarget.getAttribute('href')) {
                 case '#tab-1':
+                    $('.wc-bookings-date-picker .start-date-label').text(uiText.displayDate());
                     $('input[name="booking_time"]').prop('checked', false);
                     resetShoppingCartFormTimesAndResource();
                     break;
@@ -541,14 +528,12 @@ const bookingTabSteps = (function () {
         $('body').on('calendarDateWasClicked', function (event, data) {
 
             bookingTabSteps.showPrimaryModal();
+            $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
 
             // Save locally user selected date
             userSelect.date.year = $("[name=wc_bookings_field_start_date_year]").val();
             userSelect.date.month = $("[name=wc_bookings_field_start_date_month]").val();
             userSelect.date.day = $("[name=wc_bookings_field_start_date_day]").val();
-
-            toggleCalendarAndTimeOptions();
-            uiText.updatingBookingTimeOptions();
         });
 
         $('body').on('afterResourceChangeSetDateAgain', function (event) {
@@ -602,33 +587,14 @@ const bookingTabSteps = (function () {
             $('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
         });
 
-        // STEP/TAB 1 event handlers
-        $('.js-toggle-date-time').on('click', () => {
-            $('.picker').toggleClass('hidden');
-            $('.booking-time-options').toggleClass('hidden', !$('.picker').is(":hidden"));
-        });
-
-        $('.booking-time-options').on('change', () => {
-
-            //On 02/21/21, we changed booking time options to just one(full-day). So this one just works like a button now.
-            //Maybe just change this to a button instead later if time permits
-
-            blocker.blockShoppingCart(1);
-
-            // Switch tab, update time, and build new cart items
-            $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
-        });
-
         // Shopping cart
         $('.expand-calendar').on('click', function () {
             // TODO repeated code, refactor
             var calendarToggleBtn = $('.wc-bookings-date-picker .start-date-label');
             var chooseDateLabel = $('.wc-bookings-date-picker .booking-steps-title-wrapper');
-            var timeOptionsContainer = $('.booking-time-options');
 
             calendarToggleBtn.show();
             chooseDateLabel.hide();
-            timeOptionsContainer.toggleClass('hidden', true);
             $('.picker').toggleClass('hidden', false);
         });
 
@@ -664,29 +630,6 @@ const bookingTabSteps = (function () {
         gFormCart.modal({
             modalClass: "modal modal-primary",
         });
-    };
-
-    // Handle tab step display (text & visibility)
-    const toggleCalendarAndTimeOptions = function () {
-
-        // UPDATE TAB 1 TEXTS AND VISIBILITIES
-        var calendarToggleBtn = $('.wc-bookings-date-picker .start-date-label');
-        var chooseDateLabel = $('.wc-bookings-date-picker .booking-steps-title-wrapper');
-        var timeOptionsContainer = $('.booking-time-options');
-
-        if (uiText.displayDate() == '') {
-            calendarToggleBtn.hide();
-            chooseDateLabel.show();
-            timeOptionsContainer.toggleClass('hidden', true);
-            $('.picker').toggleClass('hidden', false);
-        } else {
-            calendarToggleBtn.text(uiText.displayDate());
-
-            calendarToggleBtn.show();
-            chooseDateLabel.hide();
-            timeOptionsContainer.toggleClass('hidden', false)
-            $('.picker').toggleClass('hidden', true);
-        }
     };
 
     // @params el = element current target on shopping cart click event
@@ -827,7 +770,7 @@ const bookingTabSteps = (function () {
 
         $('.bikes-accordion-content').append(cartHTML);
 
-        blocker.unblockShoppingCart(1);
+//         blocker.unblockShoppingCart(1);
 
         //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
           var slotsRequest = dataService.getSlotsByDate(date).then( function(result) {
@@ -996,8 +939,6 @@ const bookingTabSteps = (function () {
         while ($.modal.getCurrent() != null) {
             $.modal.close();
         }
-
-        bookingTabSteps.showPrimaryModal();
     };
 
     const resetAllBikesPriceUi = function () {
@@ -1038,7 +979,6 @@ const bookingTabSteps = (function () {
     return {
         init,
         showPrimaryModal,
-        toggleCalendarAndTimeOptions,
         toggleAddToCartBtn,
         getCalendarDate,
         renderShoppingCartItems,
@@ -1207,10 +1147,10 @@ gFormCart.on($.modal.AFTER_CLOSE, function (event, modal) {
 
     // Hides non-modal-primary elements.
     $('.wc-bookings-date-picker .start-date-label').hide(); //always hide the choose date label
-    $('.picker').toggleClass('hidden', false); //and alwasys show the calendar
+    $('.picker').toggleClass('hidden', false);
+
     $('.booking-popup-header').hide();
     $('.single_add_to_cart_button').hide();
-    $('.booking-time-container').hide();
 
     $('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
 
@@ -1235,8 +1175,6 @@ gFormCart.on($.modal.OPEN, function (event, modal) {
     $('.single_add_to_cart_button').show();
     // $('form.cart').append($(".receipt"))
 
-    $('.booking-time-container').show();
-
     // If user has not selected a date yet, open the modal witht he datepicker calendar visible
     var userHasSelectedDate = $('.booking_date_year') && $('.booking_date_month') && $('.booking_date_day');
 
@@ -1244,7 +1182,7 @@ gFormCart.on($.modal.OPEN, function (event, modal) {
         $('.picker').toggleClass('hidden', false);
     }
 
-    bookingTabSteps.toggleCalendarAndTimeOptions();
+
     // To xfr
     $('input[name="booking_time"]').prop('checked', false);
 });
@@ -1284,14 +1222,6 @@ function updatePrevBtnVisibility() {
 * reminder:  place as much code related to setting dynamic strings here for one place access
 */
 const uiText = {
-
-    /**
-        *@params {date} selected date in the calendar(.picker)
-    */
-    updatingBookingTimeOptions() {
-        console.log("updatingBookingTimeOptions called")
-        $('.booking-time-options .full-day').text('Hele dag 09:00 - ' + uiText.fullDayReturnTime());
-    },
 
     fullDayReturnTime(date) {
         // Current rule is..bike can be returned at 6pm/18:00 on weekdays, and 5pm/17:00 on weekends.
