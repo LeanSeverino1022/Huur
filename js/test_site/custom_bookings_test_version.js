@@ -968,20 +968,18 @@ const bookingTabSteps = (function () {
         });
 
         itemsContainer.on('click', '.add-bike-to-cart', function (e) {
-
-            updateCartItemToUpdateDisplayPrice($(this).closest('.item'));
-
-            // Update form fields then trigger  add to cart button
-            var itemQuantity = $(this).closest('.item').find('[name="qty"]').val();
-            updateFormBikeQuantity(itemQuantity);
-
-            const resource_id = $(this).closest('.item').data('resource-id');
-            updateFormResource(resource_id);
-
-            const addToCartBtn = e.currentTarget;
-            addToCartBtnMakeReadyForTrigger($(addToCartBtn));
-
-            blocker.blockContentTemp('filling up booking form');
+            //non-disabled single_add_to_cart_button means everything is ok/ready for booking - see booking-form.js
+            if($('.single_add_to_cart_button').is(':disabled') ){
+                 //show some kind of error message to the user to reload... for the developer: this should not happen. check updates.
+                 $('.generic-modal').html("<br><p> Is iets fout gegaan. U kunt de pagina opnieuw laden en het opnieuw proberen.</p>")
+                 .modal({
+                        closeExisting: true,
+                        showClose: true,
+                        clickClose: true
+                    });
+            } else {
+                $('button.single_add_to_cart_button').click();
+            }
         });
     };
 
@@ -1251,17 +1249,6 @@ gFormCart.on($.modal.OPEN, function (event, modal) {
 gPostDataNumPersons.on('change', function () {
     $('.total-amount').text($('.woocommerce-Price-amount.amount').text());
 });
-
-// Add a class to add to cart btn so that it will be triggered once requirements(currently on end time is set) are fulfilled
-function addToCartBtnMakeReadyForTrigger(btn) {
-
-    // Make sure 1 only so there will be no chance of multiple triggers
-    if ($('.js-ready-to-trigger').length > 1)
-        return;
-
-    // Todo check every form input later
-    btn.addClass('js-ready-to-trigger');
-}
 
 function addToCartBtnTriggerIfReady(btn) {
     if (btn.hasClass('js-ready-to-trigger')) {
