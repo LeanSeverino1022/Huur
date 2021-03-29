@@ -260,8 +260,6 @@ const manipulateDom = (function () {
         <ul class="tabs-nav" style="display:none">
             <li class="js-tab-active"><a href="#tab-1" rel="nofollow">Datum & Tijd</a>
             </li>
-            <li><a href="#tab-3" rel="nofollow">Kies fiets</a>
-            </li>
             <li><a href="#tab-4" rel="nofollow">Kies maat</a>
             </li>
             <li><a href="#tab-5" rel="nofollow">Reserveer</a>
@@ -276,19 +274,6 @@ const manipulateDom = (function () {
 
         </div>`;
 
-        const tab3Content = `
-            <div id="tab-3" class="tab-step">
-                <div class="booking-steps-title-wrapper">
-                    <p>Kies fiets</p>
-                </div>
-                <div class="select-cat-content">
-                    <div class="cat-option js-go-select-resource">
-                        <div class="cat-option-content">
-                            Test
-                        </div>
-                    </div>
-                </div>
-            </div>`;
 
         const tab4Content = `
         <div id="tab-4" class="tab-step">
@@ -334,7 +319,6 @@ const manipulateDom = (function () {
         $j('#wc-bookings-booking-form').after(tab5Content); //step/tab 5
 
         $j('#wc-bookings-booking-form').prepend(tab4Content); //step/tab 4
-        $j('#wc-bookings-booking-form').prepend(tab3Content); //step/tab 3
         // $j('#wc-bookings-booking-form').prepend(tab2Content); //step 2
         $j('#wc-bookings-booking-form').prepend(tab1Content); //step 1
 
@@ -454,9 +438,7 @@ const bookingTabSteps = (function () {
 
             // ActiveTab on before tab switch
             switch (activeTab.children('a').attr('href')) {
-                case '#tab-3':
-                    $j('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
-                    break;
+
                 case '#tab-4':
                     $j('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
                     break;
