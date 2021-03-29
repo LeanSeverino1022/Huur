@@ -1247,9 +1247,7 @@ const uiText = {
 
     updateShoppingCartBookingInfo() {
         //update UIs
-
         $j('#tab-4 .selected-time').text(uiText.displayDate());
-
         $j('.pickup-time').text('09:00');
         $j('.return-time').text(uiText.fullDayReturnTime());
     },
@@ -1302,27 +1300,11 @@ function handleCalculateCostResponse(result = {}) {
             showClose: true,
             clickClose: true
         });
-
     }
-
 }
-
 
 /* Blocking user interactions. Shows loader/spinner */
 var blocker = {
-
-    blockShoppingCart() {
-
-        $j('form.cart').block({
-            message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
-            overlayCSS: mySettings.spinner.blockUIOverlayCSS,
-            css: { border: 0 },
-        });
-    },
-
-    unblockShoppingCart() {
-        $j('form.cart').unblock();
-    },
 
     blockContentTemp() {
         $j('form.cart').block({
