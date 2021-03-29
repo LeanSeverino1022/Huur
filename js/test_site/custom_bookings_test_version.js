@@ -81,7 +81,7 @@ $(document).ajaxSuccess(function (event, xhr, settings) {
              settings.url?.includes('wc_bookings_find_booked_day_blocks'))
      {
         // Make sure no blocked dates / red dates... clear select bicycle dropdown
-        removeCalendarBlockedDates();
+        removeCalendarBlockedDates(); //todo:check if still needed
 
     }
 
@@ -220,14 +220,8 @@ window.gFormCheckout = $('form[name=checkout]');
 window.gMainUrl = 'https://wpbeter-ontwikkelt.nl';
 
 // The actual form input elements used to process bookings. take note its an id
-
-
 window.gPostDataNumPersons = $('input[name="wc_bookings_field_persons"]');
 window.gPostDataResource = $('select[name="wc_bookings_field_resource"]');
-
-window.gPostDataDuration = $('input[name="wc_bookings_field_duration"]');
-
-
 
 window.gCartItemToUpdateDisplayPrice = null;
 function updateCartItemToUpdateDisplayPrice($el) {
@@ -246,7 +240,6 @@ let gResourceIds = []; // Format is { product[productid]: [array of resource ids
 let gResourcesData = [];
 
 let gCustomSlotsData = new Array(); // To contain slots available based on user selected date
-let gOneYearSlotsData = new Array(); // Contain slots  from today + 1year - this is a lot of data.
 
 
 // Manipulate the DOM to create our custom user experience. Stuff here can also be done in the theme files later
@@ -300,8 +293,8 @@ const manipulateDom = (function () {
         <div id="tab-4" class="tab-step">
             <div class="shopping-cart-container">
                 <div class="booking-steps-overview-wrapper">
-                    <p class="expand-calendar start-date-label go-to-choose-date"><span class="selected-time"></span></p>
-                    <p class="start-date-label go-to-choose-date"><span class="pickup-time"></span> - <span class="return-time"> </span></p>
+                    <p class="start-date-label go-to-choose-date"><span class="selected-time"></span></p>
+                    <p class="shopping-cart-time-text"><span class="pickup-time"></span> - <span class="return-time"> </span></p>
                 </div>
                 <ul class="bikes-accordion">
                     <li>
@@ -323,7 +316,7 @@ const manipulateDom = (function () {
             <div class="booking-steps-title-wrapper">
                 <p>Kies tijd</p>
             </div>
-            <div class="start-date-label"></div>`;
+            <div class="selected-date-label"></div>`;
 
         // Generice messages
         const genericModal = `<div class="generic-modal text-center" style="display: none"></div>`;
@@ -384,7 +377,7 @@ const manipulateDom = (function () {
         $('.booking-popup-header').hide();
         $('.tab-step').hide(); // Hide all tab-steps by default
         $('.single_add_to_cart_button').hide();
-        $('.wc-bookings-date-picker .start-date-label').hide();
+
     };
 
     return {
@@ -396,8 +389,6 @@ const manipulateDom = (function () {
 const bookingTabSteps = (function () {
 
     let userSelect = {
-        startTime: null,
-        endTime: null,
         date: {
             day: null,
             month: null,
@@ -409,7 +400,6 @@ const bookingTabSteps = (function () {
     let addedOrRemovedItemResourceName = null;
 
     const init = function () {
-
         initTabNavigation();
         registerEventHandlers();
 
@@ -433,9 +423,11 @@ const bookingTabSteps = (function () {
             // #tab-* - destination tab...
             switch (event.currentTarget.getAttribute('href')) {
                 case '#tab-1':
-                    $('.wc-bookings-date-picker .start-date-label').text(uiText.displayDate());
-                    $('input[name="booking_time"]').prop('checked', false);
+
+                    $('#tab-1 .selected-date-label').text(uiText.displayDate());
                     resetShoppingCartFormTimesAndResource();
+                     removeCalendarBlockedDates();
+
                     break;
                 case '#tab-4':
                     uiText.updateShoppingCartBookingInfo();
@@ -528,12 +520,14 @@ const bookingTabSteps = (function () {
         $('body').on('calendarDateWasClicked', function (event, data) {
 
             bookingTabSteps.showPrimaryModal();
-            $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
+
 
             // Save locally user selected date
             userSelect.date.year = $("[name=wc_bookings_field_start_date_year]").val();
             userSelect.date.month = $("[name=wc_bookings_field_start_date_month]").val();
             userSelect.date.day = $("[name=wc_bookings_field_start_date_day]").val();
+
+            $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
         });
 
         $('body').on('afterResourceChangeSetDateAgain', function (event) {
@@ -551,7 +545,7 @@ const bookingTabSteps = (function () {
             }
 
             blocker.unblockContentTemp('filling up booking form');
-            addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
+//             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
             toggleAddToCartBtn();
         });
 
@@ -560,10 +554,6 @@ const bookingTabSteps = (function () {
 
             // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
             const result = $.parseJSON(responseText);
-
-            // sometimes calendar dates become fully_booked and this is one
-            //part of the code that when reached, the blocked dates are already updated
-            removeCalendarBlockedDates();
 
             handleCalculateCostResponse(result);
         });
@@ -585,17 +575,6 @@ const bookingTabSteps = (function () {
 
         $('.go-to-choose-date').on('click', function () {
             $('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
-        });
-
-        // Shopping cart
-        $('.expand-calendar').on('click', function () {
-            // TODO repeated code, refactor
-            var calendarToggleBtn = $('.wc-bookings-date-picker .start-date-label');
-            var chooseDateLabel = $('.wc-bookings-date-picker .booking-steps-title-wrapper');
-
-            calendarToggleBtn.show();
-            chooseDateLabel.hide();
-            $('.picker').toggleClass('hidden', false);
         });
 
         $('.btn-top-book-more, .btn-bottom-book-more').on('click', function (e) {
@@ -774,9 +753,8 @@ const bookingTabSteps = (function () {
 
         //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
           var slotsRequest = dataService.getSlotsByDate(date).then( function(result) {
-                var tt;
-            //render
-            result.records.forEach( (slot,idx)=> {
+             //render
+             result.records.forEach( (slot,idx)=> {
 
                 let $item = $('.bikes-accordion-content .item').eq(idx);
 
@@ -784,7 +762,7 @@ const bookingTabSteps = (function () {
                 $item.find('[max]').attr("max", slot.available);
                 $item.find('.js-availability').text('Aantal beschikbaar: ' + slot.available);
 
-            })
+             })
 
             return "OK: bike details set!"
         }).then(function(status){
@@ -1146,7 +1124,7 @@ gFormCart.on($.modal.AFTER_CLOSE, function (event, modal) {
     bringBackFormCartToOriginalLocation();
 
     // Hides non-modal-primary elements.
-    $('.wc-bookings-date-picker .start-date-label').hide(); //always hide the choose date label
+
     $('.picker').toggleClass('hidden', false);
 
     $('.booking-popup-header').hide();
