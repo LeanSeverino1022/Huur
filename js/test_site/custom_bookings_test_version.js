@@ -1,17 +1,19 @@
-$ = jQuery.noConflict();
+var $j = jQuery.noConflict();
+
+
 // throw new error('x');
 window.debugOn = 0; // for debugging
 
-$( document ).ready(function() {
+$j(document).ready(function () {
 
-if (window.debugOn) {
-    $('.wc_bookings_field_duration').attr('type', '')
-    $('#wc_bookings_field_start_date').attr('type', '')
-    $('.form-field-wide').css('display', 'block')
-     $('.wc-bookings-date-picker-date-fields').css('display', 'block')
-}
+    if (window.debugOn) {
+        $j('.wc_bookings_field_duration').attr('type', '')
+        $j('#wc_bookings_field_start_date').attr('type', '')
+        $j('.form-field-wide').css('display', 'block')
+        $j('.wc-bookings-date-picker-date-fields').css('display', 'block')
+    }
 
-    console.log( "ready!" );
+    console.log("ready!");
 });
 
 'use strict';
@@ -72,14 +74,13 @@ const mySettings = {
 
 
 // Load right away. Don't put inside doc.ready since we need to verride default spinner by woocommerce right away
-$(document).ajaxSend(function (event, request, settings) {});
+$j(document).ajaxSend(function (event, request, settings) { });
 
-$(document).ajaxSuccess(function (event, xhr, settings) {
+$j(document).ajaxSuccess(function (event, xhr, settings) {
 
     //on when plugin knows what dates are booked
     if (typeof settings?.url === 'string' &&
-             settings.url?.includes('wc_bookings_find_booked_day_blocks'))
-     {
+        settings.url?.includes('wc_bookings_find_booked_day_blocks')) {
         // Make sure no blocked dates / red dates... clear select bicycle dropdown
         removeCalendarBlockedDates(); //todo:check if still needed
 
@@ -91,8 +92,8 @@ $(document).ajaxSuccess(function (event, xhr, settings) {
         settings.data.includes("action=wc_bookings_calculate_costs")
     ) {
 
-         if(getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.RESOURCE_CHANGE) {
-            $('body').trigger('afterResourceChangeSetDateAgain');
+        if (getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.RESOURCE_CHANGE) {
+            $j('body').trigger('afterResourceChangeSetDateAgain');
 
             getBlocksRequest.resetInitiator();
 
@@ -101,14 +102,14 @@ $(document).ajaxSuccess(function (event, xhr, settings) {
 
 
         myConsole.log("success wc_bookings_calculate_costs");
-        $('body').trigger('afterCalculateCostRequest', [xhr.responseText]);
+        $j('body').trigger('afterCalculateCostRequest', [xhr.responseText]);
 
 
     }
 
 });
 
-$(document).ajaxError(function (event, jqxhr, settings, thrownError) {
+$j(document).ajaxError(function (event, jqxhr, settings, thrownError) {
 
     // On change calendar month or year
     let findBookedDayBlocksRequest = typeof settings.url == 'string' &&
@@ -127,7 +128,7 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
         dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
     }
 
-   else if (calculateBookingCostRequest) {
+    else if (calculateBookingCostRequest) {
         dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
         blocker.unblockContentTemp('filling up booking form');
     }
@@ -135,7 +136,7 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     else if (checkoutAttempt) {
         dataService.notifyConnectionErrorOnCheckoutAttempt(jqxhr, jqxhr.statusText);
         // Remove this because it's showing the woocommerce-error container but with no error msg
-        $('.woocommerce-NoticeGroup-checkout').html('');
+        $j('.woocommerce-NoticeGroup-checkout').html('');
     }
 
     else if (deleteOrderAttempt) {
@@ -151,13 +152,13 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
 */
 
 // Custom event for devs to hook into before posting of products for processing- one-page-checkout-js
-$('body').on('opc_add_remove_product', function (event, data) {
+$j('body').on('opc_add_remove_product', function (event, data) {
     blocker.blockContentTemp('add remove product');
 });
 
 // Fired in one-page-checkout-js
 // Custom event for devs to hook into AFTER products HAVE BEEN processed - from opc
-$('body').on('after_opc_add_remove_product', function (event, data, response) {
+$j('body').on('after_opc_add_remove_product', function (event, data, response) {
     blocker.unblockContentTemp('add remove product');
 
     if (response.result !== 'success') {
@@ -167,7 +168,7 @@ $('body').on('after_opc_add_remove_product', function (event, data, response) {
     }
 
     if (data.action == 'pp_add_to_cart') {
-        $('.tabs-nav a[href="#tab-5"]').trigger('switchActiveTab');
+        $j('.tabs-nav a[href="#tab-5"]').trigger('switchActiveTab');
 
         const addedItem = gCartItemToUpdateDisplayPrice.closest('.item').find('.resource-name').text();
         bookingTabSteps.setAddedOrRemovedItemResourceName(addedItem);
@@ -176,7 +177,7 @@ $('body').on('after_opc_add_remove_product', function (event, data, response) {
     else if (data.action == 'pp_remove_from_cart') {
 
         if (data.update_key) {
-            const removedItem = $(`.cart_item.opc_cart_item[data-update_key=${data.update_key}]`).find('dd.variation-Fiets').text();
+            const removedItem = $j(`.cart_item.opc_cart_item[data-update_key=${data.update_key}]`).find('dd.variation-Fiets').text();
             bookingTabSteps.setAddedOrRemovedItemResourceName(removedItem);
         }
 
@@ -193,8 +194,8 @@ $('body').on('after_opc_add_remove_product', function (event, data, response) {
 
 // Event triggered in date-picker.js on after calendar day click only
 // wc_bookings_get_blocks ajaxsuccess is triggered on different occasions
-$('.wc-bookings-booking-form fieldset').on('date-selected', function (e, date, start_or_end_date) {
-    $('body').trigger('calendarDateWasClicked');
+$j('.wc-bookings-booking-form fieldset').on('date-selected', function (e, date, start_or_end_date) {
+    $j('body').trigger('calendarDateWasClicked');
     getBlocksRequest.setInitiator(getBlocksRequest.Triggers.DATE_SELECT);
 });
 
@@ -204,7 +205,7 @@ jQuery(document.body).on('checkout_error', function () {
     jQuery('html, body').stop();
     // Then apply our own scroll to checkout error
     document.getElementById("tab-5").scroll({
-        top: $('#opc-messages').outerHeight() - 10,
+        top: $j('#opc-messages').outerHeight() - 10,
         behavior: 'smooth'
     });
 });
@@ -215,13 +216,13 @@ jQuery(document.body).on('checkout_error', function () {
 const TIME_FORMAT = 'HH:mm';
 
 // Globals
-window.gFormCart = $('form.cart');
-window.gFormCheckout = $('form[name=checkout]');
+window.gFormCart = $j('form.cart');
+window.gFormCheckout = $j('form[name=checkout]');
 window.gMainUrl = 'https://wpbeter-ontwikkelt.nl';
 
 // The actual form input elements used to process bookings. take note its an id
-window.gPostDataNumPersons = $('input[name="wc_bookings_field_persons"]');
-window.gPostDataResource = $('select[name="wc_bookings_field_resource"]');
+window.gPostDataNumPersons = $j('input[name="wc_bookings_field_persons"]');
+window.gPostDataResource = $j('select[name="wc_bookings_field_resource"]');
 
 window.gCartItemToUpdateDisplayPrice = null;
 function updateCartItemToUpdateDisplayPrice($el) {
@@ -321,62 +322,62 @@ const manipulateDom = (function () {
         // Generice messages
         const genericModal = `<div class="generic-modal text-center" style="display: none"></div>`;
 
-        $('fieldset.wc-bookings-date-picker').prepend(htmlDateLabel); //step/tab 1
+        $j('fieldset.wc-bookings-date-picker').prepend(htmlDateLabel); //step/tab 1
 
         // We add the TABS NAV in the DOM
-        $('form.cart').prepend(htmlTabsNav);
-        $('form.cart').prepend(prevBtn);
+        $j('form.cart').prepend(htmlTabsNav);
+        $j('form.cart').prepend(prevBtn);
 
-        $('#wc-bookings-booking-form').addClass('tabs-stage');
+        $j('#wc-bookings-booking-form').addClass('tabs-stage');
 
         // Didnt' include tab 5 in bokings-form because this form is used by the plugin. it mess up stuff
-        $('#wc-bookings-booking-form').after(tab5Content); //step/tab 5
+        $j('#wc-bookings-booking-form').after(tab5Content); //step/tab 5
 
-        $('#wc-bookings-booking-form').prepend(tab4Content); //step/tab 4
-        $('#wc-bookings-booking-form').prepend(tab3Content); //step/tab 3
-        // $('#wc-bookings-booking-form').prepend(tab2Content); //step 2
-        $('#wc-bookings-booking-form').prepend(tab1Content); //step 1
+        $j('#wc-bookings-booking-form').prepend(tab4Content); //step/tab 4
+        $j('#wc-bookings-booking-form').prepend(tab3Content); //step/tab 3
+        // $j('#wc-bookings-booking-form').prepend(tab2Content); //step 2
+        $j('#wc-bookings-booking-form').prepend(tab1Content); //step 1
 
-        $('#wc-bookings-booking-form').append('<div class="tab-footers"></div');
-        $('.tab-footer')
-            .append($('.wc-bookings-booking-cost'))
-            .append($('.single_add_to_cart_button'));
+        $j('#wc-bookings-booking-form').append('<div class="tab-footers"></div');
+        $j('.tab-footer')
+            .append($j('.wc-bookings-booking-cost'))
+            .append($j('.single_add_to_cart_button'));
 
         // ADD CONTENT TO TAB SECTIONS
-        $('.block-picker.wc-bookings-time-block-picker')
+        $j('.block-picker.wc-bookings-time-block-picker')
             .parents('.form-field')
             .eq(0) // On debugOn comment
             .prependTo('#tab-1') //on debugOn comment
             .hide(); // On debugOn comment
 
-        $('.wc-bookings-date-picker').prependTo('#tab-1');
+        $j('.wc-bookings-date-picker').prependTo('#tab-1');
 
         // Change order of checkout form HTML elements
-        gFormCheckout.append(gFormCheckout.find($('#customer_details')), gFormCheckout.find($('#payment')));
-        $('#tab-5').append($('#opc-messages'), gFormCheckout);
+        gFormCheckout.append(gFormCheckout.find($j('#customer_details')), gFormCheckout.find($j('#payment')));
+        $j('#tab-5').append($j('#opc-messages'), gFormCheckout);
         // Add book again buttons
-        $('<button class="btn-top-book-more">Meer fietsen reserveren</button>').insertAfter($('#order_review_heading'))
-        $('<button class="btn-bottom-book-more">Meer fietsen reserveren</button>').insertAfter($('#order_review'));
+        $j('<button class="btn-top-book-more">Meer fietsen reserveren</button>').insertAfter($j('#order_review_heading'))
+        $j('<button class="btn-bottom-book-more">Meer fietsen reserveren</button>').insertAfter($j('#order_review'));
 
-        $('body').append(genericModal);
+        $j('body').append(genericModal);
     };
 
     const hideElementsForever = function () {
         if (window.debugOn) return;
         // Hide forever
-        $('.wc_bookings_field_persons').hide(); /* Hide num of persons form-field */
-        $('.wc_bookings_field_resource').hide(); /* Hide select bike form-field*/
-        $('.wc-bookings-time-block-picker').hide(); /* Start and end time inputs container*/
-        $('.wc-bookings-date-picker .booking-steps-title-wrapper').hide();
-        $('.wc_bookings_field_duration').hide();
+        $j('.wc_bookings_field_persons').hide(); /* Hide num of persons form-field */
+        $j('.wc_bookings_field_resource').hide(); /* Hide select bike form-field*/
+        $j('.wc-bookings-time-block-picker').hide(); /* Start and end time inputs container*/
+        $j('.wc-bookings-date-picker .booking-steps-title-wrapper').hide();
+        $j('.wc_bookings_field_duration').hide();
     };
 
     const hideElementsOnInit = function () {
 
         // When modal-primary is closed which is the case on page init, hide these elements
-        $('.booking-popup-header').hide();
-        $('.tab-step').hide(); // Hide all tab-steps by default
-        $('.single_add_to_cart_button').hide();
+        $j('.booking-popup-header').hide();
+        $j('.tab-step').hide(); // Hide all tab-steps by default
+        $j('.single_add_to_cart_button').hide();
 
     };
 
@@ -403,35 +404,35 @@ const bookingTabSteps = (function () {
         initTabNavigation();
         registerEventHandlers();
 
-        $('.tabs-nav a:first').trigger('switchActiveTab'); // Show the 1st tab by default
+        $j('.tabs-nav a:first').trigger('switchActiveTab'); // Show the 1st tab by default
     };
 
     const initTabNavigation = function () {
 
         // Register Tab Navigation Event Handlers
-        $('.tabs-nav a').on('switchActiveTab', function (event) {
+        $j('.tabs-nav a').on('switchActiveTab', function (event) {
 
             event.preventDefault();
             // Change nav tabs UI
-            $('.js-tab-active').removeClass('js-tab-active');
-            $(this).parent().addClass('js-tab-active');
+            $j('.js-tab-active').removeClass('js-tab-active');
+            $j(this).parent().addClass('js-tab-active');
 
-            // $('.tabs-stage .tab-step').hide();
-            $('.tab-step').hide(); // since we moved cart form for a bit... its no longer under tabs-stage
-            $($(this).attr('href')).show();
+            // $j('.tabs-stage .tab-step').hide();
+            $j('.tab-step').hide(); // since we moved cart form for a bit... its no longer under tabs-stage
+            $j($j(this).attr('href')).show();
 
             // #tab-* - destination tab...
             switch (event.currentTarget.getAttribute('href')) {
                 case '#tab-1':
 
-                    $('#tab-1 .selected-date-label').text(uiText.displayDate());
+                    $j('#tab-1 .selected-date-label').text(uiText.displayDate());
                     resetShoppingCartFormTimesAndResource();
-                     removeCalendarBlockedDates();
+                    removeCalendarBlockedDates();
 
                     break;
                 case '#tab-4':
                     uiText.updateShoppingCartBookingInfo();
-                    $('.bikes-accordion-content').empty();
+                    $j('.bikes-accordion-content').empty();
                     renderShoppingCartItems();
                     resetShoppingCartFormTimesAndResource();
                     break;
@@ -448,25 +449,25 @@ const bookingTabSteps = (function () {
 
         });
 
-        $('.prev-btn').on('click', function () {
-            var activeTab = $('.tabs-nav .js-tab-active');
+        $j('.prev-btn').on('click', function () {
+            var activeTab = $j('.tabs-nav .js-tab-active');
 
             // ActiveTab on before tab switch
             switch (activeTab.children('a').attr('href')) {
                 case '#tab-3':
-                    $('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
+                    $j('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
                     break;
                 case '#tab-4':
-                    $('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
+                    $j('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
                     break;
                 case '#tab-5':
-                    // $('.bikes-accordion-content').empty();
-                    $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
+                    // $j('.bikes-accordion-content').empty();
+                    $j('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
 
 
-                    $('.bikes-accordion input[name="qty"]').val(0);
-                    $('.add-bike-to-cart').toggleClass('disabled', true);
-                    $('.total-price').text("");
+                    $j('.bikes-accordion input[name="qty"]').val(0);
+                    $j('.add-bike-to-cart').toggleClass('disabled', true);
+                    $j('.total-price').text("");
 
                     break;
                 default:
@@ -479,15 +480,15 @@ const bookingTabSteps = (function () {
     const registerEventHandlers = function () {
 
         // MutationObserver for listening/detecting changes in the DOM
-        const target = $('.woocommerce-checkout-review-order .opc_order_review')[0];
+        const target = $j('.woocommerce-checkout-review-order .opc_order_review')[0];
         new MutationObserver(function (mutations) {
-            $('body').trigger('afterCartOrdersUiChanged');
+            $j('body').trigger('afterCartOrdersUiChanged');
         }).observe(target, {
             childList: true,
         });
 
         /* Currently triggered on when user triggers a shopping cart bike item action(change quantity, add-to-reservation) */
-        $('body').on('singleCartItemFocused', function (e) {
+        $j('body').on('singleCartItemFocused', function (e) {
 
             // If user is still active / still waiting for debounced startFillBookingForm event to trigger
             if (isWaitingForDebounce()) {
@@ -502,12 +503,12 @@ const bookingTabSteps = (function () {
             resetAllBikesPriceUi();
         });
 
-        $('body').on('startFillBookingForm', debounce(function (e, value, resource_id) {
+        $j('body').on('startFillBookingForm', debounce(function (e, value, resource_id) {
 
             // Notify that debounced startFillBookingForm event already triggered
             notifyEndDebounceWait();
 
-            $('.item').find('.add-bike-to-cart').toggleClass("disabled", true);
+            $j('.item').find('.add-bike-to-cart').toggleClass("disabled", true);
 
             unblockBikeItemControls();
 
@@ -517,40 +518,40 @@ const bookingTabSteps = (function () {
         }, 1000));
 
         // CUSTOM EVENTS
-        $('body').on('calendarDateWasClicked', function (event, data) {
+        $j('body').on('calendarDateWasClicked', function (event, data) {
 
             bookingTabSteps.showPrimaryModal();
 
 
             // Save locally user selected date
-            userSelect.date.year = $("[name=wc_bookings_field_start_date_year]").val();
-            userSelect.date.month = $("[name=wc_bookings_field_start_date_month]").val();
-            userSelect.date.day = $("[name=wc_bookings_field_start_date_day]").val();
+            userSelect.date.year = $j("[name=wc_bookings_field_start_date_year]").val();
+            userSelect.date.month = $j("[name=wc_bookings_field_start_date_month]").val();
+            userSelect.date.day = $j("[name=wc_bookings_field_start_date_day]").val();
 
-            $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
+            $j('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
         });
 
-        $('body').on('afterResourceChangeSetDateAgain', function (event) {
+        $j('body').on('afterResourceChangeSetDateAgain', function (event) {
             // On resource change, there are cases that the date resets. What we do here is set the date again using our saved user-selected date(see custom event calendarDateWasClicked)
-            if (!$("[name=wc_bookings_field_start_date_year]").val()) {
+            if (!$j("[name=wc_bookings_field_start_date_year]").val()) {
 
                 if (!userSelect.date.year || !userSelect.date.month || !userSelect.date.day) {
                     console.error('missing year || month || day');
                     return;
                 }
 
-                $("[name=wc_bookings_field_start_date_year]").val(userSelect.date.year);
-                $("[name=wc_bookings_field_start_date_month]").val(userSelect.date.month);
-                $("[name=wc_bookings_field_start_date_day]").val(userSelect.date.day).change();
+                $j("[name=wc_bookings_field_start_date_year]").val(userSelect.date.year);
+                $j("[name=wc_bookings_field_start_date_month]").val(userSelect.date.month);
+                $j("[name=wc_bookings_field_start_date_day]").val(userSelect.date.day).change();
             }
 
             blocker.unblockContentTemp('filling up booking form');
-//             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
+            //             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
             toggleAddToCartBtn();
         });
 
 
-        $('body').on('afterCalculateCostRequest', function (event, responseText) {
+        $j('body').on('afterCalculateCostRequest', function (event, responseText) {
 
             // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
             const result = $.parseJSON(responseText);
@@ -559,7 +560,7 @@ const bookingTabSteps = (function () {
         });
 
         // On after review orders UI / fragments have been updated
-        $('body').on('afterCartOrdersUiChanged', function (event) {
+        $j('body').on('afterCartOrdersUiChanged', function (event) {
 
             bookingTabSteps.updateCheckoutItems();
             // Changes in review orders also means opc messages have been updated so I also put the function to update the opc message(on add/delete item) here
@@ -569,28 +570,28 @@ const bookingTabSteps = (function () {
         // End CUSTOM EVENTS
 
         // Sales page buttons
-        $('.open-booking-popup').on('click', function () {
+        $j('.open-booking-popup').on('click', function () {
             bookingTabSteps.showPrimaryModal();
         });
 
-        $('.go-to-choose-date').on('click', function () {
-            $('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
+        $j('.go-to-choose-date').on('click', function () {
+            $j('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
         });
 
-        $('.btn-top-book-more, .btn-bottom-book-more').on('click', function (e) {
+        $j('.btn-top-book-more, .btn-bottom-book-more').on('click', function (e) {
             e.preventDefault();
-            $('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
+            $j('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
         });
 
-        $('.generic-modal').on('click', '.js-reload-page-btn', function (e) {
+        $j('.generic-modal').on('click', '.js-reload-page-btn', function (e) {
             location.reload();
         });
 
-        $('.generic-modal').on('click', '.js-restart-booking-btn', function (e) {
+        $j('.generic-modal').on('click', '.js-restart-booking-btn', function (e) {
             bookingTabSteps.resetBookingProcess();
         });
 
-        $('.generic-modal').on('click', '.js-close-modal', function (e) {
+        $j('.generic-modal').on('click', '.js-close-modal', function (e) {
             $.modal.close();
         });
 
@@ -620,11 +621,11 @@ const bookingTabSteps = (function () {
     const updateCheckoutItems = function () {
 
         // Remove the default productname and replace with variation-Fiets
-        $('.opc_cart_item .product-details').each((idx, el) => {
+        $j('.opc_cart_item .product-details').each((idx, el) => {
             // Replace the top most text with the bike type
-            $(el).contents()[0].textContent = $(el).find('.variation-Fiets > p').text();
-            $(el).find('.variation-Aantal').insertBefore($(el).find('dt.variation-Huurdatum'));
-            $(el).find('.variation-Fiets').css('opacity', 0);
+            $j(el).contents()[0].textContent = $j(el).find('.variation-Fiets > p').text();
+            $j(el).find('.variation-Aantal').insertBefore($j(el).find('dt.variation-Huurdatum'));
+            $j(el).find('.variation-Fiets').css('opacity', 0);
 
             // All code below to compute for rendered return time
             var dropoffTime = '';
@@ -632,11 +633,11 @@ const bookingTabSteps = (function () {
             // Modify the order review of time row.. from show starting time to show pickup and return time
 
             // Use the duration to determine end time
-            let durationInt = parseInt($(el).find('dd.variation-Duur').text());
+            let durationInt = parseInt($j(el).find('dd.variation-Duur').text());
 
             // We are just getting the text from the original order review items.. and using it to create our own display data
-            const orderPickupTime = $(el).find('dd.variation-Huurtijd').text();
-            let orderPickupDate = $(el).find('dd.variation-Huurdatum').text();
+            const orderPickupTime = $j(el).find('dd.variation-Huurtijd').text();
+            let orderPickupDate = $j(el).find('dd.variation-Huurdatum').text();
             orderPickupDate = convertDutchTranslatedDateToEnglish(orderPickupDate);
 
             const computedActualDropoffTime = moment(orderPickupTime, "HH:mm").add(durationInt, 'h').format("HH:mm");
@@ -654,7 +655,7 @@ const bookingTabSteps = (function () {
             }
 
             // Render the pickup and dropoff time
-            $(el).find('dd.variation-Huurtijd > p').text(`${orderPickupTime} - ${dropoffTime}`);
+            $j(el).find('dd.variation-Huurtijd > p').text(`${orderPickupTime} - ${dropoffTime}`);
 
         });
 
@@ -696,7 +697,7 @@ const bookingTabSteps = (function () {
 
     /* Get date picker DATE */
     const getCalendarDate = function () {
-        return $('.picker').datepicker("getDate");
+        return $j('.picker').datepicker("getDate");
     };
 
     const renderShoppingCartItems = function () {
@@ -709,11 +710,11 @@ const bookingTabSteps = (function () {
 
 
         //Build shopping cart UI
-        const cartHTML = gResourceIds.map( x => {
+        const cartHTML = gResourceIds.map(x => {
 
             //we already have the resource ids, but we also need to get the resource data to
             //get the retrieve the resource name
-            let resource = gResourcesData.find( elem => elem.id === x );
+            let resource = gResourcesData.find(elem => elem.id === x);
 
             const imageUrl = isElectricBike(resource.name) ? electricBikeImgUrl : normalBikeImgUrl;
 
@@ -747,25 +748,25 @@ const bookingTabSteps = (function () {
             </div>`;
         })
 
-        $('.bikes-accordion-content').append(cartHTML);
+        $j('.bikes-accordion-content').append(cartHTML);
 
         blocker.blockContentTemp("Get slots by date");
 
         //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
-          var slotsRequest = dataService.getSlotsByDate(date).then( function(result) {
-             //render
-             result.records.forEach( (slot,idx)=> {
+        var slotsRequest = dataService.getSlotsByDate(date).then(function (result) {
+            //render
+            result.records.forEach((slot, idx) => {
 
-                let $item = $('.bikes-accordion-content .item').eq(idx);
+                let $item = $j('.bikes-accordion-content .item').eq(idx);
 
                 $item.find('.js-slot-date').text(slot.date);
                 $item.find('[max]').attr("max", slot.available);
                 $item.find('.js-availability').text('Aantal beschikbaar: ' + slot.available);
 
-             })
+            })
 
             return "OK: bike details set!"
-        }).then(function(status){
+        }).then(function (status) {
             console.log(status);
             highlightNoAvailabilityItems();
             blocker.unblockContentTemp("Get slots by date");
@@ -775,7 +776,7 @@ const bookingTabSteps = (function () {
     // shows the bike description on the shopping cart page
     // params name = resource name of the bike ('S Mountainbike', 'M Elektrische mountainbike', etc)
     const printBikeDescription = function (name) {
-        const keyValue = Object.keys(mySettings.bikeDescription).find( key => {
+        const keyValue = Object.keys(mySettings.bikeDescription).find(key => {
             return key.toLowerCase() === name.trim().toLowerCase();
         });
 
@@ -786,7 +787,7 @@ const bookingTabSteps = (function () {
     const blockBikeItemControls = function (event) {
 
         // Disable only control of oher bike items not currently the one we are focused on
-        $('.item .js-quantity').not(gCartItemToUpdateDisplayPrice.closest('.item').find('.js-quantity')).block({
+        $j('.item .js-quantity').not(gCartItemToUpdateDisplayPrice.closest('.item').find('.js-quantity')).block({
             message: null,
             overlayCSS: {
                 backgroundColor: '#fff',
@@ -801,7 +802,7 @@ const bookingTabSteps = (function () {
     // When user is active changing quantity, prevent add to reservation enabling... changing quantity uses debounce so this is needed.
     const unblockBikeItemControls = function (event) {
         // Make plus-minus btns of all bike items  clickable again
-        $('.item .js-quantity').unblock();
+        $j('.item .js-quantity').unblock();
     };
 
     // Determine if item is electric bike. we can use ID too but this is ok for now
@@ -814,19 +815,19 @@ const bookingTabSteps = (function () {
 
     // We need to reset some inputs because on calendar select time, it triggers booking cost calculation. bookingform.js - if some dates are missing it doesn't trigger wc_bookings_calculate_costs
     const resetShoppingCartFormTimesAndResource = function () {
-        $('select#wc_bookings_field_resource').prop('selectedIndex', -1);
-        $('#wc_bookings_field_start_date').val('');
+        $j('select#wc_bookings_field_resource').prop('selectedIndex', -1);
+        $j('#wc_bookings_field_start_date').val('');
     }
 
     const runBikeCartScripts = function () {
         // Shopping cart bike items
-        const itemsContainer = $('.bikes-accordion-content');
+        const itemsContainer = $j('.bikes-accordion-content');
 
         // Used event delagation below since contents are dynamically created
         itemsContainer.on('click', '.minus-btn', function (e) {
             e.preventDefault();
 
-            const currentBike = $(this).closest('.item');
+            const currentBike = $j(this).closest('.item');
             const quantityField = currentBike.find('input[name=qty]');
 
             // Expecting only 1 quantity input field in each bike item
@@ -848,19 +849,19 @@ const bookingTabSteps = (function () {
             quantityField.val(newQuantity);  // Update UI quantity
 
             updateCartItemToUpdateDisplayPrice(currentBike);
-            $('body').trigger('singleCartItemFocused');
+            $j('body').trigger('singleCartItemFocused');
 
 
             // Start filling up the form
             const currentBikeResourceId = currentBike.data('resource-id');
-            $('body').trigger('startFillBookingForm', [newQuantity, currentBikeResourceId]);
+            $j('body').trigger('startFillBookingForm', [newQuantity, currentBikeResourceId]);
 
         });
 
         itemsContainer.on('click', '.plus-btn', function (e) {
             e.preventDefault();
 
-            const currentBike = $(this).closest('.item');
+            const currentBike = $j(this).closest('.item');
             const quantityField = currentBike.find('input[name=qty]');
 
             // Expecting only 1 quantity input field in each bike item
@@ -880,37 +881,37 @@ const bookingTabSteps = (function () {
             quantityField.val(newQuantity); // Update UI quantity amount
 
             updateCartItemToUpdateDisplayPrice(currentBike);
-            $('body').trigger('singleCartItemFocused');
+            $j('body').trigger('singleCartItemFocused');
 
 
             // Start filling up the form
             const currentBikeResourceId = currentBike.data('resource-id');
-            $('body').trigger('startFillBookingForm', [newQuantity, currentBikeResourceId]);
+            $j('body').trigger('startFillBookingForm', [newQuantity, currentBikeResourceId]);
 
         });
 
         itemsContainer.on('click', '.add-bike-to-cart', function (e) {
             //non-disabled single_add_to_cart_button means everything is ok/ready for booking - see booking-form.js
             if (
-                $('.single_add_to_cart_button').is(':disabled') ||
-                $('.single_add_to_cart_button.disabled').length > 0
-               ){
-                 //show some kind of error message to the user to reload... for the developer: this should not happen. check updates.
-                 $('.generic-modal').html("<br><p> Is iets fout gegaan. U kunt de pagina opnieuw laden en het opnieuw proberen.</p>")
-                 .modal({
+                $j('.single_add_to_cart_button').is(':disabled') ||
+                $j('.single_add_to_cart_button.disabled').length > 0
+            ) {
+                //show some kind of error message to the user to reload... for the developer: this should not happen. check updates.
+                $j('.generic-modal').html("<br><p> Is iets fout gegaan. U kunt de pagina opnieuw laden en het opnieuw proberen.</p>")
+                    .modal({
                         closeExisting: true,
                         showClose: true,
                         clickClose: true
                     });
             } else {
-                $('button.single_add_to_cart_button').click();
+                $j('button.single_add_to_cart_button').click();
             }
         });
     };
 
     // Reset quantity of the unfocused shopping cart items
     const resetUnfocusedBikesQuantity = function () {
-        $('.item .js-quantity input[name=qty]').not(gCartItemToUpdateDisplayPrice.closest('.item').find('.js-quantity input[name=qty]')).val(0);
+        $j('.item .js-quantity input[name=qty]').not(gCartItemToUpdateDisplayPrice.closest('.item').find('.js-quantity input[name=qty]')).val(0);
     };
 
     const resetBookingProcess = function () {
@@ -921,24 +922,24 @@ const bookingTabSteps = (function () {
     };
 
     const resetAllBikesPriceUi = function () {
-        $('.item .total-price').text("");
+        $j('.item .total-price').text("");
     }
 
     // Adds a class to items container so we can determine if user is still actively updating quantity and still waiting for debounce function to execute
     const notifyStartDebounceWait = function () {
-        const itemsContainer = $('.bikes-accordion-content');
+        const itemsContainer = $j('.bikes-accordion-content');
         itemsContainer.addClass('js-user-is-active');
     };
 
     const notifyEndDebounceWait = function () {
-        const itemsContainer = $('.bikes-accordion-content');
+        const itemsContainer = $j('.bikes-accordion-content');
         itemsContainer.removeClass('js-user-is-active');
     };
 
     // Check if debounce function(startFillBookingForm) hasn't executed yet
     // @returns true -  if still waiting / debounce hasn't executed yet
     const isWaitingForDebounce = function () {
-        const itemsContainer = $('.bikes-accordion-content');
+        const itemsContainer = $j('.bikes-accordion-content');
         return itemsContainer.hasClass('js-user-is-active');
     };
 
@@ -1012,10 +1013,10 @@ const dataService = {
 
     getSlotsByDate(date) {
         //if there are issue, check if date args is already formatted as 'YYYY-MM-DD'
-        const maxDate =moment(date, "YYYY-MM-DD").add(1, 'days').format('YYYY-MM-DD');
+        const maxDate = moment(date, "YYYY-MM-DD").add(1, 'days').format('YYYY-MM-DD');
         const api = `${gMainUrl}/wp-json/wc-bookings/v1/products/slots?min_date=${date}&max_date=${maxDate}`;
 
-        return  $.getJSON(api);
+        return $.getJSON(api);
     },
 
     logFail(jqXHR, textStatus, errorThrown) {
@@ -1027,7 +1028,7 @@ const dataService = {
 
         if (jqXHR.readyState == 0 || textStatus == 'timeout') {
 
-            $('.generic-modal').html(`
+            $j('.generic-modal').html(`
                 <div class="connection-error">
                     <div class="connection-error-message">${mySettings.errorMsg.reloadPage}</div>
                     <div class="btn-container">
@@ -1035,7 +1036,7 @@ const dataService = {
                     </div>
                 </div>`);
 
-            $('.generic-modal').modal({
+            $j('.generic-modal').modal({
                 showClose: false,
             });
         }
@@ -1046,7 +1047,7 @@ const dataService = {
 
         if (jqXHR.readyState == 0 || textStatus == 'timeout') {
 
-            $('.generic-modal').html(`
+            $j('.generic-modal').html(`
                 <div class="connection-error">
                     <div class="connection-error-message">${mySettings.errorMsg.tryAgain}</div>
                     <div class="btn-container">
@@ -1054,7 +1055,7 @@ const dataService = {
                     </div>
                 </div>`);
 
-            $('.generic-modal').modal({
+            $j('.generic-modal').modal({
                 closeExisting: false, // No need to close primary modal if it is already open.
                 showClose: false,
             });
@@ -1065,7 +1066,7 @@ const dataService = {
     notifyConnectionErrorOnCheckoutAttempt(jqXHR, textStatus) {
         if (jqXHR.readyState == 0 || textStatus == 'timeout') {
 
-            $('.generic-modal').html(`
+            $j('.generic-modal').html(`
                 <div class="connection-error">
                     <div class="connection-error-message">${mySettings.errorMsg.reserveAgain}</div>
                     <div class="btn-container">
@@ -1073,7 +1074,7 @@ const dataService = {
                     </div>
                 </div>`);
 
-            $('.generic-modal').modal({
+            $j('.generic-modal').modal({
                 closeExisting: false, // No need to close primary modal if it is already open.
                 showClose: false,
             });
@@ -1081,7 +1082,7 @@ const dataService = {
     }
 }
 
-$(document).ready(function () {
+$j(document).ready(function () {
 
     // Create our custom user experience. Stuff here can also be done in the theme files later when already familiar with WP
     manipulateDom.start();
@@ -1092,7 +1093,7 @@ $(document).ready(function () {
         changeMonth: true,
         changeYear: true,
     });
-    $(".picker").datepicker("option", "showOtherMonths", false);
+    $j(".picker").datepicker("option", "showOtherMonths", false);
 
     // Override jquery-modal defaults
     $.extend($.modal.defaults, {
@@ -1111,9 +1112,9 @@ $(document).ready(function () {
             dataService.notifyConnectionErrorReload(jqXHR, textStatus);
         });
 
-        dataService.getResources().done(resources => {
-            gResourcesData = resources;
-        })
+    dataService.getResources().done(resources => {
+        gResourcesData = resources;
+    })
 });
 
 
@@ -1126,12 +1127,12 @@ gFormCart.on($.modal.AFTER_CLOSE, function (event, modal) {
 
     // Hides non-modal-primary elements.
 
-    $('.picker').toggleClass('hidden', false);
+    $j('.picker').toggleClass('hidden', false);
 
-    $('.booking-popup-header').hide();
-    $('.single_add_to_cart_button').hide();
+    $j('.booking-popup-header').hide();
+    $j('.single_add_to_cart_button').hide();
 
-    $('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
+    $j('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
 
     // Unblock blockers
     blocker.unblockContentTemp('filling up booking form');
@@ -1149,31 +1150,31 @@ function bringBackFormCartToOriginalLocation() {
 // ON MODAL OPEN EVENT
 gFormCart.on($.modal.OPEN, function (event, modal) {
 
-    $('.booking-popup-header').show();
+    $j('.booking-popup-header').show();
 
-    $('.single_add_to_cart_button').show();
-    // $('form.cart').append($(".receipt"))
+    $j('.single_add_to_cart_button').show();
+    // $j('form.cart').append($j(".receipt"))
 
     // If user has not selected a date yet, open the modal witht he datepicker calendar visible
-    var userHasSelectedDate = $('.booking_date_year') && $('.booking_date_month') && $('.booking_date_day');
+    var userHasSelectedDate = $j('.booking_date_year') && $j('.booking_date_month') && $j('.booking_date_day');
 
     if (!userHasSelectedDate) {
-        $('.picker').toggleClass('hidden', false);
+        $j('.picker').toggleClass('hidden', false);
     }
 
 
     // To xfr
-    $('input[name="booking_time"]').prop('checked', false);
+    $j('input[name="booking_time"]').prop('checked', false);
 });
 
 gPostDataNumPersons.on('change', function () {
-    $('.total-amount').text($('.woocommerce-Price-amount.amount').text());
+    $j('.total-amount').text($j('.woocommerce-Price-amount.amount').text());
 });
 
 function addToCartBtnTriggerIfReady(btn) {
     if (btn.hasClass('js-ready-to-trigger')) {
         btn.removeClass('js-ready-to-trigger');
-        $('form.cart').find('button.single_add_to_cart_button').click();
+        $j('form.cart').find('button.single_add_to_cart_button').click();
     };
 }
 
@@ -1184,8 +1185,8 @@ function updateFormBikeQuantity(value) {
 
 // All hiding and showing of the prev button must be handled here...
 function updatePrevBtnVisibility() {
-    var activeTab = $('.tabs-nav .js-tab-active');
-    var btn = $('.prev-btn');
+    var activeTab = $j('.tabs-nav .js-tab-active');
+    var btn = $j('.prev-btn');
 
     // If its not tab-1 AND the button is hidden, then show it
     if (activeTab.children('a').attr('href') !== '#tab-1' && btn.not(':visible')) {
@@ -1205,7 +1206,7 @@ const uiText = {
     fullDayReturnTime(date) {
         // Current rule is..bike can be returned at 6pm/18:00 on weekdays, and 5pm/17:00 on weekends.
         // Doesn't change the cost, just change the UI
-        let calendarDate = $('.picker').datepicker("getDate");
+        let calendarDate = $j('.picker').datepicker("getDate");
 
         // If date argument is passed use it instead. if not get the current calendar date
         if (date) {
@@ -1221,9 +1222,9 @@ const uiText = {
     // Returns the formatted date(Mon 6 January) or returns  '' a success returns a string so return '' instead of null, undefined, false
     displayDate() {
 
-        var month = $('[name="wc_bookings_field_start_date_month"]').val(),
-            day = $('[name="wc_bookings_field_start_date_day"]').val(),
-            year = $('[name="wc_bookings_field_start_date_year"]').val();
+        var month = $j('[name="wc_bookings_field_start_date_month"]').val(),
+            day = $j('[name="wc_bookings_field_start_date_day"]').val(),
+            year = $j('[name="wc_bookings_field_start_date_year"]').val();
 
         // Keep this as it is which returns an empty string. Do not put any text value here because..
         //I'm using it on other parts of the codebase too - If ( !uiText.getDate() set text to 'choose date' )
@@ -1247,16 +1248,16 @@ const uiText = {
     updateShoppingCartBookingInfo() {
         //update UIs
 
-        $('#tab-4 .selected-time').text(uiText.displayDate());
+        $j('#tab-4 .selected-time').text(uiText.displayDate());
 
-        $('.pickup-time').text('09:00');
-        $('.return-time').text(uiText.fullDayReturnTime());
+        $j('.pickup-time').text('09:00');
+        $j('.return-time').text(uiText.fullDayReturnTime());
     },
 
     // Change default text(product name) to the resource name
     updateOpcMessageToShowResourceName() {
 
-        const wooMsg = $('#opc-messages .woocommerce-message');
+        const wooMsg = $j('#opc-messages .woocommerce-message');
         const newMsg = wooMsg.text().replace("Huur mountainbikes in Schoorl", bookingTabSteps.getAddedOrRemovedItemResourceName);
 
         wooMsg.text(newMsg);
@@ -1273,8 +1274,8 @@ function handleCalculateCostResponse(result = {}) {
     if (result.result == "SUCCESS") {
         // If success the returned html returns an el with class .woocommerce-Price-amount.amount
         // https://ourcodeworld.com/articles/read/376/how-to-strip-html-from-a-string-extract-only-text-content-in-javascript
-        if ($('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').length && gCartItemToUpdateDisplayPrice) {
-            var copiedAmtTxt = $('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
+        if ($j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').length && gCartItemToUpdateDisplayPrice) {
+            var copiedAmtTxt = $j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
             gCartItemToUpdateDisplayPrice.text(copiedAmtTxt);
             console.log("displaying price: " + copiedAmtTxt)
         }
@@ -1293,9 +1294,9 @@ function handleCalculateCostResponse(result = {}) {
         }
 
         // Todo: handle Please choose a resource type ERROR)
-        $('.generic-modal').html(result.html);
+        $j('.generic-modal').html(result.html);
 
-        $('.generic-modal').modal({
+        $j('.generic-modal').modal({
             closeExisting: false,
             escapeClose: true,
             showClose: true,
@@ -1312,7 +1313,7 @@ var blocker = {
 
     blockShoppingCart() {
 
-        $('form.cart').block({
+        $j('form.cart').block({
             message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
             overlayCSS: mySettings.spinner.blockUIOverlayCSS,
             css: { border: 0 },
@@ -1320,11 +1321,11 @@ var blocker = {
     },
 
     unblockShoppingCart() {
-        $('form.cart').unblock();
+        $j('form.cart').unblock();
     },
 
     blockContentTemp() {
-        $('form.cart').block({
+        $j('form.cart').block({
             message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
             overlayCSS: mySettings.spinner.blockUIOverlayCSS,
             css: { border: 0 },
@@ -1332,12 +1333,12 @@ var blocker = {
     },
 
     unblockContentTemp() {
-        $('form.cart').unblock();
+        $j('form.cart').unblock();
     },
 
     // @params message - just a custom msg for devs in the future to track when the block happens and ends
     blockCalendar(msg = '') {
-        $('.picker').block({
+        $j('.picker').block({
             message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
             overlayCSS: mySettings.spinner.blockUIOverlayCSS,
             css: { border: 0 },
@@ -1346,7 +1347,7 @@ var blocker = {
 
     // @params message - just a custom msg for devs in the future to track when the block happens and ends
     unblockCalendar(msg = '') {
-        $('.picker').unblock();
+        $j('.picker').unblock();
     },
 
 };
@@ -1355,25 +1356,25 @@ function isWeekend(date) {
     return moment(date).day() == 6 || moment(date).day() == 0; // a 0 or a 6 is a Weekend!;
 }
 
-$('.generic-modal').on($.modal.AFTER_CLOSE, function (event, modal) {
+$j('.generic-modal').on($.modal.AFTER_CLOSE, function (event, modal) {
     // HACK.. with the generic modal it takes twice to close to really close item
     var esc = $.Event("keydown", { keyCode: 27 });
-    $(this).trigger(esc);
+    $j(this).trigger(esc);
 });
 
 // This can just be done via css. checkout page hide the red text and and red border on Een account aanmaken? checkbox click
-$('.create-account').on('change', function () {
-    $('.woocommerce form .form-row.woocommerce-invalid input.input-text').css('border-color', 'rgb(221, 221, 221)');
-    $('.woocommerce form .form-row.woocommerce-invalid label').css('color', '#444')
+$j('.create-account').on('change', function () {
+    $j('.woocommerce form .form-row.woocommerce-invalid input.input-text').css('border-color', 'rgb(221, 221, 221)');
+    $j('.woocommerce form .form-row.woocommerce-invalid label').css('color', '#444')
 })
 
 // Color red items with no availability
 function highlightNoAvailabilityItems() {
     const numberPattern = /\d+/g;
 
-    $('.shopping-cart-container .js-availability').each(function (idx, el) {
+    $j('.shopping-cart-container .js-availability').each(function (idx, el) {
 
-        if( el.textContent.match(numberPattern) == null ) {
+        if (el.textContent.match(numberPattern) == null) {
             console.error('invalid availability amount');
             return;
         }
@@ -1381,7 +1382,7 @@ function highlightNoAvailabilityItems() {
         const avail = el.textContent.match(numberPattern)[0];
 
         let isOutOfStock = Number(avail) < 1;
-        $(this).css('color', isOutOfStock ? '#D83F35' : '#444')
+        $j(this).css('color', isOutOfStock ? '#D83F35' : '#444')
     })
 }
 
@@ -1400,8 +1401,8 @@ const debounce = function (func, delay) {
 // Make sure no blocked dates / red dates... clear select bicycle dropdown
 function removeCalendarBlockedDates() {
 
-    if( $('.ui-datepicker-calendar .fully_booked').length > 0 ) {
-        $('#wc_bookings_field_resource').prop('selectedIndex', -1).change();
+    if ($j('.ui-datepicker-calendar .fully_booked').length > 0) {
+        $j('#wc_bookings_field_resource').prop('selectedIndex', -1).change();
     }
     console.log('removeCalendarBlockedDates called');
 
@@ -1414,8 +1415,8 @@ myConsole.log = msg => {
 
 //DISABLE ALERTS
 function disableAlerts() {
-    window.alert = function() {};
-    alert = function() {
+    window.alert = function () { };
+    alert = function () {
         console.error('alert called')
     };
 }
