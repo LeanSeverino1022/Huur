@@ -554,7 +554,7 @@ const bookingTabSteps = (function () {
         $j('body').on('afterCalculateCostRequest', function (event, responseText) {
 
             // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
-            const result = $.parseJSON(responseText);
+            const result = $j.parseJSON(responseText);
 
             handleCalculateCostResponse(result);
         });
@@ -592,7 +592,7 @@ const bookingTabSteps = (function () {
         });
 
         $j('.generic-modal').on('click', '.js-close-modal', function (e) {
-            $.modal.close();
+            $j.modal.close();
         });
 
         // STEP/TAB 3 event handlers contained inside
@@ -601,7 +601,7 @@ const bookingTabSteps = (function () {
 
     const showPrimaryModal = function () {
 
-        let modalIsAlreadyShowing = $.modal.getCurrent() && $.modal.getCurrent().$elm.is(gFormCart);
+        let modalIsAlreadyShowing = $j.modal.getCurrent() && $j.modal.getCurrent().$elm.is(gFormCart);
 
         if (modalIsAlreadyShowing) {
             return;
@@ -916,8 +916,8 @@ const bookingTabSteps = (function () {
 
     const resetBookingProcess = function () {
         // Close all active modals
-        while ($.modal.getCurrent() != null) {
-            $.modal.close();
+        while ($j.modal.getCurrent() != null) {
+            $j.modal.close();
         }
     };
 
@@ -1007,16 +1007,16 @@ const getBlocksRequest = {
 const dataService = {
 
     // @params cb=callback
-    getProducts() { return $.getJSON(`${gMainUrl}/wp-json/wc-bookings/v1/products`) },
+    getProducts() { return $j.getJSON(`${gMainUrl}/wp-json/wc-bookings/v1/products`) },
 
-    getResources() { return $.getJSON(`${gMainUrl}/wp-json/wc-bookings/v1/resources`) },
+    getResources() { return $j.getJSON(`${gMainUrl}/wp-json/wc-bookings/v1/resources`) },
 
     getSlotsByDate(date) {
         //if there are issue, check if date args is already formatted as 'YYYY-MM-DD'
         const maxDate = moment(date, "YYYY-MM-DD").add(1, 'days').format('YYYY-MM-DD');
         const api = `${gMainUrl}/wp-json/wc-bookings/v1/products/slots?min_date=${date}&max_date=${maxDate}`;
 
-        return $.getJSON(api);
+        return $j.getJSON(api);
     },
 
     logFail(jqXHR, textStatus, errorThrown) {
@@ -1089,14 +1089,14 @@ $j(document).ready(function () {
     bookingTabSteps.init();
 
     // Override datepicker defaults.
-    $.datepicker.setDefaults({
+    $j.datepicker.setDefaults({
         changeMonth: true,
         changeYear: true,
     });
     $j(".picker").datepicker("option", "showOtherMonths", false);
 
     // Override jquery-modal defaults
-    $.extend($.modal.defaults, {
+    $j.extend($j.modal.defaults, {
         escapeClose: false,
         clickClose: false,
     });
@@ -1120,7 +1120,7 @@ $j(document).ready(function () {
 
 // Moving the calendar inside form.cart back to its original location when all modals closed
 
-gFormCart.on($.modal.AFTER_CLOSE, function (event, modal) {
+gFormCart.on($j.modal.AFTER_CLOSE, function (event, modal) {
 
     // Hide non-modal-primary elements
     bringBackFormCartToOriginalLocation();
@@ -1148,7 +1148,7 @@ function bringBackFormCartToOriginalLocation() {
 };
 
 // ON MODAL OPEN EVENT
-gFormCart.on($.modal.OPEN, function (event, modal) {
+gFormCart.on($j.modal.OPEN, function (event, modal) {
 
     $j('.booking-popup-header').show();
 
@@ -1356,9 +1356,9 @@ function isWeekend(date) {
     return moment(date).day() == 6 || moment(date).day() == 0; // a 0 or a 6 is a Weekend!;
 }
 
-$j('.generic-modal').on($.modal.AFTER_CLOSE, function (event, modal) {
+$j('.generic-modal').on($j.modal.AFTER_CLOSE, function (event, modal) {
     // HACK.. with the generic modal it takes twice to close to really close item
-    var esc = $.Event("keydown", { keyCode: 27 });
+    var esc = $j.Event("keydown", { keyCode: 27 });
     $j(this).trigger(esc);
 });
 
