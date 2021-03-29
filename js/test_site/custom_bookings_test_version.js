@@ -82,7 +82,7 @@ $j(document).ajaxSuccess(function (event, xhr, settings) {
     if (typeof settings?.url === 'string' &&
         settings.url?.includes('wc_bookings_find_booked_day_blocks')) {
         // Make sure no blocked dates / red dates... clear select bicycle dropdown
-        removeCalendarBlockedDates(); //todo:check if still needed
+        // removeCalendarBlockedDates(); //todo:check if still needed
 
     }
 
