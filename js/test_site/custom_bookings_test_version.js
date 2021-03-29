@@ -749,7 +749,7 @@ const bookingTabSteps = (function () {
 
         $('.bikes-accordion-content').append(cartHTML);
 
-//         blocker.unblockShoppingCart(1);
+        blocker.blockContentTemp("Get slots by date");
 
         //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
           var slotsRequest = dataService.getSlotsByDate(date).then( function(result) {
@@ -766,8 +766,9 @@ const bookingTabSteps = (function () {
 
             return "OK: bike details set!"
         }).then(function(status){
-            console.log(status)
+            console.log(status);
             highlightNoAvailabilityItems();
+            blocker.unblockContentTemp("Get slots by date");
         })
     };
 
