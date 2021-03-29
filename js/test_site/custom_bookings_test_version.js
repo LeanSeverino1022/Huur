@@ -753,7 +753,7 @@ const bookingTabSteps = (function () {
         blocker.blockContentTemp("Get slots by date");
 
         //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
-        var slotsRequest = dataService.getSlotsByDate(date).then(function (result) {
+        dataService.getSlotsByDate(date).then(function (result) {
             //render
             result.records.forEach((slot, idx) => {
 
