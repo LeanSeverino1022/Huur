@@ -1,17 +1,19 @@
 $ = jQuery.noConflict();
+
+
 // throw new error('x');
 window.debugOn = 0; // for debugging
 
-$( document ).ready(function() {
+$(document).ready(function () {
 
-if (window.debugOn) {
-    $('.wc_bookings_field_duration').attr('type', '')
-    $('#wc_bookings_field_start_date').attr('type', '')
-    $('.form-field-wide').css('display', 'block')
-     $('.wc-bookings-date-picker-date-fields').css('display', 'block')
-}
+    if (window.debugOn) {
+        $('.wc_bookings_field_duration').attr('type', '')
+        $('#wc_bookings_field_start_date').attr('type', '')
+        $('.form-field-wide').css('display', 'block')
+        $('.wc-bookings-date-picker-date-fields').css('display', 'block')
+    }
 
-    console.log( "ready!" );
+    console.log("ready!");
 });
 
 'use strict';
@@ -72,14 +74,13 @@ const mySettings = {
 
 
 // Load right away. Don't put inside doc.ready since we need to verride default spinner by woocommerce right away
-$(document).ajaxSend(function (event, request, settings) {});
+$(document).ajaxSend(function (event, request, settings) { });
 
 $(document).ajaxSuccess(function (event, xhr, settings) {
 
     //on when plugin knows what dates are booked
     if (typeof settings?.url === 'string' &&
-             settings.url?.includes('wc_bookings_find_booked_day_blocks'))
-     {
+        settings.url?.includes('wc_bookings_find_booked_day_blocks')) {
         // Make sure no blocked dates / red dates... clear select bicycle dropdown
         removeCalendarBlockedDates(); //todo:check if still needed
 
@@ -91,7 +92,7 @@ $(document).ajaxSuccess(function (event, xhr, settings) {
         settings.data.includes("action=wc_bookings_calculate_costs")
     ) {
 
-         if(getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.RESOURCE_CHANGE) {
+        if (getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.RESOURCE_CHANGE) {
             $('body').trigger('afterResourceChangeSetDateAgain');
 
             getBlocksRequest.resetInitiator();
@@ -127,7 +128,7 @@ $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
         dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
     }
 
-   else if (calculateBookingCostRequest) {
+    else if (calculateBookingCostRequest) {
         dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
         blocker.unblockContentTemp('filling up booking form');
     }
@@ -426,7 +427,7 @@ const bookingTabSteps = (function () {
 
                     $('#tab-1 .selected-date-label').text(uiText.displayDate());
                     resetShoppingCartFormTimesAndResource();
-                     removeCalendarBlockedDates();
+                    removeCalendarBlockedDates();
 
                     break;
                 case '#tab-4':
@@ -545,7 +546,7 @@ const bookingTabSteps = (function () {
             }
 
             blocker.unblockContentTemp('filling up booking form');
-//             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
+            //             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
             toggleAddToCartBtn();
         });
 
@@ -709,11 +710,11 @@ const bookingTabSteps = (function () {
 
 
         //Build shopping cart UI
-        const cartHTML = gResourceIds.map( x => {
+        const cartHTML = gResourceIds.map(x => {
 
             //we already have the resource ids, but we also need to get the resource data to
             //get the retrieve the resource name
-            let resource = gResourcesData.find( elem => elem.id === x );
+            let resource = gResourcesData.find(elem => elem.id === x);
 
             const imageUrl = isElectricBike(resource.name) ? electricBikeImgUrl : normalBikeImgUrl;
 
@@ -752,9 +753,9 @@ const bookingTabSteps = (function () {
         blocker.blockContentTemp("Get slots by date");
 
         //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
-          var slotsRequest = dataService.getSlotsByDate(date).then( function(result) {
-             //render
-             result.records.forEach( (slot,idx)=> {
+        var slotsRequest = dataService.getSlotsByDate(date).then(function (result) {
+            //render
+            result.records.forEach((slot, idx) => {
 
                 let $item = $('.bikes-accordion-content .item').eq(idx);
 
@@ -762,10 +763,10 @@ const bookingTabSteps = (function () {
                 $item.find('[max]').attr("max", slot.available);
                 $item.find('.js-availability').text('Aantal beschikbaar: ' + slot.available);
 
-             })
+            })
 
             return "OK: bike details set!"
-        }).then(function(status){
+        }).then(function (status) {
             console.log(status);
             highlightNoAvailabilityItems();
             blocker.unblockContentTemp("Get slots by date");
@@ -775,7 +776,7 @@ const bookingTabSteps = (function () {
     // shows the bike description on the shopping cart page
     // params name = resource name of the bike ('S Mountainbike', 'M Elektrische mountainbike', etc)
     const printBikeDescription = function (name) {
-        const keyValue = Object.keys(mySettings.bikeDescription).find( key => {
+        const keyValue = Object.keys(mySettings.bikeDescription).find(key => {
             return key.toLowerCase() === name.trim().toLowerCase();
         });
 
@@ -894,10 +895,10 @@ const bookingTabSteps = (function () {
             if (
                 $('.single_add_to_cart_button').is(':disabled') ||
                 $('.single_add_to_cart_button.disabled').length > 0
-               ){
-                 //show some kind of error message to the user to reload... for the developer: this should not happen. check updates.
-                 $('.generic-modal').html("<br><p> Is iets fout gegaan. U kunt de pagina opnieuw laden en het opnieuw proberen.</p>")
-                 .modal({
+            ) {
+                //show some kind of error message to the user to reload... for the developer: this should not happen. check updates.
+                $('.generic-modal').html("<br><p> Is iets fout gegaan. U kunt de pagina opnieuw laden en het opnieuw proberen.</p>")
+                    .modal({
                         closeExisting: true,
                         showClose: true,
                         clickClose: true
@@ -1012,10 +1013,10 @@ const dataService = {
 
     getSlotsByDate(date) {
         //if there are issue, check if date args is already formatted as 'YYYY-MM-DD'
-        const maxDate =moment(date, "YYYY-MM-DD").add(1, 'days').format('YYYY-MM-DD');
+        const maxDate = moment(date, "YYYY-MM-DD").add(1, 'days').format('YYYY-MM-DD');
         const api = `${gMainUrl}/wp-json/wc-bookings/v1/products/slots?min_date=${date}&max_date=${maxDate}`;
 
-        return  $.getJSON(api);
+        return $.getJSON(api);
     },
 
     logFail(jqXHR, textStatus, errorThrown) {
@@ -1111,9 +1112,9 @@ $(document).ready(function () {
             dataService.notifyConnectionErrorReload(jqXHR, textStatus);
         });
 
-        dataService.getResources().done(resources => {
-            gResourcesData = resources;
-        })
+    dataService.getResources().done(resources => {
+        gResourcesData = resources;
+    })
 });
 
 
@@ -1373,7 +1374,7 @@ function highlightNoAvailabilityItems() {
 
     $('.shopping-cart-container .js-availability').each(function (idx, el) {
 
-        if( el.textContent.match(numberPattern) == null ) {
+        if (el.textContent.match(numberPattern) == null) {
             console.error('invalid availability amount');
             return;
         }
@@ -1400,7 +1401,7 @@ const debounce = function (func, delay) {
 // Make sure no blocked dates / red dates... clear select bicycle dropdown
 function removeCalendarBlockedDates() {
 
-    if( $('.ui-datepicker-calendar .fully_booked').length > 0 ) {
+    if ($('.ui-datepicker-calendar .fully_booked').length > 0) {
         $('#wc_bookings_field_resource').prop('selectedIndex', -1).change();
     }
     console.log('removeCalendarBlockedDates called');
@@ -1414,8 +1415,8 @@ myConsole.log = msg => {
 
 //DISABLE ALERTS
 function disableAlerts() {
-    window.alert = function() {};
-    alert = function() {
+    window.alert = function () { };
+    alert = function () {
         console.error('alert called')
     };
 }
