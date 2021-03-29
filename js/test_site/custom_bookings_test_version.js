@@ -19,6 +19,8 @@ $j(document).ready(function () {
 'use strict';
 
 // Config settings for user / Tycho to modify
+window.gMainUrl = 'https://wpbeter-ontwikkelt.nl';
+
 const mySettings = {
     spinner: {
         blockUIOverlayCSS: {
@@ -121,7 +123,7 @@ $j(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     let checkoutAttempt = settings.type == "POST" && (typeof settings.data === 'string' && settings.url.includes("wc-ajax=checkout"));
 
     let deleteOrderAttempt = typeof settings.data === 'string' &&
-        settings.data.includes('action=pp_remove_from_cart')
+        settings.data.includes('action=pp_remove_from_cart');
 
     if (findBookedDayBlocksRequest) {
         blocker.unblockCalendar();
@@ -140,7 +142,7 @@ $j(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     }
 
     else if (deleteOrderAttempt) {
-        alert("Connection Error. Check your internet connection and try again.")
+        alert("Connection Error. Check your internet connection and try again.");
         blocker.unblockContentTemp('add remove product');
         // For now just unblock the blocker. maybe we can also add a dataService.notifyConnectionError* to show message on failed delete
 
@@ -218,7 +220,6 @@ const TIME_FORMAT = 'HH:mm';
 // Globals
 window.gFormCart = $j('form.cart');
 window.gFormCheckout = $j('form[name=checkout]');
-window.gMainUrl = 'https://wpbeter-ontwikkelt.nl';
 
 // The actual form input elements used to process bookings. take note its an id
 window.gPostDataNumPersons = $j('input[name="wc_bookings_field_persons"]');
