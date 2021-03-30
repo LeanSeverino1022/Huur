@@ -1353,13 +1353,14 @@ function highlightNoAvailabilityItems() {
 
 const debounce = function (func, delay) {
 
-    let debounceTimer
+    let timeoutID
     return function () {
-        const context = this; // Box-1 or box-2 el
-        const args = arguments
-        clearTimeout(debounceTimer)
-        debounceTimer
-            = setTimeout(() => func.apply(context, args), delay)
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeoutID);
+        timeoutID = setTimeout(() => {
+            func.apply(context, args)
+        }, delay)
     }
 }
 
