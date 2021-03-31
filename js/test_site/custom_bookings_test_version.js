@@ -545,9 +545,36 @@ const bookingTabSteps = (function () {
         $j('body').on('afterCalculateCostRequest', function (event, responseText) {
 
             // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
-            const result = $j.parseJSON(responseText);
+            const response = $j.parseJSON(responseText);
 
-            handleCalculateCostResponse(result);
+            if (response.result == "SUCCESS") {
+                // If success the returned html returns an el with class .woocommerce-Price-amount.amount
+                // https://ourcodeworld.com/articles/read/376/how-to-strip-html-from-a-string-extract-only-text-content-in-javascript
+                if ($j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').length && gCartItemToUpdateDisplayPrice) {
+                    var copiedAmtTxt = $j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
+                    gCartItemToUpdateDisplayPrice.text(copiedAmtTxt);
+                    console.log("displaying price: " + copiedAmtTxt)
+                    bookingTabSteps.toggleAddToCartBtn();
+                }
+
+            } else if (response.result == "ERROR") {
+               //hulpmiddel - resource
+                const substrings = ['minumum aantal personen','minimum','Date is required','Datum','resource','hulpmiddel'];
+
+                if(substrings.some(s => response.html.includes(s))) {
+                    return;
+                }
+
+                $j('.generic-modal').html(response.html);
+
+                $j('.generic-modal').modal({
+                    closeExisting: false,
+                    escapeClose: true,
+                    showClose: true,
+                    clickClose: true
+                });
+            }
+
         });
 
         // On after review orders UI / fragments have been updated
@@ -1255,43 +1282,6 @@ const uiText = {
 
         // Render new opc msg with slidedown effect..
         wooMsg.hide().slideDown("fast");
-    }
-}
-
-// Temporary for now. move somewhere later
-// For now this just copies amount from woocommerce-Price-amount amount. TEXT
-function handleCalculateCostResponse(result = {}) {
-
-    if (result.result == "SUCCESS") {
-        // If success the returned html returns an el with class .woocommerce-Price-amount.amount
-        // https://ourcodeworld.com/articles/read/376/how-to-strip-html-from-a-string-extract-only-text-content-in-javascript
-        if ($j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').length && gCartItemToUpdateDisplayPrice) {
-            var copiedAmtTxt = $j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
-            gCartItemToUpdateDisplayPrice.text(copiedAmtTxt);
-            console.log("displaying price: " + copiedAmtTxt)
-            bookingTabSteps.toggleAddToCartBtn();
-        }
-
-    } else if (result.result == "ERROR") {
-
-        // Remove the minimum persons = 1 error and some..
-        if (result.html.includes('minumum aantal personen') ||
-            result.html.includes('minimum') ||
-            result.html.includes('Date is required') ||
-            result.html.includes('Datum') ||
-            result.html.includes('hulpmiddel')) { //please choose a resource
-            return;
-        }
-
-
-        $j('.generic-modal').html(result.html);
-
-        $j('.generic-modal').modal({
-            closeExisting: false,
-            escapeClose: true,
-            showClose: true,
-            clickClose: true
-        });
     }
 }
 
