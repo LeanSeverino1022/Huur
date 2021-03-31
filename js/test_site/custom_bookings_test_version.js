@@ -95,20 +95,22 @@ $j(document).ajaxSuccess(function (event, xhr, settings) {
     ) {
 
         if (getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.RESOURCE_CHANGE) {
+           //when you change resources, the date resets so we need to set it again.
             $j('body').trigger('afterResourceChangeSetDateAgain');
-
             getBlocksRequest.resetInitiator();
 
-            return;
-        }
+            blocker.unblockContentTemp('resource id change triggered');
+            return; //return to prevent afterCalculateCostRequest since we need to reset date
+        } else if (getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.QUANTITY_CHANGE) {
+            getBlocksRequest.resetInitiator();
 
+            blocker.unblockContentTemp('quantity change triggered');
+        }
 
         myConsole.log("success wc_bookings_calculate_costs");
         $j('body').trigger('afterCalculateCostRequest', [xhr.responseText]);
 
-
     }
-
 });
 
 $j(document).ajaxError(function (event, jqxhr, settings, thrownError) {
@@ -166,7 +168,6 @@ $j('body').on('after_opc_add_remove_product', function (event, data, response) {
     if (response.result !== 'success') {
         // Todo: if unsuccessful just proceed to cart page, scroll to opc-messages. let the opc handle it. return early
         console.error(response.messages)
-
     }
 
     if (data.action == 'pp_add_to_cart') {
@@ -486,7 +487,7 @@ const bookingTabSteps = (function () {
             resetAllBikesPriceUi();
         });
 
-        $j('body').on('startFillBookingForm', debounce(function (e, value, resource_id) {
+        $j('body').on('startFillBookingForm', debounce(function (e, quantity, resource_id) {
 
             // Notify that debounced startFillBookingForm event already triggered
             notifyEndDebounceWait();
@@ -495,16 +496,23 @@ const bookingTabSteps = (function () {
 
             unblockBikeItemControls();
 
-            updateFormBikeQuantity(value);
-            updateFormResource(resource_id);
-            blocker.blockContentTemp('filling up booking form');
+            var triggerChangeEvt = null;
+            //If quantity is the only thing that changed... then just update quantity amt and trigger change()
+            if (onlyQuantityWasUpdated(quantity, resource_id)) {
+                updateFormBikeQuantity(quantity, triggerChangeEvt = true);
+                blocker.blockContentTemp('quantity change triggered');
+            } else {
+                updateFormBikeQuantity(quantity, triggerChangeEvt = false);
+                updateFormResource(resource_id);
+                blocker.blockContentTemp('resource id change triggered');
+            }
+
         }, 1000));
 
         // CUSTOM EVENTS
         $j('body').on('calendarDateWasClicked', function (event, data) {
 
             bookingTabSteps.showPrimaryModal();
-
 
             // Save locally user selected date
             userSelect.date.year = $j("[name=wc_bookings_field_start_date_year]").val();
@@ -528,9 +536,9 @@ const bookingTabSteps = (function () {
                 $j("[name=wc_bookings_field_start_date_day]").val(userSelect.date.day).change();
             }
 
-            blocker.unblockContentTemp('filling up booking form');
+
             //             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
-            toggleAddToCartBtn();
+
         });
 
 
@@ -794,7 +802,29 @@ const bookingTabSteps = (function () {
             return name.toLowerCase().includes("elektrische");
 
         console.warn('Passed a non string. Check!')
+    };
+
+    function onlyQuantityWasUpdated(new_qty, new_resource_id) {
+        //make sure no required fields are empty
+        //before proceeding to comparing if values(old & new) are the same to prevent (null == nul) which is true
+        if(!allRequiredFieldsIsNotEmpty()) {
+            return false; //some fields are empty
+        }
+
+        //compare if values are same except quantity/wc_bookings_field_persons
+        //note: duration and product id doesn't change at all for this booking sys version
+        if (
+        gPostDataResource.val() != new_resource_id ||
+        $j('input[name="wc_bookings_field_start_date_day"]').val() != userSelect.date.day ||
+        $j('input[name="wc_bookings_field_start_date_month"]').val() != userSelect.date.month ||
+        $j('input[name="wc_bookings_field_start_date_year"]').val() != userSelect.date.year) {
+            return false;
+        }
+
+        return Number(gPostDataNumPersons.val()) !== Number(new_qty);
     }
+
+
 
     // We need to reset some inputs because on calendar select time, it triggers booking cost calculation. bookingform.js - if some dates are missing it doesn't trigger wc_bookings_calculate_costs
     const resetShoppingCartFormTimesAndResource = function () {
@@ -822,13 +852,11 @@ const bookingTabSteps = (function () {
                 return;
             }
 
-            // Deduct 1
             const newQuantity = oldQuantity - 1;
             quantityField.val(newQuantity);  // Update UI quantity
 
             updateCartItemToUpdateDisplayPrice(currentBike);
             $j('body').trigger('singleCartItemFocused');
-
 
             // Start filling up the form
             const currentBikeResourceId = currentBike.data('resource-id');
@@ -851,7 +879,7 @@ const bookingTabSteps = (function () {
             }
 
             const newQuantity = oldQuantity + 1;
-            quantityField.val(newQuantity); // Update UI quantity amount
+            quantityField.val(newQuantity); // Update UI quantity
 
             updateCartItemToUpdateDisplayPrice(currentBike);
             $j('body').trigger('singleCartItemFocused');
@@ -864,21 +892,9 @@ const bookingTabSteps = (function () {
         });
 
         itemsContainer.on('click', '.add-bike-to-cart', function (e) {
-            //non-disabled single_add_to_cart_button means everything is ok/ready for booking - see booking-form.js
-            if (
-                $j('.single_add_to_cart_button').is(':disabled') ||
-                $j('.single_add_to_cart_button.disabled').length > 0
-            ) {
-                //show some kind of error message to the user to reload... for the developer: this should not happen. check updates.
-                $j('.generic-modal').html("<br><p> Is iets fout gegaan. U kunt de pagina opnieuw laden en het opnieuw proberen.</p>")
-                    .modal({
-                        closeExisting: true,
-                        showClose: true,
-                        clickClose: true
-                    });
-            } else {
-                $j('button.single_add_to_cart_button').click();
-            }
+
+            $j('button.single_add_to_cart_button').click();
+
         });
     };
 
@@ -900,13 +916,11 @@ const bookingTabSteps = (function () {
 
     // Adds a class to items container so we can determine if user is still actively updating quantity and still waiting for debounce function to execute
     const notifyStartDebounceWait = function () {
-
         const itemsContainer = $j('.bikes-accordion-content');
         itemsContainer.addClass('js-user-is-active');
     };
 
     const notifyEndDebounceWait = function () {
-
         const itemsContainer = $j('.bikes-accordion-content');
         itemsContainer.removeClass('js-user-is-active');
     };
@@ -954,7 +968,7 @@ const getBlocksRequest = {
     Triggers: {
         DATE_SELECT: 1,
         RESOURCE_CHANGE: 2,
-        DURATION_CHANGE: 3
+        QUANTITY_CHANGE: 3
     },
 
     initiator: '',
@@ -1114,7 +1128,6 @@ gFormCart.on($j.modal.AFTER_CLOSE, function (event, modal) {
 });
 
 function bringBackFormCartToOriginalLocation() {
-    // TODO: check later if this is the best choice for target
     gFormCart.insertAfter('.woocommerce-product-details__short-description');
 
     // Remove manually the style attributes of modal-primary which was added  by calling modal()
@@ -1153,9 +1166,15 @@ function addToCartBtnTriggerIfReady(btn) {
     };
 }
 
-function updateFormBikeQuantity(value) {
-    // Update and trigger change
-    gPostDataNumPersons.val(value);
+//updates bike quantity and trigger change event if params{bool} trigger is set to true
+// Note: triggering change also triggrs an AJAX request
+function updateFormBikeQuantity(value, trigger=false) {
+    if( trigger ) {
+        gPostDataNumPersons.val(value).change();
+        getBlocksRequest.setInitiator(getBlocksRequest.Triggers.QUANTITY_CHANGE);  // refer to ajaxSuccess / ajaxError and find wc_bookings_get_blocks to trace next action
+    } else {
+        gPostDataNumPersons.val(value)
+    }
 }
 
 // All hiding and showing of the prev button must be handled here...
@@ -1214,7 +1233,6 @@ const uiText = {
         // Return this.uiText = moment(date).locale('nl').format('dddd D MMMM,  HH:mm');
     },
 
-    // Tycho suggests we create custom name via js
     // @params name = product name in db to be converted
     displayProductLabel(name) {
         return name.includes('Elektrische') ? mySettings.productLabel.electric : mySettings.productLabel.mtb;
@@ -1251,13 +1269,12 @@ function handleCalculateCostResponse(result = {}) {
             var copiedAmtTxt = $j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
             gCartItemToUpdateDisplayPrice.text(copiedAmtTxt);
             console.log("displaying price: " + copiedAmtTxt)
+            bookingTabSteps.toggleAddToCartBtn();
         }
 
     } else if (result.result == "ERROR") {
-        //todo: 03/03/2021. review this more later re errors(english/dutch)
 
-        return;
-        // Remove the minimum persons = 1 error. take note that the message string may change so update here..
+        // Remove the minimum persons = 1 error and some..
         if (result.html.includes('minumum aantal personen') ||
             result.html.includes('minimum') ||
             result.html.includes('Date is required') ||
@@ -1266,7 +1283,7 @@ function handleCalculateCostResponse(result = {}) {
             return;
         }
 
-        // Todo: handle Please choose a resource type ERROR)
+
         $j('.generic-modal').html(result.html);
 
         $j('.generic-modal').modal({
@@ -1363,6 +1380,15 @@ function removeCalendarBlockedDates() {
     }
     console.log('removeCalendarBlockedDates called');
 
+}
+
+function allRequiredFieldsIsNotEmpty() {
+    var names = ["add-to-cart", "wc_bookings_field_duration", "wc_bookings_field_persons", "wc_bookings_field_resource", "wc_bookings_field_start_date_day","wc_bookings_field_start_date_month","wc_bookings_field_start_date_year"]
+
+    //check if there are falsy values- undefined, null, NaN, 0, "" (empty string)
+    return names.every(name => {
+        return Boolean($j(`[name=${name}]`).val())
+    })
 }
 
 window.myConsole = {};
