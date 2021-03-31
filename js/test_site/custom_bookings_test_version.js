@@ -470,7 +470,7 @@ const bookingTabSteps = (function () {
             childList: true,
         });
 
-        /* Currently triggered on when user triggers a shopping cart bike item action(change quantity, add-to-reservation) */
+        /* Currently triggered on when user adds/deducts items*/
         $j('body').on('singleCartItemFocused', function (e) {
 
             // If user is still active / still waiting for debounced startFillBookingForm event to trigger
@@ -813,11 +813,6 @@ const bookingTabSteps = (function () {
             const currentBike = $j(this).closest('.item');
             const quantityField = currentBike.find('input[name=qty]');
 
-            // Expecting only 1 quantity input field in each bike item
-            if (quantityField.length != 1) {
-                console.error("Expecting exactly 1 quantity input field in each bike item. Check");
-            }
-
             const oldQuantity = parseInt(quantityField.val());
             const minQuantity = 0;
 
@@ -846,11 +841,6 @@ const bookingTabSteps = (function () {
 
             const currentBike = $j(this).closest('.item');
             const quantityField = currentBike.find('input[name=qty]');
-
-            // Expecting only 1 quantity input field in each bike item
-            if (quantityField.length != 1) {
-                console.error("Expecting only 1 quantity input field in each bike item. Check");
-            }
 
             const oldQuantity = parseInt(quantityField.val());
             const maxQuantity = parseInt(quantityField.attr('max'));
@@ -910,11 +900,13 @@ const bookingTabSteps = (function () {
 
     // Adds a class to items container so we can determine if user is still actively updating quantity and still waiting for debounce function to execute
     const notifyStartDebounceWait = function () {
+
         const itemsContainer = $j('.bikes-accordion-content');
         itemsContainer.addClass('js-user-is-active');
     };
 
     const notifyEndDebounceWait = function () {
+
         const itemsContainer = $j('.bikes-accordion-content');
         itemsContainer.removeClass('js-user-is-active');
     };
@@ -1353,14 +1345,13 @@ function highlightNoAvailabilityItems() {
 
 const debounce = function (func, delay) {
 
-    let timeoutID
+    let debounceTimer
     return function () {
-        const context = this;
-        const args = arguments;
-        clearTimeout(timeoutID);
-        timeoutID = setTimeout(() => {
-            func.apply(context, args)
-        }, delay)
+        const context = this; // Box-1 or box-2 el
+        const args = arguments
+        clearTimeout(debounceTimer)
+        debounceTimer
+            = setTimeout(() => func.apply(context, args), delay)
     }
 }
 
