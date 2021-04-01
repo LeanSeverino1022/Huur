@@ -1,5 +1,5 @@
 var $j = jQuery.noConflict();
-window.debugOn = 0; // for debugging
+window.debugOn = 0;
 
 $j(document).ready(function () {
     if (window.debugOn) {
@@ -8,8 +8,6 @@ $j(document).ready(function () {
         $j('.form-field-wide').css('display', 'block')
         $j('.wc-bookings-date-picker-date-fields').css('display', 'block')
     }
-
-    console.log("ready!");
 });
 
 /**
@@ -101,7 +99,7 @@ $j(document).ajaxSuccess(function (event, xhr, settings) {
             blocker.unblockContentTemp('quantity change triggered');
         }
 
-        myConsole.log("success wc_bookings_calculate_costs");
+        //console.log("success wc_bookings_calculate_costs");
         $j('body').trigger('afterCalculateCostRequest', [xhr.responseText]);
     }
 });
@@ -139,8 +137,6 @@ $j(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     else if (deleteOrderAttempt) {
         alert("Connection Error. Check your internet connection and try again.");
         blocker.unblockContentTemp('add remove product');
-        // For now just unblock the blocker. maybe we can also add a dataService.notifyConnectionError* to show message on failed delete
-
     }
 });
 
@@ -171,12 +167,10 @@ $j('body').on('after_opc_add_remove_product', function (event, data, response) {
 
     }
     else if (data.action == 'pp_remove_from_cart') {
-
         if (data.update_key) {
             const removedItem = $j(`.cart_item.opc_cart_item[data-update_key=${data.update_key}]`).find('dd.variation-Fiets').text();
             bookingTabSteps.setAddedOrRemovedItemResourceName(removedItem);
         }
-
     }
 
     // Scroll top to highlight OPC message
@@ -267,10 +261,7 @@ const manipulateDom = (function () {
 
         // 2. Create the tab contents
         const tab1Content = `
-        <div id='tab-1' class='tab-step'>
-
-        </div>`;
-
+        <div id='tab-1' class='tab-step'></div>`;
 
         const tab4Content = `
         <div id="tab-4" class="tab-step">
@@ -534,12 +525,7 @@ const bookingTabSteps = (function () {
                 $j("[name=wc_bookings_field_start_date_month]").val(userSelect.date.month);
                 $j("[name=wc_bookings_field_start_date_day]").val(userSelect.date.day).change();
             }
-
-
-            //             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
-
         });
-
 
         $j('body').on('afterCalculateCostRequest', function (event, responseText) {
 
@@ -562,6 +548,11 @@ const bookingTabSteps = (function () {
 
                 if(substrings.some(s => response.html.includes(s))) {
                     return;
+                }
+
+                //if error is related to booking more than available, refresh shown qty
+                if(response.html.includes("beschikbaar") || response.html.includes("available")) {
+                    $j('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
                 }
 
                 $j('.generic-modal').html(response.html);
@@ -730,12 +721,12 @@ const bookingTabSteps = (function () {
         const cartHTML = gResourceIds.map(x => {
 
             //we already have the resource ids, but we also need to get the resource data to
-            //get the retrieve the resource name
+            //get the resource name
             let resource = gResourcesData.find(elem => elem.id === x);
 
             const imageUrl = isElectricBike(resource.name) ? electricBikeImgUrl : normalBikeImgUrl;
 
-            console.log(`${resource.name} rendered`);
+            //console.log(`${resource.name} rendered`);
 
             return `
             <div class="item" data-resource-id="${resource.id}">
@@ -988,7 +979,6 @@ const bookingTabSteps = (function () {
 // End BookingTabSteps Module
 
 
-
 //time-picker.js - wc_bookings_get_blocks is triggered/initiated by changes to #wc_bookings_field_duration,
 //#wc_bookings_field_resource, and .wc-bookings-booking-form fieldset(on 'date-selected'). in this ala-module we just
 //try to track the initiator and then we can handle what actions should be done/not done
@@ -1020,7 +1010,6 @@ const getBlocksRequest = {
         this.initiator = '';
     }
 };
-
 
 const dataService = {
 
@@ -1187,13 +1176,6 @@ gPostDataNumPersons.on('change', function () {
     $j('.total-amount').text($j('.woocommerce-Price-amount.amount').text());
 });
 
-function addToCartBtnTriggerIfReady(btn) {
-    if (btn.hasClass('js-ready-to-trigger')) {
-        btn.removeClass('js-ready-to-trigger');
-        $j('form.cart').find('button.single_add_to_cart_button').click();
-    };
-}
-
 //updates bike quantity and trigger change event if params{bool} trigger is set to true
 // Note: triggering change also triggrs an AJAX request
 function updateFormBikeQuantity(value, trigger=false) {
@@ -1225,7 +1207,6 @@ function updatePrevBtnVisibility() {
 * reminder:  as much as possible. place all code related to setting dynamic strings here for one place access
 */
 const uiText = {
-
     fullDayReturnTime(date) {
         // Current rule is..bike can be returned at 6pm/18:00 on weekdays, and 5pm/17:00 on weekends.
         // Doesn't change the cost, just change the UI
@@ -1240,7 +1221,6 @@ const uiText = {
         // IsWeekend already checks if date is valid
         return isWeekend(calendarDate) ? '17:00' : '18:00';
     },
-
 
     // Returns the formatted date(Mon 6 January) or returns  '' a success returns a string so return '' instead of null, undefined, false
     displayDate() {
@@ -1258,8 +1238,6 @@ const uiText = {
         var dateIdx = month + '-' + day + '-' + year;
 
         return this.uiText = moment(dateIdx, 'MM-DD-YYY').locale('nl').format('dddd D MMMM');
-        // If you need different formats to out, just add a swtich and an argument/enum
-        // Return this.uiText = moment(date).locale('nl').format('dddd D MMMM,  HH:mm');
     },
 
     // @params name = product name in db to be converted
@@ -1289,7 +1267,6 @@ const uiText = {
 
 /* Blocking user interactions. Shows loader/spinner */
 var blocker = {
-
     blockContentTemp() {
         $j('form.cart').block({
             message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
@@ -1380,16 +1357,8 @@ function allRequiredFieldsIsNotEmpty() {
     })
 }
 
-window.myConsole = {};
-myConsole.log = msg => {
-    console.log('%c%s', 'color: #fff; background: red; font-size: 14px;', msg);
-}
-
-//DISABLE ALERTS
+//DISABLE ALERTS. seems that I don't need this b
 function disableAlerts() {
     window.alert = function () { };
-    alert = function () {
-        console.error('alert called')
-    };
 }
 disableAlerts();
