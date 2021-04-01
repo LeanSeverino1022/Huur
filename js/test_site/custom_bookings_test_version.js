@@ -1,11 +1,7 @@
 var $j = jQuery.noConflict();
-
-
-// throw new error('x');
 window.debugOn = 0; // for debugging
 
 $j(document).ready(function () {
-
     if (window.debugOn) {
         $j('.wc_bookings_field_duration').attr('type', '')
         $j('#wc_bookings_field_start_date').attr('type', '')
@@ -16,9 +12,9 @@ $j(document).ready(function () {
     console.log("ready!");
 });
 
-'use strict';
-
-// Config settings for user / Tycho to modify
+/**
+ *  *||Config
+ */
 window.gMainUrl = 'https://wpbeter-ontwikkelt.nl';
 
 const mySettings = {
@@ -74,18 +70,16 @@ const mySettings = {
 
 };
 
-
-// Load right away. Don't put inside doc.ready since we need to verride default spinner by woocommerce right away
-$j(document).ajaxSend(function (event, request, settings) { });
+/**
+ * * ||GLobal AJAX Event Handlers
+ *  handle events that happens on any Ajax requests
+ */
 
 $j(document).ajaxSuccess(function (event, xhr, settings) {
 
     //on when plugin knows what dates are booked
-    if (typeof settings?.url === 'string' &&
+    if (typeof settings.url === 'string' &&
         settings.url?.includes('wc_bookings_find_booked_day_blocks')) {
-        // Make sure no blocked dates / red dates... clear select bicycle dropdown
-        // removeCalendarBlockedDates(); //todo:check if still needed
-
     }
 
     // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
@@ -109,7 +103,6 @@ $j(document).ajaxSuccess(function (event, xhr, settings) {
 
         myConsole.log("success wc_bookings_calculate_costs");
         $j('body').trigger('afterCalculateCostRequest', [xhr.responseText]);
-
     }
 });
 
@@ -151,8 +144,8 @@ $j(document).ajaxError(function (event, jqxhr, settings, thrownError) {
     }
 });
 
-/*
-    SECTION: Custom event handlers triggered on other scripts not created by wpBeter( woocommerce, one-page-checkout, etc.)
+/**
+ *  *||SECTION: Custom event handlers triggered by other external scripts( woocommerce, one-page-checkout, etc.) not created by wpBeter
 */
 
 // Custom event for devs to hook into before posting of products for processing- one-page-checkout-js
@@ -244,8 +237,10 @@ let gResourcesData = [];
 
 let gCustomSlotsData = new Array(); // To contain slots available based on user selected date
 
-
-// Manipulate the DOM to create our custom user experience. Stuff here can also be done in the theme files later
+/**
+ *  *||manipulate DOM
+ *  Manipulate the DOM to customize user experience. Stuff here can also be done in the theme files later
+ */
 const manipulateDom = (function () {
 
     const start = function () {
@@ -371,8 +366,12 @@ const manipulateDom = (function () {
         start,
     };
 
-})(); /* menipulateDom */
+})();
+/* END manipulate DOM */
 
+/**
+ *  *||BookingTabSteps - main module
+ */
 const bookingTabSteps = (function () {
 
     let userSelect = {
@@ -986,6 +985,9 @@ const bookingTabSteps = (function () {
 
     };
 })()
+// End BookingTabSteps Module
+
+
 
 //time-picker.js - wc_bookings_get_blocks is triggered/initiated by changes to #wc_bookings_field_duration,
 //#wc_bookings_field_resource, and .wc-bookings-booking-form fieldset(on 'date-selected'). in this ala-module we just
@@ -1177,7 +1179,6 @@ gFormCart.on($j.modal.OPEN, function (event, modal) {
         $j('.picker').toggleClass('hidden', false);
     }
 
-
     // To xfr
     $j('input[name="booking_time"]').prop('checked', false);
 });
@@ -1206,8 +1207,8 @@ function updateFormBikeQuantity(value, trigger=false) {
 
 // All hiding and showing of the prev button must be handled here...
 function updatePrevBtnVisibility() {
-    var activeTab = $j('.tabs-nav .js-tab-active');
-    var btn = $j('.prev-btn');
+    const activeTab = $j('.tabs-nav .js-tab-active');
+    const btn = $j('.prev-btn');
 
     // If its not tab-1 AND the button is hidden, then show it
     if (activeTab.children('a').attr('href') !== '#tab-1' && btn.not(':visible')) {
@@ -1218,9 +1219,10 @@ function updatePrevBtnVisibility() {
 }
 
 /**
-* UI texts/label manager to encapsulate(not all) code related to setting dynamic labels/texts.
+* *|| UI texts/label manager
+* To encapsulate(not all) code related to setting dynamic labels/texts.
 * Don't put anything that doesn't return a string or not related to updating a text
-* reminder:  place as much code related to setting dynamic strings here for one place access
+* reminder:  as much as possible. place all code related to setting dynamic strings here for one place access
 */
 const uiText = {
 
@@ -1322,7 +1324,7 @@ function isWeekend(date) {
 
 $j('.generic-modal').on($j.modal.AFTER_CLOSE, function (event, modal) {
     // HACK.. with the generic modal it takes twice to close to really close item
-    var esc = $j.Event("keydown", { keyCode: 27 });
+    let esc = $j.Event("keydown", { keyCode: 27 });
     $j(this).trigger(esc);
 });
 
@@ -1344,7 +1346,6 @@ function highlightNoAvailabilityItems() {
         }
 
         const avail = el.textContent.match(numberPattern)[0];
-
         let isOutOfStock = Number(avail) < 1;
         $j(this).css('color', isOutOfStock ? '#D83F35' : '#444')
     })
@@ -1364,12 +1365,10 @@ const debounce = function (func, delay) {
 
 // Make sure no blocked dates / red dates... clear select bicycle dropdown
 function removeCalendarBlockedDates() {
-
     if ($j('.ui-datepicker-calendar .fully_booked').length > 0) {
         $j('#wc_bookings_field_resource').prop('selectedIndex', -1).change();
     }
     console.log('removeCalendarBlockedDates called');
-
 }
 
 function allRequiredFieldsIsNotEmpty() {
