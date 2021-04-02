@@ -525,7 +525,12 @@ const bookingTabSteps = (function () {
                 $j("[name=wc_bookings_field_start_date_month]").val(userSelect.date.month);
                 $j("[name=wc_bookings_field_start_date_day]").val(userSelect.date.day).change();
             }
+
+
+            //             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
+
         });
+
 
         $j('body').on('afterCalculateCostRequest', function (event, responseText) {
 
@@ -727,7 +732,6 @@ const bookingTabSteps = (function () {
             const imageUrl = isElectricBike(resource.name) ? electricBikeImgUrl : normalBikeImgUrl;
 
             //console.log(`${resource.name} rendered`);
-
             return `
             <div class="item" data-resource-id="${resource.id}">
                 <div class="image">
@@ -979,6 +983,7 @@ const bookingTabSteps = (function () {
 // End BookingTabSteps Module
 
 
+
 //time-picker.js - wc_bookings_get_blocks is triggered/initiated by changes to #wc_bookings_field_duration,
 //#wc_bookings_field_resource, and .wc-bookings-booking-form fieldset(on 'date-selected'). in this ala-module we just
 //try to track the initiator and then we can handle what actions should be done/not done
@@ -1010,6 +1015,7 @@ const getBlocksRequest = {
         this.initiator = '';
     }
 };
+
 
 const dataService = {
 
@@ -1175,6 +1181,13 @@ gFormCart.on($j.modal.OPEN, function (event, modal) {
 gPostDataNumPersons.on('change', function () {
     $j('.total-amount').text($j('.woocommerce-Price-amount.amount').text());
 });
+
+function addToCartBtnTriggerIfReady(btn) {
+    if (btn.hasClass('js-ready-to-trigger')) {
+        btn.removeClass('js-ready-to-trigger');
+        $j('form.cart').find('button.single_add_to_cart_button').click();
+    };
+}
 
 //updates bike quantity and trigger change event if params{bool} trigger is set to true
 // Note: triggering change also triggrs an AJAX request
