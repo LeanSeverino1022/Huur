@@ -1,4 +1,4 @@
-var $j = jQuery.noConflict();
+const $j = jQuery.noConflict();
 window.debugOn = 0;
 
 $j(document).ready(function () {
@@ -427,7 +427,7 @@ const bookingTabSteps = (function () {
         });
 
         $j('.prev-btn').on('click', function () {
-            var activeTab = $j('.tabs-nav .js-tab-active');
+            const activeTab = $j('.tabs-nav .js-tab-active');
 
             // ActiveTab on before tab switch
             switch (activeTab.children('a').attr('href')) {
@@ -487,7 +487,7 @@ const bookingTabSteps = (function () {
 
             unblockBikeItemControls();
 
-            var triggerChangeEvt = null;
+            let triggerChangeEvt = null;
             //If quantity is the only thing that changed... then just update quantity amt and trigger change()
             if (onlyQuantityWasUpdated(quantity, resource_id)) {
                 updateFormBikeQuantity(quantity, triggerChangeEvt = true);
@@ -537,7 +537,7 @@ const bookingTabSteps = (function () {
                 // If success the returned html returns an el with class .woocommerce-Price-amount.amount
                 // https://ourcodeworld.com/articles/read/376/how-to-strip-html-from-a-string-extract-only-text-content-in-javascript
                 if ($j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').length && gCartItemToUpdateDisplayPrice) {
-                    var copiedAmtTxt = $j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
+                    let copiedAmtTxt = $j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
                     gCartItemToUpdateDisplayPrice.text(copiedAmtTxt);
                     console.log("displaying price: " + copiedAmtTxt)
                     bookingTabSteps.toggleAddToCartBtn();
@@ -637,7 +637,7 @@ const bookingTabSteps = (function () {
             $j(el).find('.variation-Fiets').css('opacity', 0);
 
             // All code below to compute for rendered return time
-            var dropoffTime = '';
+            let dropoffTime = '';
 
             // Modify the order review of time row.. from show starting time to show pickup and return time
 
@@ -1001,7 +1001,7 @@ const getBlocksRequest = {
 
     setInitiator(val) {
 
-        var acceptedValues = Object.values(this.Triggers);
+        let acceptedValues = Object.values(this.Triggers);
         if (!acceptedValues.includes(Number(val))) {
             console.error('invalid initator passed');
             return;
@@ -1118,7 +1118,7 @@ $j(document).ready(function () {
     //fetch producs and resources from api
     dataService.getProducts()
         .done(function (result) {
-            var product = result[0]; // We're only expecting 1 product(with mult resources)
+            let product = result[0]; // We're only expecting 1 product(with mult resources)
             gResourceIds = product.resource_ids;
         })
         .fail((jqXHR, textStatus, errorThrown) => {
@@ -1162,7 +1162,7 @@ gFormCart.on($j.modal.OPEN, function (event, modal) {
     // $j('form.cart').append($j(".receipt"))
 
     // If user has not selected a date yet, open the modal witht he datepicker calendar visible
-    var userHasSelectedDate = $j('.booking_date_year') && $j('.booking_date_month') && $j('.booking_date_day');
+    let userHasSelectedDate = $j('.booking_date_year') && $j('.booking_date_month') && $j('.booking_date_day');
 
     if (!userHasSelectedDate) {
         $j('.picker').toggleClass('hidden', false);
@@ -1225,7 +1225,7 @@ const uiText = {
     // Returns the formatted date(Mon 6 January) or returns  '' a success returns a string so return '' instead of null, undefined, false
     displayDate() {
 
-        var month = $j('[name="wc_bookings_field_start_date_month"]').val(),
+        let month = $j('[name="wc_bookings_field_start_date_month"]').val(),
             day = $j('[name="wc_bookings_field_start_date_day"]').val(),
             year = $j('[name="wc_bookings_field_start_date_year"]').val();
 
@@ -1235,7 +1235,7 @@ const uiText = {
             return '';
         }
 
-        var dateIdx = month + '-' + day + '-' + year;
+        let dateIdx = month + '-' + day + '-' + year;
 
         return this.uiText = moment(dateIdx, 'MM-DD-YYY').locale('nl').format('dddd D MMMM');
     },
@@ -1266,7 +1266,7 @@ const uiText = {
 }
 
 /* Blocking user interactions. Shows loader/spinner */
-var blocker = {
+let blocker = {
     blockContentTemp() {
         $j('form.cart').block({
             message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
@@ -1316,7 +1316,6 @@ function highlightNoAvailabilityItems() {
     $j('.shopping-cart-container .js-availability').each(function (idx, el) {
         const availabilityNumTxt = $j(this);
 
-        //const avail = el.textContent.match(numberPattern)[0];
         let isOutOfStock = availabilityNumTxt.data("available") < 1;
 
         //if there are no bikes left, show sold out msg
@@ -1348,7 +1347,7 @@ function removeCalendarBlockedDates() {
 }
 
 function allRequiredFieldsIsNotEmpty() {
-    var names = ["add-to-cart", "wc_bookings_field_duration", "wc_bookings_field_persons", "wc_bookings_field_resource", "wc_bookings_field_start_date_day", "wc_bookings_field_start_date_month", "wc_bookings_field_start_date_year"]
+    const names = ["add-to-cart", "wc_bookings_field_duration", "wc_bookings_field_persons", "wc_bookings_field_resource", "wc_bookings_field_start_date_day", "wc_bookings_field_start_date_month", "wc_bookings_field_start_date_year"]
 
     //check if there are falsy values- undefined, null, NaN, 0, "" (empty string)
     return names.every(name => {
