@@ -87,7 +87,7 @@ $j(document).ajaxSuccess(function (event, xhr, settings) {
     ) {
 
         if (getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.RESOURCE_CHANGE) {
-           //when you change resources, the date resets so we need to set it again.
+            //when you change resources, the date resets so we need to set it again.
             $j('body').trigger('afterResourceChangeSetDateAgain');
             getBlocksRequest.resetInitiator();
 
@@ -548,15 +548,15 @@ const bookingTabSteps = (function () {
                 }
 
             } else if (response.result == "ERROR") {
-               //hulpmiddel - resource
-                const substrings = ['minumum aantal personen','minimum','Date is required','Datum','resource','hulpmiddel'];
+                //hulpmiddel - resource
+                const substrings = ['minumum aantal personen', 'minimum', 'Date is required', 'Datum', 'resource', 'hulpmiddel'];
 
-                if(substrings.some(s => response.html.includes(s))) {
+                if (substrings.some(s => response.html.includes(s))) {
                     return;
                 }
 
                 //if error is related to booking more than available, refresh shown qty
-                if(response.html.includes("beschikbaar") || response.html.includes("available")) {
+                if (response.html.includes("beschikbaar") || response.html.includes("available")) {
                     $j('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
                 }
 
@@ -742,7 +742,7 @@ const bookingTabSteps = (function () {
                     <span class="js-slot-date" style="display: ${window.debugOn ? 'block' : 'none'}">${"[Date]"}</span>
                     <span class="wc-bookings-item-title resource-name">${resource.name}</span>
                     <div>${printBikeDescription(resource.name)}</div>
-                   <span class="js-availability">Aantal beschikbaar: [slot.available] </span>
+                    <p>Aantal beschikbaar: <span data-available="null" class="js-availability">[slot.available]</span></p>
                 </div>
 
                 <div class="js-quantity quantity">
@@ -773,7 +773,9 @@ const bookingTabSteps = (function () {
 
                 $item.find('.js-slot-date').text(slot.date);
                 $item.find('[max]').attr("max", slot.available);
-                $item.find('.js-availability').text('Aantal beschikbaar: ' + slot.available);
+
+                $item.find('.js-availability').get(0).dataset.available = slot.available;
+                $item.find('.js-availability').text(slot.available);
 
             })
 
@@ -828,17 +830,17 @@ const bookingTabSteps = (function () {
     function onlyQuantityWasUpdated(new_qty, new_resource_id) {
         //make sure no required fields are empty
         //before proceeding to comparing if values(old & new) are the same to prevent (null == nul) which is true
-        if(!allRequiredFieldsIsNotEmpty()) {
+        if (!allRequiredFieldsIsNotEmpty()) {
             return false; //some fields are empty
         }
 
         //compare if values are same except quantity/wc_bookings_field_persons
         //note: duration and product id doesn't change at all for this booking sys version
         if (
-        gPostDataResource.val() != new_resource_id ||
-        $j('input[name="wc_bookings_field_start_date_day"]').val() != userSelect.date.day ||
-        $j('input[name="wc_bookings_field_start_date_month"]').val() != userSelect.date.month ||
-        $j('input[name="wc_bookings_field_start_date_year"]').val() != userSelect.date.year) {
+            gPostDataResource.val() != new_resource_id ||
+            $j('input[name="wc_bookings_field_start_date_day"]').val() != userSelect.date.day ||
+            $j('input[name="wc_bookings_field_start_date_month"]').val() != userSelect.date.month ||
+            $j('input[name="wc_bookings_field_start_date_year"]').val() != userSelect.date.year) {
             return false;
         }
 
@@ -1191,8 +1193,8 @@ function addToCartBtnTriggerIfReady(btn) {
 
 //updates bike quantity and trigger change event if params{bool} trigger is set to true
 // Note: triggering change also triggrs an AJAX request
-function updateFormBikeQuantity(value, trigger=false) {
-    if( trigger ) {
+function updateFormBikeQuantity(value, trigger = false) {
+    if (trigger) {
         gPostDataNumPersons.val(value).change();
         getBlocksRequest.setInitiator(getBlocksRequest.Triggers.QUANTITY_CHANGE);  // refer to ajaxSuccess / ajaxError and find wc_bookings_get_blocks to trace next action
     } else {
@@ -1324,20 +1326,19 @@ $j('.create-account').on('change', function () {
     $j('.woocommerce form .form-row.woocommerce-invalid label').css('color', '#444')
 })
 
-// Color red items with no availability
+// change color and text to highlight no-availability
 function highlightNoAvailabilityItems() {
-    const numberPattern = /\d+/g;
-
     $j('.shopping-cart-container .js-availability').each(function (idx, el) {
+        const availabilityNumTxt = $j(this);
 
-        if (el.textContent.match(numberPattern) == null) {
-            console.error('invalid availability amount');
-            return;
+        //const avail = el.textContent.match(numberPattern)[0];
+        let isOutOfStock = availabilityNumTxt.data("available") < 1;
+
+        //if there are no bikes left, show sold out msg
+        if (isOutOfStock) {
+            availabilityNumTxt.text("uitverhuurd");
+            availabilityNumTxt.css('color', '#D83F35');
         }
-
-        const avail = el.textContent.match(numberPattern)[0];
-        let isOutOfStock = Number(avail) < 1;
-        $j(this).css('color', isOutOfStock ? '#D83F35' : '#444')
     })
 }
 
@@ -1362,7 +1363,7 @@ function removeCalendarBlockedDates() {
 }
 
 function allRequiredFieldsIsNotEmpty() {
-    var names = ["add-to-cart", "wc_bookings_field_duration", "wc_bookings_field_persons", "wc_bookings_field_resource", "wc_bookings_field_start_date_day","wc_bookings_field_start_date_month","wc_bookings_field_start_date_year"]
+    var names = ["add-to-cart", "wc_bookings_field_duration", "wc_bookings_field_persons", "wc_bookings_field_resource", "wc_bookings_field_start_date_day", "wc_bookings_field_start_date_month", "wc_bookings_field_start_date_year"]
 
     //check if there are falsy values- undefined, null, NaN, 0, "" (empty string)
     return names.every(name => {

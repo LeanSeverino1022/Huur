@@ -1,0 +1,23 @@
+{
+  "name": "Huur",
+  "version": "1.0.0",
+  "description": "🤔 what I did...",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeanSeverino1022/Huur.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeanSeverino1022/Huur/issues"
+  },
+  "homepage": "https://github.com/LeanSeverino1022/Huur#readme",
+  "devDependencies": {
+    "eslint": "^7.23.0"
+  }
+}
