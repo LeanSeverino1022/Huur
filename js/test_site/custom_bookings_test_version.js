@@ -57,6 +57,9 @@ const mySettings = {
                             Lichaamslengte: 1,57 - 1,73 m</span>`,
     },
 
+    calendarDayNames: ["zo", "ma", "di", "wo", "do", "vr", "za"],
+    calendarMonthNames: ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"],
+
     errorMsg: {
         reloadPage: `<b>We kunnen geen verbinding maken met de server.</b><br>Controleer je internetverbinding en laad de pagina opnieuw.`,
         reloadPageBtnTxt: 'Probeer opnieuw',
@@ -1103,12 +1106,15 @@ $j(document).ready(function () {
     manipulateDom.start();
     bookingTabSteps.init();
 
-    // Override datepicker defaults.
+    // overide datepicker defaults
     $j.datepicker.setDefaults({
         changeMonth: true,
         changeYear: true,
     });
     $j(".picker").datepicker("option", "showOtherMonths", false);
+    //update col header minimized day names
+    $j(".picker").datepicker("option", "dayNamesMin", mySettings.calendarDayNames);
+    $j(".picker").datepicker("option", "monthNamesShort", mySettings.calendarMonthNames);
 
     // Override jquery-modal defaults
     $j.extend($j.modal.defaults, {
@@ -1139,8 +1145,6 @@ gFormCart.on($j.modal.AFTER_CLOSE, function (event, modal) {
 
     // Hide non-modal-primary elements
     bringBackFormCartToOriginalLocation();
-
-    // Hides non-modal-primary elements.
 
     $j('.picker').toggleClass('hidden', false);
 
