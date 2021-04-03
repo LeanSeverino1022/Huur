@@ -348,12 +348,10 @@ const manipulateDom = (function () {
     };
 
     const hideElementsOnInit = function () {
-
         // When modal-primary is closed which is the case on page init, hide these elements
         $j('.booking-popup-header').hide();
         $j('.tab-step').hide(); // Hide all tab-steps by default
         $j('.single_add_to_cart_button').hide();
-
     };
 
     return {
@@ -528,12 +526,7 @@ const bookingTabSteps = (function () {
                 $j("[name=wc_bookings_field_start_date_month]").val(userSelect.date.month);
                 $j("[name=wc_bookings_field_start_date_day]").val(userSelect.date.day).change();
             }
-
-
-            //             addToCartBtnTriggerIfReady(gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart'));
-
         });
-
 
         $j('body').on('afterCalculateCostRequest', function (event, responseText) {
 
@@ -1142,17 +1135,12 @@ $j(document).ready(function () {
 // Moving the calendar inside form.cart back to its original location when all modals closed
 
 gFormCart.on($j.modal.AFTER_CLOSE, function (event, modal) {
-
     // Hide non-modal-primary elements
     bringBackFormCartToOriginalLocation();
-
     $j('.picker').toggleClass('hidden', false);
-
     $j('.booking-popup-header').hide();
     $j('.single_add_to_cart_button').hide();
-
     $j('.tabs-nav a[href="#tab-1"]').trigger('switchActiveTab');
-
     // Unblock blockers
     blocker.unblockContentTemp('filling up booking form');
 });
