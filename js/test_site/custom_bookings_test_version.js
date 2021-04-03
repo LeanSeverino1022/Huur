@@ -270,7 +270,7 @@ const manipulateDom = (function () {
         <div id="tab-4" class="tab-step">
             <div class="shopping-cart-container">
                 <div class="booking-steps-overview-wrapper">
-                    <p class="start-date-label go-to-choose-date"><span class="selected-time"></span></p>
+                    <div><p class="start-date-label go-to-choose-date"><span class="selected-time"></span></p></div>
                     <p class="shopping-cart-time-text"><span class="pickup-time"></span> - <span class="return-time"> </span></p>
                 </div>
                 <ul class="bikes-accordion">
