@@ -3,10 +3,10 @@ window.debugOn = 0;
 
 $j(document).ready(function () {
     if (window.debugOn) {
-        $j('.wc_bookings_field_duration').attr('type', '')
-        $j('#wc_bookings_field_start_date').attr('type', '')
-        $j('.form-field-wide').css('display', 'block')
-        $j('.wc-bookings-date-picker-date-fields').css('display', 'block')
+        $j('.wc_bookings_field_duration').attr('type', '');
+        $j('#wc_bookings_field_start_date').attr('type', '');
+        $j('.form-field-wide').css('display', 'block');
+        $j('.wc-bookings-date-picker-date-fields').css('display', 'block');
     }
 });
 
@@ -331,7 +331,7 @@ const manipulateDom = (function () {
         gFormCheckout.append(gFormCheckout.find($j('#customer_details')), gFormCheckout.find($j('#payment')));
         $j('#tab-5').append($j('#opc-messages'), gFormCheckout);
         // Add book again buttons
-        $j('<button class="btn-top-book-more">Meer fietsen reserveren</button>').insertAfter($j('#order_review_heading'))
+        $j('<button class="btn-top-book-more">Meer fietsen reserveren</button>').insertAfter($j('#order_review_heading'));
         $j('<button class="btn-bottom-book-more">Meer fietsen reserveren</button>').insertAfter($j('#order_review'));
 
         $j('body').append(genericModal);
@@ -372,7 +372,7 @@ const bookingTabSteps = (function () {
             month: null,
             year: null
         }
-    }
+    };
 
     // Keep track of the item added or removed to update opc-message
     let addedOrRemovedItemResourceName = null;
@@ -539,7 +539,7 @@ const bookingTabSteps = (function () {
                 if ($j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').length && gCartItemToUpdateDisplayPrice) {
                     let copiedAmtTxt = $j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
                     gCartItemToUpdateDisplayPrice.text(copiedAmtTxt);
-                    console.log("displaying price: " + copiedAmtTxt)
+                    console.log("displaying price: " + copiedAmtTxt);
                     bookingTabSteps.toggleAddToCartBtn();
                 }
 
@@ -625,7 +625,7 @@ const bookingTabSteps = (function () {
     const toggleAddToCartBtn = function () {
         const qty = parseInt(gCartItemToUpdateDisplayPrice.closest('.item').find('[name="qty"]').val());
         gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart').toggleClass("disabled", qty < 1);
-    }
+    };
 
     const updateCheckoutItems = function () {
 
@@ -691,14 +691,14 @@ const bookingTabSteps = (function () {
             oktober: 'october',
             november: 'november',
             december: 'december'
-        }
+        };
 
-        let monthString = Object.keys(translate).find(x => dateString.includes(x))
+        let monthString = Object.keys(translate).find(x => dateString.includes(x));
 
         let outputString = dateString.replace(monthString, translate[monthString]);
 
         if (moment(outputString).isValid()) {
-            return moment(outputString).format('YYYY-MM-DD')
+            return moment(outputString).format('YYYY-MM-DD');
         }
 
         console.error('invalid date');
@@ -738,7 +738,7 @@ const bookingTabSteps = (function () {
                     <span class="js-slot-date" style="display: ${window.debugOn ? 'block' : 'none'}">${"[Date]"}</span>
                     <span class="wc-bookings-item-title resource-name">${resource.name}</span>
                     <div>${printBikeDescription(resource.name)}</div>
-                    <p>Aantal beschikbaar: <span data-available="null" class="js-availability">[slot.available]</span></p>
+                    <p>Aantal beschikbaar: <span data-available="null" class="js-availability"> &nbsp;&nbsp;...</span></p>
                 </div>
 
                 <div class="js-quantity quantity">
@@ -1328,15 +1328,15 @@ function highlightNoAvailabilityItems() {
 
 const debounce = function (func, delay) {
 
-    let debounceTimer
+    let debounceTimer;
     return function () {
         const context = this; // Box-1 or box-2 el
-        const args = arguments
-        clearTimeout(debounceTimer)
+        const args = arguments;
+        clearTimeout(debounceTimer);
         debounceTimer
-            = setTimeout(() => func.apply(context, args), delay)
-    }
-}
+            = setTimeout(() => func.apply(context, args), delay);
+    };
+};
 
 // Make sure no blocked dates / red dates... clear select bicycle dropdown
 function removeCalendarBlockedDates() {
