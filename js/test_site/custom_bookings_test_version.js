@@ -1176,13 +1176,6 @@ gPostDataNumPersons.on('change', function () {
     $j('.total-amount').text($j('.woocommerce-Price-amount.amount').text());
 });
 
-function addToCartBtnTriggerIfReady(btn) {
-    if (btn.hasClass('js-ready-to-trigger')) {
-        btn.removeClass('js-ready-to-trigger');
-        $j('form.cart').find('button.single_add_to_cart_button').click();
-    };
-}
-
 //updates bike quantity and trigger change event if params{bool} trigger is set to true
 // Note: triggering change also triggrs an AJAX request
 function updateFormBikeQuantity(value, trigger = false) {
