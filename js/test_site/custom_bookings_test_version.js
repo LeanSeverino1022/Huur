@@ -80,7 +80,7 @@ $j(document).ajaxSuccess(function (event, xhr, settings) {
 
     //on when plugin knows what dates are booked
     if (typeof settings.url === 'string' &&
-        settings.url?.includes('wc_bookings_find_booked_day_blocks')) {
+        settings.url.includes('wc_bookings_find_booked_day_blocks')) {
     }
 
     // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
@@ -738,7 +738,7 @@ const bookingTabSteps = (function () {
                     <span class="js-slot-date" style="display: ${window.debugOn ? 'block' : 'none'}">${"[Date]"}</span>
                     <span class="wc-bookings-item-title resource-name">${resource.name}</span>
                     <div>${printBikeDescription(resource.name)}</div>
-                    <p>Aantal beschikbaar: <span data-available="null" class="js-availability"> &nbsp;&nbsp;...</span></p>
+                    <span>Aantal beschikbaar: <span data-available="null" class="js-availability"> &nbsp;&nbsp;...</span>
                 </div>
 
                 <div class="js-quantity quantity">
