@@ -1,4 +1,6 @@
-const $j = jQuery.noConflict();
+'use strict';
+
+var $j = jQuery.noConflict();
 window.debugOn = 0;
 
 $j(document).ready(function () {
@@ -15,11 +17,11 @@ $j(document).ready(function () {
  */
 window.gMainUrl = 'https://wpbeter-ontwikkelt.nl';
 
-const mySettings = {
+var mySettings = {
     spinner: {
         blockUIOverlayCSS: {
             background: '#FFF',
-            opacity: 0.7,
+            opacity: 0.7
         }
     },
     productLabel: {
@@ -29,44 +31,35 @@ const mySettings = {
 
     // take note of https://mountainbikehurenschoorl.nl/wp-json/wc-bookings/v1/
     bikeDescription: {
-        'XL Elektrische mountainbike': `<span>Framemaat: 21 inch <br>
-                            Lichaamslengte: 1,87 - 1,96 m</span>`,
+        'XL Elektrische mountainbike': '<span>Framemaat: 21 inch <br>\n                            Lichaamslengte: 1,87 - 1,96 m</span>',
 
-        'L Elektrische mountainbike': `<span>Framemaat: 19 inch <br>
-                            Lichaamslengte: 1,77 - 1,90 m</span>`,
+        'L Elektrische mountainbike': '<span>Framemaat: 19 inch <br>\n                            Lichaamslengte: 1,77 - 1,90 m</span>',
 
-        'M Elektrische mountainbike': `<span>Framemaat: 17 inch <br>
-                            Lichaamslengte: 1,67 - 1,83 m</span>`,
+        'M Elektrische mountainbike': '<span>Framemaat: 17 inch <br>\n                            Lichaamslengte: 1,67 - 1,83 m</span>',
 
-        'S Elektrische mountainbike': `<span>Framemaat: 15 inch <br>
-                            Lichaamslengte: 1,57 - 1,73 m</span>`,
+        'S Elektrische mountainbike': '<span>Framemaat: 15 inch <br>\n                            Lichaamslengte: 1,57 - 1,73 m</span>',
 
-        'XXL Mountainbike': `<span>Framemaat: 23 inch <br>
-                            Lichaamslengte: 1,92 m en langer</span>`,
+        'XXL Mountainbike': '<span>Framemaat: 23 inch <br>\n                            Lichaamslengte: 1,92 m en langer</span>',
 
-        'XL Mountainbike': `<span>Framemaat: 21 inch <br>
-                            Lichaamslengte: 1,87 - 1,96 m</span>`,
+        'XL Mountainbike': '<span>Framemaat: 21 inch <br>\n                            Lichaamslengte: 1,87 - 1,96 m</span>',
 
-        'L Mountainbike': `<span>Framemaat: 19 inch <br>
-                            Lichaamslengte: 1,77 - 1,90 m</span>`,
+        'L Mountainbike': '<span>Framemaat: 19 inch <br>\n                            Lichaamslengte: 1,77 - 1,90 m</span>',
 
-        'M Mountainbike': `<span>Framemaat: 17 inch <br>
-                            Lichaamslengte: 1,67 - 1,83 m</span>`,
+        'M Mountainbike': '<span>Framemaat: 17 inch <br>\n                            Lichaamslengte: 1,67 - 1,83 m</span>',
 
-        'S Mountainbike': `<span>Framemaat: 15 inch <br>
-                            Lichaamslengte: 1,57 - 1,73 m</span>`,
+        'S Mountainbike': '<span>Framemaat: 15 inch <br>\n                            Lichaamslengte: 1,57 - 1,73 m</span>'
     },
 
     calendarDayNames: ["zo", "ma", "di", "wo", "do", "vr", "za"],
     calendarMonthNames: ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"],
 
     errorMsg: {
-        reloadPage: `<b>We kunnen geen verbinding maken met de server.</b><br>Controleer je internetverbinding en laad de pagina opnieuw.`,
+        reloadPage: '<b>We kunnen geen verbinding maken met de server.</b><br>Controleer je internetverbinding en laad de pagina opnieuw.',
         reloadPageBtnTxt: 'Probeer opnieuw',
         tryAgain: '<b>Verbindingsfout.</b><br>Controleer je internetverbinding en probeer het opnieuw.',
         retryBtnTxt: 'Probeer opnieuw',
         reserveAgain: '<b>Je reservering is nog niet verwerkt vanwege een verbindingsfout.</b><br>Controleer je internetverbinding en probeer het opnieuw.',
-        reserveAgainBtn: 'Probeer opnieuw',
+        reserveAgainBtn: 'Probeer opnieuw'
     }
 
 };
@@ -79,65 +72,51 @@ const mySettings = {
 $j(document).ajaxSuccess(function (event, xhr, settings) {
 
     //on when plugin knows what dates are booked
-    if (typeof settings.url === 'string' &&
-        settings.url.includes('wc_bookings_find_booked_day_blocks')) {
-    }
+    if (typeof settings.url === 'string' && settings.url.includes('wc_bookings_find_booked_day_blocks')) {}
 
     // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
-    else if (
-        typeof settings.data === "string" &&
-        settings.data.includes("action=wc_bookings_calculate_costs")
-    ) {
+    else if (typeof settings.data === "string" && settings.data.includes("action=wc_bookings_calculate_costs")) {
 
-        if (getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.RESOURCE_CHANGE) {
-            //when you change resources, the date resets so we need to set it again.
-            $j('body').trigger('afterResourceChangeSetDateAgain');
-            getBlocksRequest.resetInitiator();
+            if (getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.RESOURCE_CHANGE) {
+                //when you change resources, the date resets so we need to set it again.
+                $j('body').trigger('afterResourceChangeSetDateAgain');
+                getBlocksRequest.resetInitiator();
 
-            blocker.unblockContentTemp('resource id change triggered');
-            return; //return to prevent afterCalculateCostRequest since we need to reset date
-        } else if (getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.QUANTITY_CHANGE) {
-            getBlocksRequest.resetInitiator();
+                blocker.unblockContentTemp('resource id change triggered');
+                return; //return to prevent afterCalculateCostRequest since we need to reset date
+            } else if (getBlocksRequest.getInitiator() == getBlocksRequest.Triggers.QUANTITY_CHANGE) {
+                getBlocksRequest.resetInitiator();
 
-            blocker.unblockContentTemp('quantity change triggered');
+                blocker.unblockContentTemp('quantity change triggered');
+            }
+
+            //console.log("success wc_bookings_calculate_costs");
+            $j('body').trigger('afterCalculateCostRequest', [xhr.responseText]);
         }
-
-        //console.log("success wc_bookings_calculate_costs");
-        $j('body').trigger('afterCalculateCostRequest', [xhr.responseText]);
-    }
 });
 
 $j(document).ajaxError(function (event, jqxhr, settings, thrownError) {
 
     // On change calendar month or year
-    let findBookedDayBlocksRequest = typeof settings.url == 'string' &&
-        settings.url.includes('wc_bookings_find_booked_day_blocks');
+    var findBookedDayBlocksRequest = typeof settings.url == 'string' && settings.url.includes('wc_bookings_find_booked_day_blocks');
 
-    let calculateBookingCostRequest = typeof settings.data === "string" &&
-        settings.data.includes("action=wc_bookings_calculate_costs");
+    var calculateBookingCostRequest = typeof settings.data === "string" && settings.data.includes("action=wc_bookings_calculate_costs");
 
-    let checkoutAttempt = settings.type == "POST" && (typeof settings.data === 'string' && settings.url.includes("wc-ajax=checkout"));
+    var checkoutAttempt = settings.type == "POST" && typeof settings.data === 'string' && settings.url.includes("wc-ajax=checkout");
 
-    let deleteOrderAttempt = typeof settings.data === 'string' &&
-        settings.data.includes('action=pp_remove_from_cart');
+    var deleteOrderAttempt = typeof settings.data === 'string' && settings.data.includes('action=pp_remove_from_cart');
 
     if (findBookedDayBlocksRequest) {
         blocker.unblockCalendar();
         dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
-    }
-
-    else if (calculateBookingCostRequest) {
+    } else if (calculateBookingCostRequest) {
         dataService.notifyConnectionErrorRetry(jqxhr, jqxhr.statusText);
         blocker.unblockContentTemp('filling up booking form');
-    }
-
-    else if (checkoutAttempt) {
+    } else if (checkoutAttempt) {
         dataService.notifyConnectionErrorOnCheckoutAttempt(jqxhr, jqxhr.statusText);
         // Remove this because it's showing the woocommerce-error container but with no error msg
         $j('.woocommerce-NoticeGroup-checkout').html('');
-    }
-
-    else if (deleteOrderAttempt) {
+    } else if (deleteOrderAttempt) {
         alert("Connection Error. Check your internet connection and try again.");
         blocker.unblockContentTemp('add remove product');
     }
@@ -159,19 +138,17 @@ $j('body').on('after_opc_add_remove_product', function (event, data, response) {
 
     if (response.result !== 'success') {
         // Todo: if unsuccessful just proceed to cart page, scroll to opc-messages. let the opc handle it. return early
-        console.error(response.messages)
+        console.error(response.messages);
     }
 
     if (data.action == 'pp_add_to_cart') {
         $j('.tabs-nav a[href="#tab-5"]').trigger('switchActiveTab');
 
-        const addedItem = gCartItemToUpdateDisplayPrice.closest('.item').find('.resource-name').text();
+        var addedItem = gCartItemToUpdateDisplayPrice.closest('.item').find('.resource-name').text();
         bookingTabSteps.setAddedOrRemovedItemResourceName(addedItem);
-
-    }
-    else if (data.action == 'pp_remove_from_cart') {
+    } else if (data.action == 'pp_remove_from_cart') {
         if (data.update_key) {
-            const removedItem = $j(`.cart_item.opc_cart_item[data-update_key=${data.update_key}]`).find('dd.variation-Fiets').text();
+            var removedItem = $j('.cart_item.opc_cart_item[data-update_key=' + data.update_key + ']').find('dd.variation-Fiets').text();
             bookingTabSteps.setAddedOrRemovedItemResourceName(removedItem);
         }
     }
@@ -182,7 +159,6 @@ $j('body').on('after_opc_add_remove_product', function (event, data, response) {
         left: 0,
         behavior: 'smooth'
     });
-
 });
 
 // Event triggered in date-picker.js on after calendar day click only
@@ -206,7 +182,7 @@ jQuery(document.body).on('checkout_error', function () {
 //END OF SECTION: Custom event handlers triggered on other scripts
 
 
-const TIME_FORMAT = 'HH:mm';
+var TIME_FORMAT = 'HH:mm';
 
 // Globals
 window.gFormCart = $j('form.cart');
@@ -228,75 +204,41 @@ function updateFormResource(new_value) {
     getBlocksRequest.setInitiator(getBlocksRequest.Triggers.RESOURCE_CHANGE);
 }
 
+var gResourceIds = []; // Format is { product[productid]: [array of resource ids]   }
+var gResourcesData = [];
 
-let gResourceIds = []; // Format is { product[productid]: [array of resource ids]   }
-let gResourcesData = [];
-
-let gCustomSlotsData = new Array(); // To contain slots available based on user selected date
+var gCustomSlotsData = new Array(); // To contain slots available based on user selected date
 
 /**
  *  *||manipulate DOM
  *  Manipulate the DOM to customize user experience. Stuff here can also be done in the theme files later
  */
-const manipulateDom = (function () {
+var manipulateDom = function () {
 
-    const start = function () {
+    var start = function start() {
         createAndInsertHtmlOnPageLoad();
         hideElementsForever();
         hideElementsOnInit();
     };
 
     // Create and insert HTML on page load
-    const createAndInsertHtmlOnPageLoad = function () {
+    var createAndInsertHtmlOnPageLoad = function createAndInsertHtmlOnPageLoad() {
 
-        let htmlTabsNav = `
-        <div class='booking-popup-header'>Mountainbike Huren Schoorl</div>
-        <ul class="tabs-nav" style="display:none">
-            <li class="js-tab-active"><a href="#tab-1" rel="nofollow">Datum & Tijd</a>
-            </li>
-            <li><a href="#tab-4" rel="nofollow">Kies maat</a>
-            </li>
-            <li><a href="#tab-5" rel="nofollow">Reserveer</a>
-            </li>
-        </ul>`;
+        var htmlTabsNav = '\n        <div class=\'booking-popup-header\'>Mountainbike Huren Schoorl</div>\n        <ul class="tabs-nav" style="display:none">\n            <li class="js-tab-active"><a href="#tab-1" rel="nofollow">Datum & Tijd</a>\n            </li>\n            <li><a href="#tab-4" rel="nofollow">Kies maat</a>\n            </li>\n            <li><a href="#tab-5" rel="nofollow">Reserveer</a>\n            </li>\n        </ul>';
 
-        const prevBtn = `<span class="prev-btn"></span>`;
+        var prevBtn = '<span class="prev-btn"></span>';
 
         // 2. Create the tab contents
-        const tab1Content = `
-        <div id='tab-1' class='tab-step'></div>`;
+        var tab1Content = '\n        <div id=\'tab-1\' class=\'tab-step\'></div>';
 
-        const tab4Content = `
-        <div id="tab-4" class="tab-step">
-            <div class="shopping-cart-container">
-                <div class="booking-steps-overview-wrapper">
-                    <div><p class="start-date-label go-to-choose-date"><span class="selected-time"></span></p></div>
-                    <p class="shopping-cart-time-text"><span class="pickup-time"></span> - <span class="return-time"> </span></p>
-                </div>
-                <ul class="bikes-accordion">
-                    <li>
-                        <div class="bikes-accordion-header">
-                            <div class="booking-steps-title-wrapper">
-                                <p>Kies mountainbikes</p>
-                            </div>
-                        </div>
-                        <div class="bikes-accordion-content">
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>`;
+        var tab4Content = '\n        <div id="tab-4" class="tab-step">\n            <div class="shopping-cart-container">\n                <div class="booking-steps-overview-wrapper">\n                    <div><p class="start-date-label go-to-choose-date"><span class="selected-time"></span></p></div>\n                    <p class="shopping-cart-time-text"><span class="pickup-time"></span> - <span class="return-time"> </span></p>\n                </div>\n                <ul class="bikes-accordion">\n                    <li>\n                        <div class="bikes-accordion-header">\n                            <div class="booking-steps-title-wrapper">\n                                <p>Kies mountainbikes</p>\n                            </div>\n                        </div>\n                        <div class="bikes-accordion-content">\n                        </div>\n                    </li>\n                </ul>\n            </div>\n        </div>';
 
-        const tab5Content = `<div id='tab-5' class='tab-step'></div>`;
+        var tab5Content = '<div id=\'tab-5\' class=\'tab-step\'></div>';
 
-        const htmlDateLabel = `
-            <div class="booking-steps-title-wrapper">
-                <p>Kies tijd</p>
-            </div>
-            <div class="selected-date-label"></div>`;
+        var htmlDateLabel = '\n            <div class="booking-steps-title-wrapper">\n                <p>Kies tijd</p>\n            </div>\n            <div class="selected-date-label"></div>';
 
         // Generice messages
-        const genericModal = `<div class="generic-modal text-center" style="display: none"></div>`;
+        var genericModal = '<div class="generic-modal text-center" style="display: none"></div>';
 
         $j('fieldset.wc-bookings-date-picker').prepend(htmlDateLabel); //step/tab 1
 
@@ -314,16 +256,12 @@ const manipulateDom = (function () {
         $j('#wc-bookings-booking-form').prepend(tab1Content); //step 1
 
         $j('#wc-bookings-booking-form').append('<div class="tab-footers"></div');
-        $j('.tab-footer')
-            .append($j('.wc-bookings-booking-cost'))
-            .append($j('.single_add_to_cart_button'));
+        $j('.tab-footer').append($j('.wc-bookings-booking-cost')).append($j('.single_add_to_cart_button'));
 
         // ADD CONTENT TO TAB SECTIONS
-        $j('.block-picker.wc-bookings-time-block-picker')
-            .parents('.form-field')
-            .eq(0) // On debugOn comment
-            .prependTo('#tab-1') //on debugOn comment
-            .hide(); // On debugOn comment
+        $j('.block-picker.wc-bookings-time-block-picker').parents('.form-field').eq(0) // On debugOn comment
+        .prependTo('#tab-1') //on debugOn comment
+        .hide(); // On debugOn comment
 
         $j('.wc-bookings-date-picker').prependTo('#tab-1');
 
@@ -337,7 +275,7 @@ const manipulateDom = (function () {
         $j('body').append(genericModal);
     };
 
-    const hideElementsForever = function () {
+    var hideElementsForever = function hideElementsForever() {
         if (window.debugOn) return;
         // Hide forever
         $j('.wc_bookings_field_persons').hide(); /* Hide num of persons form-field */
@@ -347,7 +285,7 @@ const manipulateDom = (function () {
         $j('.wc_bookings_field_duration').hide();
     };
 
-    const hideElementsOnInit = function () {
+    var hideElementsOnInit = function hideElementsOnInit() {
         // When modal-primary is closed which is the case on page init, hide these elements
         $j('.booking-popup-header').hide();
         $j('.tab-step').hide(); // Hide all tab-steps by default
@@ -355,18 +293,17 @@ const manipulateDom = (function () {
     };
 
     return {
-        start,
+        start: start
     };
-
-})();
+}();
 /* END manipulate DOM */
 
 /**
  *  *||BookingTabSteps - main module
  */
-const bookingTabSteps = (function () {
+var bookingTabSteps = function () {
 
-    let userSelect = {
+    var userSelect = {
         date: {
             day: null,
             month: null,
@@ -375,16 +312,16 @@ const bookingTabSteps = (function () {
     };
 
     // Keep track of the item added or removed to update opc-message
-    let addedOrRemovedItemResourceName = null;
+    var addedOrRemovedItemResourceName = null;
 
-    const init = function () {
+    var init = function init() {
         initTabNavigation();
         registerEventHandlers();
 
         $j('.tabs-nav a:first').trigger('switchActiveTab'); // Show the 1st tab by default
     };
 
-    const initTabNavigation = function () {
+    var initTabNavigation = function initTabNavigation() {
 
         // Register Tab Navigation Event Handlers
         $j('.tabs-nav a').on('switchActiveTab', function (event) {
@@ -423,11 +360,10 @@ const bookingTabSteps = (function () {
 
             // Do this for all tab switch events
             updatePrevBtnVisibility();
-
         });
 
         $j('.prev-btn').on('click', function () {
-            const activeTab = $j('.tabs-nav .js-tab-active');
+            var activeTab = $j('.tabs-nav .js-tab-active');
 
             // ActiveTab on before tab switch
             switch (activeTab.children('a').attr('href')) {
@@ -438,7 +374,6 @@ const bookingTabSteps = (function () {
                 case '#tab-5':
                     // $j('.bikes-accordion-content').empty();
                     $j('.tabs-nav a[href="#tab-4"]').trigger('switchActiveTab');
-
 
                     $j('.bikes-accordion input[name="qty"]').val(0);
                     $j('.add-bike-to-cart').toggleClass('disabled', true);
@@ -452,14 +387,14 @@ const bookingTabSteps = (function () {
         });
     };
 
-    const registerEventHandlers = function () {
+    var registerEventHandlers = function registerEventHandlers() {
 
         // MutationObserver for listening/detecting changes in the DOM
-        const target = $j('.woocommerce-checkout-review-order .opc_order_review')[0];
+        var target = $j('.woocommerce-checkout-review-order .opc_order_review')[0];
         new MutationObserver(function (mutations) {
             $j('body').trigger('afterCartOrdersUiChanged');
         }).observe(target, {
-            childList: true,
+            childList: true
         });
 
         /* Currently triggered on when user adds/deducts items*/
@@ -487,7 +422,7 @@ const bookingTabSteps = (function () {
 
             unblockBikeItemControls();
 
-            let triggerChangeEvt = null;
+            var triggerChangeEvt = null;
             //If quantity is the only thing that changed... then just update quantity amt and trigger change()
             if (onlyQuantityWasUpdated(quantity, resource_id)) {
                 updateFormBikeQuantity(quantity, triggerChangeEvt = true);
@@ -497,7 +432,6 @@ const bookingTabSteps = (function () {
                 updateFormResource(resource_id);
                 blocker.blockContentTemp('resource id change triggered');
             }
-
         }, 1000));
 
         // CUSTOM EVENTS
@@ -531,23 +465,24 @@ const bookingTabSteps = (function () {
         $j('body').on('afterCalculateCostRequest', function (event, responseText) {
 
             // HANDLE SUCCESSFUL BOOKING CALCULATE COSTS RESPONSE MESSAGES
-            const response = $j.parseJSON(responseText);
+            var response = $j.parseJSON(responseText);
 
             if (response.result == "SUCCESS") {
                 // If success the returned html returns an el with class .woocommerce-Price-amount.amount
                 // https://ourcodeworld.com/articles/read/376/how-to-strip-html-from-a-string-extract-only-text-content-in-javascript
                 if ($j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').length && gCartItemToUpdateDisplayPrice) {
-                    let copiedAmtTxt = $j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
+                    var copiedAmtTxt = $j('.wc-bookings-booking-cost .woocommerce-Price-amount.amount').html().replace(/<[^>]+>/g, '');
                     gCartItemToUpdateDisplayPrice.text(copiedAmtTxt);
                     console.log("displaying price: " + copiedAmtTxt);
                     bookingTabSteps.toggleAddToCartBtn();
                 }
-
             } else if (response.result == "ERROR") {
                 //hulpmiddel - resource
-                const substrings = ['minumum aantal personen', 'minimum', 'Date is required', 'Datum', 'resource', 'hulpmiddel'];
+                var substrings = ['minumum aantal personen', 'minimum', 'Date is required', 'Datum', 'resource', 'hulpmiddel'];
 
-                if (substrings.some(s => response.html.includes(s))) {
+                if (substrings.some(function (s) {
+                    return response.html.includes(s);
+                })) {
                     return;
                 }
 
@@ -565,7 +500,6 @@ const bookingTabSteps = (function () {
                     clickClose: true
                 });
             }
-
         });
 
         // On after review orders UI / fragments have been updated
@@ -608,51 +542,51 @@ const bookingTabSteps = (function () {
         runBikeCartScripts();
     };
 
-    const showPrimaryModal = function () {
+    var showPrimaryModal = function showPrimaryModal() {
 
-        let modalIsAlreadyShowing = $j.modal.getCurrent() && $j.modal.getCurrent().$elm.is(gFormCart);
+        var modalIsAlreadyShowing = $j.modal.getCurrent() && $j.modal.getCurrent().$elm.is(gFormCart);
 
         if (modalIsAlreadyShowing) {
             return;
         }
         // We add the modal-primary class. note: always include the "modal" class.
         gFormCart.modal({
-            modalClass: "modal modal-primary",
+            modalClass: "modal modal-primary"
         });
     };
 
     // @params el = element current target on shopping cart click event
-    const toggleAddToCartBtn = function () {
-        const qty = parseInt(gCartItemToUpdateDisplayPrice.closest('.item').find('[name="qty"]').val());
+    var toggleAddToCartBtn = function toggleAddToCartBtn() {
+        var qty = parseInt(gCartItemToUpdateDisplayPrice.closest('.item').find('[name="qty"]').val());
         gCartItemToUpdateDisplayPrice.closest('.item').find('.add-bike-to-cart').toggleClass("disabled", qty < 1);
     };
 
-    const updateCheckoutItems = function () {
+    var updateCheckoutItems = function updateCheckoutItems() {
 
         // Remove the default productname and replace with variation-Fiets
-        $j('.opc_cart_item .product-details').each((idx, el) => {
+        $j('.opc_cart_item .product-details').each(function (idx, el) {
             // Replace the top most text with the bike type
             $j(el).contents()[0].textContent = $j(el).find('.variation-Fiets > p').text();
             $j(el).find('.variation-Aantal').insertBefore($j(el).find('dt.variation-Huurdatum'));
             $j(el).find('.variation-Fiets').css('opacity', 0);
 
             // All code below to compute for rendered return time
-            let dropoffTime = '';
+            var dropoffTime = '';
 
             // Modify the order review of time row.. from show starting time to show pickup and return time
 
             // Use the duration to determine end time
-            let durationInt = parseInt($j(el).find('dd.variation-Duur').text());
+            var durationInt = parseInt($j(el).find('dd.variation-Duur').text());
 
             // We are just getting the text from the original order review items.. and using it to create our own display data
-            const orderPickupTime = $j(el).find('dd.variation-Huurtijd').text();
-            let orderPickupDate = $j(el).find('dd.variation-Huurdatum').text();
+            var orderPickupTime = $j(el).find('dd.variation-Huurtijd').text();
+            var orderPickupDate = $j(el).find('dd.variation-Huurdatum').text();
             orderPickupDate = convertDutchTranslatedDateToEnglish(orderPickupDate);
 
-            const computedActualDropoffTime = moment(orderPickupTime, "HH:mm").add(durationInt, 'h').format("HH:mm");
+            var computedActualDropoffTime = moment(orderPickupTime, "HH:mm").add(durationInt, 'h').format("HH:mm");
 
             // Used contains because Tycho might change some parts of the text later on
-            const returnTimeIsSecondHalf = computedActualDropoffTime.includes('17'); //is it 5pm?
+            var returnTimeIsSecondHalf = computedActualDropoffTime.includes('17'); //is it 5pm?
 
             if (returnTimeIsSecondHalf) {
                 // If return time is 5:00 pm
@@ -664,21 +598,19 @@ const bookingTabSteps = (function () {
             }
 
             // Render the pickup and dropoff time
-            $j(el).find('dd.variation-Huurtijd > p').text(`${orderPickupTime} - ${dropoffTime}`);
-
+            $j(el).find('dd.variation-Huurtijd > p').text(orderPickupTime + ' - ' + dropoffTime);
         });
-
     };
 
     // Convert because translated texts created by Tycho cannot returns invalid date on moment(date)
-    const convertDutchTranslatedDateToEnglish = function (dateString) {
+    var convertDutchTranslatedDateToEnglish = function convertDutchTranslatedDateToEnglish(dateString) {
 
-        let newDate = moment(dateString);
+        var newDate = moment(dateString);
         if (newDate.isValid()) {
             return newDate;
         }
 
-        const translate = {
+        var translate = {
             januari: 'january',
             februari: 'february',
             maart: 'march',
@@ -693,68 +625,46 @@ const bookingTabSteps = (function () {
             december: 'december'
         };
 
-        let monthString = Object.keys(translate).find(x => dateString.includes(x));
+        var monthString = Object.keys(translate).find(function (x) {
+            return dateString.includes(x);
+        });
 
-        let outputString = dateString.replace(monthString, translate[monthString]);
+        var outputString = dateString.replace(monthString, translate[monthString]);
 
         if (moment(outputString).isValid()) {
             return moment(outputString).format('YYYY-MM-DD');
         }
 
         console.error('invalid date');
-    }
+    };
 
     /* Get date picker DATE */
-    const getCalendarDate = function () {
+    var getCalendarDate = function getCalendarDate() {
         return $j('.picker').datepicker("getDate");
     };
 
-    const renderShoppingCartItems = function () {
+    var renderShoppingCartItems = function renderShoppingCartItems() {
 
-        const normalBikeImgUrl = 'https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-mountainbike-small-product-image.png';
-        const electricBikeImgUrl = 'https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-e-mountainbike-small-product-image.png';
+        var normalBikeImgUrl = 'https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-mountainbike-small-product-image.png';
+        var electricBikeImgUrl = 'https://wpbeter-ontwikkelt.nl/wp-content/themes/mountainbike-huren-schoorl/images/wc-bookings-e-mountainbike-small-product-image.png';
 
         //let date = '2021-04-20'
-        let date = `${userSelect.date.year}-${userSelect.date.month}-${userSelect.date.day}`;
-
+        var date = userSelect.date.year + '-' + userSelect.date.month + '-' + userSelect.date.day;
 
         //Build shopping cart UI
-        const cartHTML = gResourceIds.map(x => {
+        var cartHTML = gResourceIds.map(function (x) {
 
             //we already have the resource ids, but we also need to get the resource data to
             //get the resource name
-            let resource = gResourcesData.find(elem => elem.id === x);
+            var resource = gResourcesData.find(function (elem) {
+                return elem.id === x;
+            });
 
-            const imageUrl = isElectricBike(resource.name) ? electricBikeImgUrl : normalBikeImgUrl;
+            var imageUrl = isElectricBike(resource.name) ? electricBikeImgUrl : normalBikeImgUrl;
 
             //console.log(`${resource.name} rendered`);
-            return `
-            <div class="item" data-resource-id="${resource.id}">
-                <div class="image">
-                    <img src=${imageUrl} alt="" />
-                </div>
-
-                <div class="description">
-                    <span class="js-slot-date" style="display: ${window.debugOn ? 'block' : 'none'}">${"[Date]"}</span>
-                    <span class="wc-bookings-item-title resource-name">${resource.name}</span>
-                    <div>${printBikeDescription(resource.name)}</div>
-                    <span>Aantal beschikbaar: <span data-available="null" class="js-availability"> &nbsp;&nbsp;...</span>
-                </div>
-
-                <div class="js-quantity quantity">
-                    <button class="plus-btn" type="button" name="button">
-                        <span>+</span>
-                    </button>
-                    <input type="number" name="qty" value="0" min="0" max="${100}">
-                    <button class="minus-btn" type="button" name="button">
-                        <span>-</span>
-                    </button>
-                </div>
-
-                <div class="total-price"></div>
-                <div class="add-bike-to-cart disabled">Toevoegen aan reservering</div>
-            </div>`;
-        })
+            return '\n            <div class="item" data-resource-id="' + resource.id + '">\n                <div class="image">\n                    <img src=' + imageUrl + ' alt="" />\n                </div>\n\n                <div class="description">\n                    <span class="js-slot-date" style="display: ' + (window.debugOn ? 'block' : 'none') + '">' + "[Date]" + '</span>\n                    <span class="wc-bookings-item-title resource-name">' + resource.name + '</span>\n                    <div>' + printBikeDescription(resource.name) + '</div>\n                    <span>Aantal beschikbaar: <span data-available="null" class="js-availability"> &nbsp;&nbsp;...</span>\n                </div>\n\n                <div class="js-quantity quantity">\n                    <button class="plus-btn" type="button" name="button">\n                        <span>+</span>\n                    </button>\n                    <input type="number" name="qty" value="0" min="0" max="' + 100 + '">\n                    <button class="minus-btn" type="button" name="button">\n                        <span>-</span>\n                    </button>\n                </div>\n\n                <div class="total-price"></div>\n                <div class="add-bike-to-cart disabled">Toevoegen aan reservering</div>\n            </div>';
+        });
 
         $j('.bikes-accordion-content').append(cartHTML);
 
@@ -763,38 +673,37 @@ const bookingTabSteps = (function () {
         //Update the cart items with data from slots. Remember that slots are organized in the same order as with gResourceIds so just match based on index
         dataService.getSlotsByDate(date).then(function (result) {
             //render
-            result.records.forEach((slot, idx) => {
+            result.records.forEach(function (slot, idx) {
 
-                let $item = $j('.bikes-accordion-content .item').eq(idx);
+                var $item = $j('.bikes-accordion-content .item').eq(idx);
 
                 $item.find('.js-slot-date').text(slot.date);
                 $item.find('[max]').attr("max", slot.available);
 
                 $item.find('.js-availability').get(0).dataset.available = slot.available;
                 $item.find('.js-availability').text(slot.available);
+            });
 
-            })
-
-            return "OK: bike details set!"
+            return "OK: bike details set!";
         }).then(function (status) {
             console.log(status);
             highlightNoAvailabilityItems();
             blocker.unblockContentTemp("Get slots by date");
-        })
+        });
     };
 
     // shows the bike description on the shopping cart page
     // params name = resource name of the bike ('S Mountainbike', 'M Elektrische mountainbike', etc)
-    const printBikeDescription = function (name) {
-        const keyValue = Object.keys(mySettings.bikeDescription).find(key => {
+    var printBikeDescription = function printBikeDescription(name) {
+        var keyValue = Object.keys(mySettings.bikeDescription).find(function (key) {
             return key.toLowerCase() === name.trim().toLowerCase();
         });
 
         return mySettings.bikeDescription[keyValue];
-    }
+    };
 
     // Block All Shopping cart item controls except for the focused one
-    const blockBikeItemControls = function (event) {
+    var blockBikeItemControls = function blockBikeItemControls(event) {
 
         // Disable only control of oher bike items not currently the one we are focused on
         $j('.item .js-quantity').not(gCartItemToUpdateDisplayPrice.closest('.item').find('.js-quantity')).block({
@@ -810,17 +719,16 @@ const bookingTabSteps = (function () {
     };
 
     // When user is active changing quantity, prevent add to reservation enabling... changing quantity uses debounce so this is needed.
-    const unblockBikeItemControls = function (event) {
+    var unblockBikeItemControls = function unblockBikeItemControls(event) {
         // Make plus-minus btns of all bike items  clickable again
         $j('.item .js-quantity').unblock();
     };
 
     // Determine if item is electric bike. we can use ID too but this is ok for now
     function isElectricBike(name) {
-        if (typeof name === "string")
-            return name.toLowerCase().includes("elektrische");
+        if (typeof name === "string") return name.toLowerCase().includes("elektrische");
 
-        console.warn('Passed a non string. Check!')
+        console.warn('Passed a non string. Check!');
     };
 
     function onlyQuantityWasUpdated(new_qty, new_resource_id) {
@@ -832,38 +740,32 @@ const bookingTabSteps = (function () {
 
         //compare if values are same except quantity/wc_bookings_field_persons
         //note: duration and product id doesn't change at all for this booking sys version
-        if (
-            gPostDataResource.val() != new_resource_id ||
-            $j('input[name="wc_bookings_field_start_date_day"]').val() != userSelect.date.day ||
-            $j('input[name="wc_bookings_field_start_date_month"]').val() != userSelect.date.month ||
-            $j('input[name="wc_bookings_field_start_date_year"]').val() != userSelect.date.year) {
+        if (gPostDataResource.val() != new_resource_id || $j('input[name="wc_bookings_field_start_date_day"]').val() != userSelect.date.day || $j('input[name="wc_bookings_field_start_date_month"]').val() != userSelect.date.month || $j('input[name="wc_bookings_field_start_date_year"]').val() != userSelect.date.year) {
             return false;
         }
 
         return Number(gPostDataNumPersons.val()) !== Number(new_qty);
     }
 
-
-
     // We need to reset some inputs because on calendar select time, it triggers booking cost calculation. bookingform.js - if some dates are missing it doesn't trigger wc_bookings_calculate_costs
-    const resetShoppingCartFormTimesAndResource = function () {
+    var resetShoppingCartFormTimesAndResource = function resetShoppingCartFormTimesAndResource() {
         $j('select#wc_bookings_field_resource').prop('selectedIndex', -1);
         $j('#wc_bookings_field_start_date').val('');
-    }
+    };
 
-    const runBikeCartScripts = function () {
+    var runBikeCartScripts = function runBikeCartScripts() {
         // Shopping cart bike items
-        const itemsContainer = $j('.bikes-accordion-content');
+        var itemsContainer = $j('.bikes-accordion-content');
 
         // Used event delagation below since contents are dynamically created
         itemsContainer.on('click', '.minus-btn', function (e) {
             e.preventDefault();
 
-            const currentBike = $j(this).closest('.item');
-            const quantityField = currentBike.find('input[name=qty]');
+            var currentBike = $j(this).closest('.item');
+            var quantityField = currentBike.find('input[name=qty]');
 
-            const oldQuantity = parseInt(quantityField.val());
-            const minQuantity = 0;
+            var oldQuantity = parseInt(quantityField.val());
+            var minQuantity = 0;
 
             // If quantity is already 0, return 0
             if (oldQuantity <= minQuantity) {
@@ -871,121 +773,116 @@ const bookingTabSteps = (function () {
                 return;
             }
 
-            const newQuantity = oldQuantity - 1;
-            quantityField.val(newQuantity);  // Update UI quantity
+            var newQuantity = oldQuantity - 1;
+            quantityField.val(newQuantity); // Update UI quantity
 
             updateCartItemToUpdateDisplayPrice(currentBike);
             $j('body').trigger('singleCartItemFocused');
 
             // Start filling up the form
-            const currentBikeResourceId = currentBike.data('resource-id');
+            var currentBikeResourceId = currentBike.data('resource-id');
             $j('body').trigger('startFillBookingForm', [newQuantity, currentBikeResourceId]);
-
         });
 
         itemsContainer.on('click', '.plus-btn', function (e) {
             e.preventDefault();
 
-            const currentBike = $j(this).closest('.item');
-            const quantityField = currentBike.find('input[name=qty]');
+            var currentBike = $j(this).closest('.item');
+            var quantityField = currentBike.find('input[name=qty]');
 
-            const oldQuantity = parseInt(quantityField.val());
-            const maxQuantity = parseInt(quantityField.attr('max'));
+            var oldQuantity = parseInt(quantityField.val());
+            var maxQuantity = parseInt(quantityField.attr('max'));
 
             // If qty is equal to or greater than max value, retun or do nothing
             if (oldQuantity >= maxQuantity) {
                 return;
             }
 
-            const newQuantity = oldQuantity + 1;
+            var newQuantity = oldQuantity + 1;
             quantityField.val(newQuantity); // Update UI quantity
 
             updateCartItemToUpdateDisplayPrice(currentBike);
             $j('body').trigger('singleCartItemFocused');
 
-
             // Start filling up the form
-            const currentBikeResourceId = currentBike.data('resource-id');
+            var currentBikeResourceId = currentBike.data('resource-id');
             $j('body').trigger('startFillBookingForm', [newQuantity, currentBikeResourceId]);
-
         });
 
         itemsContainer.on('click', '.add-bike-to-cart', function (e) {
 
             $j('button.single_add_to_cart_button').click();
-
         });
     };
 
     // Reset quantity of the unfocused shopping cart items
-    const resetUnfocusedBikesQuantity = function () {
+    var resetUnfocusedBikesQuantity = function resetUnfocusedBikesQuantity() {
         $j('.item .js-quantity input[name=qty]').not(gCartItemToUpdateDisplayPrice.closest('.item').find('.js-quantity input[name=qty]')).val(0);
     };
 
-    const resetBookingProcess = function () {
+    var resetBookingProcess = function resetBookingProcess() {
         // Close all active modals
         while ($j.modal.getCurrent() != null) {
             $j.modal.close();
         }
     };
 
-    const resetAllBikesPriceUi = function () {
+    var resetAllBikesPriceUi = function resetAllBikesPriceUi() {
         $j('.item .total-price').text("");
-    }
+    };
 
     // Adds a class to items container so we can determine if user is still actively updating quantity and still waiting for debounce function to execute
-    const notifyStartDebounceWait = function () {
-        const itemsContainer = $j('.bikes-accordion-content');
+    var notifyStartDebounceWait = function notifyStartDebounceWait() {
+        var itemsContainer = $j('.bikes-accordion-content');
         itemsContainer.addClass('js-user-is-active');
     };
 
-    const notifyEndDebounceWait = function () {
-        const itemsContainer = $j('.bikes-accordion-content');
+    var notifyEndDebounceWait = function notifyEndDebounceWait() {
+        var itemsContainer = $j('.bikes-accordion-content');
         itemsContainer.removeClass('js-user-is-active');
     };
 
     // Check if debounce function(startFillBookingForm) hasn't executed yet
     // @returns true -  if still waiting / debounce hasn't executed yet
-    const isWaitingForDebounce = function () {
-        const itemsContainer = $j('.bikes-accordion-content');
+    var isWaitingForDebounce = function isWaitingForDebounce() {
+        var itemsContainer = $j('.bikes-accordion-content');
         return itemsContainer.hasClass('js-user-is-active');
     };
 
     // @params {name} text. set the name to replace the OPC text msg on add/remove item
-    const setAddedOrRemovedItemResourceName = function (name) {
+    var setAddedOrRemovedItemResourceName = function setAddedOrRemovedItemResourceName(name) {
         if (!name) {
-            console.warn('check value of name')
+            console.warn('check value of name');
             return;
         }
         addedOrRemovedItemResourceName = name;
     };
 
-    const getAddedOrRemovedItemResourceName = function () {
+    var getAddedOrRemovedItemResourceName = function getAddedOrRemovedItemResourceName() {
         return addedOrRemovedItemResourceName || "Mountainbike";
     };
 
     return {
-        init,
-        showPrimaryModal,
-        toggleAddToCartBtn,
-        getCalendarDate,
-        renderShoppingCartItems,
-        resetShoppingCartFormTimesAndResource,
-        resetBookingProcess,
-        updateCheckoutItems,
-        setAddedOrRemovedItemResourceName,
-        getAddedOrRemovedItemResourceName
+        init: init,
+        showPrimaryModal: showPrimaryModal,
+        toggleAddToCartBtn: toggleAddToCartBtn,
+        getCalendarDate: getCalendarDate,
+        renderShoppingCartItems: renderShoppingCartItems,
+        resetShoppingCartFormTimesAndResource: resetShoppingCartFormTimesAndResource,
+        resetBookingProcess: resetBookingProcess,
+        updateCheckoutItems: updateCheckoutItems,
+        setAddedOrRemovedItemResourceName: setAddedOrRemovedItemResourceName,
+        getAddedOrRemovedItemResourceName: getAddedOrRemovedItemResourceName
 
     };
-})()
+}();
 // End BookingTabSteps Module
-
 
 
 //time-picker.js - wc_bookings_get_blocks is triggered/initiated by changes to #wc_bookings_field_duration,
 //#wc_bookings_field_resource, and .wc-bookings-booking-form fieldset(on 'date-selected'). in this ala-module we just
 //try to track the initiator and then we can handle what actions should be done/not done
-const getBlocksRequest = {
+var getBlocksRequest = {
 
     Triggers: {
         DATE_SELECT: 1,
@@ -995,103 +892,86 @@ const getBlocksRequest = {
 
     initiator: '',
 
-    getInitiator() {
+    getInitiator: function getInitiator() {
         return this.initiator;
     },
+    setInitiator: function setInitiator(val) {
 
-    setInitiator(val) {
-
-        let acceptedValues = Object.values(this.Triggers);
+        var acceptedValues = Object.values(this.Triggers);
         if (!acceptedValues.includes(Number(val))) {
             console.error('invalid initator passed');
             return;
         }
         this.initiator = val;
     },
-
-    resetInitiator() {
+    resetInitiator: function resetInitiator() {
         this.initiator = '';
     }
 };
 
-
-const dataService = {
+var dataService = {
 
     // @params cb=callback
-    getProducts() { return $j.getJSON(`${gMainUrl}/wp-json/wc-bookings/v1/products`) },
-
-    getResources() { return $j.getJSON(`${gMainUrl}/wp-json/wc-bookings/v1/resources`) },
-
-    getSlotsByDate(date) {
+    getProducts: function getProducts() {
+        return $j.getJSON(gMainUrl + '/wp-json/wc-bookings/v1/products');
+    },
+    getResources: function getResources() {
+        return $j.getJSON(gMainUrl + '/wp-json/wc-bookings/v1/resources');
+    },
+    getSlotsByDate: function getSlotsByDate(date) {
         //if there are issue, check if date args is already formatted as 'YYYY-MM-DD'
-        const maxDate = moment(date, "YYYY-MM-DD").add(1, 'days').format('YYYY-MM-DD');
-        const api = `${gMainUrl}/wp-json/wc-bookings/v1/products/slots?min_date=${date}&max_date=${maxDate}`;
+        var maxDate = moment(date, "YYYY-MM-DD").add(1, 'days').format('YYYY-MM-DD');
+        var api = gMainUrl + '/wp-json/wc-bookings/v1/products/slots?min_date=' + date + '&max_date=' + maxDate;
 
         return $j.getJSON(api);
     },
-
-    logFail(jqXHR, textStatus, errorThrown) {
+    logFail: function logFail(jqXHR, textStatus, errorThrown) {
         console.error(textStatus);
     },
 
+
     // Show connection error msg and ask user to reload page
-    notifyConnectionErrorReload(jqXHR, textStatus) {
+    notifyConnectionErrorReload: function notifyConnectionErrorReload(jqXHR, textStatus) {
 
         if (jqXHR.readyState == 0 || textStatus == 'timeout') {
 
-            $j('.generic-modal').html(`
-                <div class="connection-error">
-                    <div class="connection-error-message">${mySettings.errorMsg.reloadPage}</div>
-                    <div class="btn-container">
-                        <div class="connection-error-btn js-reload-page-btn">${mySettings.errorMsg.reloadPageBtnTxt}</div>
-                    </div>
-                </div>`);
+            $j('.generic-modal').html('\n                <div class="connection-error">\n                    <div class="connection-error-message">' + mySettings.errorMsg.reloadPage + '</div>\n                    <div class="btn-container">\n                        <div class="connection-error-btn js-reload-page-btn">' + mySettings.errorMsg.reloadPageBtnTxt + '</div>\n                    </div>\n                </div>');
 
             $j('.generic-modal').modal({
-                showClose: false,
+                showClose: false
             });
         }
     },
+
 
     // Show connection error msg and ask user to retry
-    notifyConnectionErrorRetry(jqXHR, textStatus) {
+    notifyConnectionErrorRetry: function notifyConnectionErrorRetry(jqXHR, textStatus) {
 
         if (jqXHR.readyState == 0 || textStatus == 'timeout') {
 
-            $j('.generic-modal').html(`
-                <div class="connection-error">
-                    <div class="connection-error-message">${mySettings.errorMsg.tryAgain}</div>
-                    <div class="btn-container">
-                        <div class="connection-error-btn js-restart-booking-btn">${mySettings.errorMsg.retryBtnTxt}</div>
-                    </div>
-                </div>`);
+            $j('.generic-modal').html('\n                <div class="connection-error">\n                    <div class="connection-error-message">' + mySettings.errorMsg.tryAgain + '</div>\n                    <div class="btn-container">\n                        <div class="connection-error-btn js-restart-booking-btn">' + mySettings.errorMsg.retryBtnTxt + '</div>\n                    </div>\n                </div>');
 
             $j('.generic-modal').modal({
                 closeExisting: false, // No need to close primary modal if it is already open.
-                showClose: false,
+                showClose: false
             });
         }
     },
 
+
     // Show connection error msg when user attempts to checkout order
-    notifyConnectionErrorOnCheckoutAttempt(jqXHR, textStatus) {
+    notifyConnectionErrorOnCheckoutAttempt: function notifyConnectionErrorOnCheckoutAttempt(jqXHR, textStatus) {
         if (jqXHR.readyState == 0 || textStatus == 'timeout') {
 
-            $j('.generic-modal').html(`
-                <div class="connection-error">
-                    <div class="connection-error-message">${mySettings.errorMsg.reserveAgain}</div>
-                    <div class="btn-container">
-                        <div class="connection-error-btn js-close-modal">${mySettings.errorMsg.reserveAgainBtn}</div>
-                    </div>
-                </div>`);
+            $j('.generic-modal').html('\n                <div class="connection-error">\n                    <div class="connection-error-message">' + mySettings.errorMsg.reserveAgain + '</div>\n                    <div class="btn-container">\n                        <div class="connection-error-btn js-close-modal">' + mySettings.errorMsg.reserveAgainBtn + '</div>\n                    </div>\n                </div>');
 
             $j('.generic-modal').modal({
                 closeExisting: false, // No need to close primary modal if it is already open.
-                showClose: false,
+                showClose: false
             });
         }
     }
-}
+};
 
 $j(document).ready(function () {
 
@@ -1102,7 +982,7 @@ $j(document).ready(function () {
     // overide datepicker defaults
     $j.datepicker.setDefaults({
         changeMonth: true,
-        changeYear: true,
+        changeYear: true
     });
     $j(".picker").datepicker("option", "showOtherMonths", false);
     //update col header minimized day names
@@ -1112,25 +992,22 @@ $j(document).ready(function () {
     // Override jquery-modal defaults
     $j.extend($j.modal.defaults, {
         escapeClose: false,
-        clickClose: false,
+        clickClose: false
     });
 
     //fetch producs and resources from api
-    dataService.getProducts()
-        .done(function (result) {
-            let product = result[0]; // We're only expecting 1 product(with mult resources)
-            gResourceIds = product.resource_ids;
-        })
-        .fail((jqXHR, textStatus, errorThrown) => {
-            console.error('getProducts error')
-            dataService.notifyConnectionErrorReload(jqXHR, textStatus);
-        });
+    dataService.getProducts().done(function (result) {
+        var product = result[0]; // We're only expecting 1 product(with mult resources)
+        gResourceIds = product.resource_ids;
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.error('getProducts error');
+        dataService.notifyConnectionErrorReload(jqXHR, textStatus);
+    });
 
-    dataService.getResources().done(resources => {
+    dataService.getResources().done(function (resources) {
         gResourcesData = resources;
-    })
+    });
 });
-
 
 // Moving the calendar inside form.cart back to its original location when all modals closed
 
@@ -1162,7 +1039,7 @@ gFormCart.on($j.modal.OPEN, function (event, modal) {
     // $j('form.cart').append($j(".receipt"))
 
     // If user has not selected a date yet, open the modal witht he datepicker calendar visible
-    let userHasSelectedDate = $j('.booking_date_year') && $j('.booking_date_month') && $j('.booking_date_day');
+    var userHasSelectedDate = $j('.booking_date_year') && $j('.booking_date_month') && $j('.booking_date_day');
 
     if (!userHasSelectedDate) {
         $j('.picker').toggleClass('hidden', false);
@@ -1178,19 +1055,21 @@ gPostDataNumPersons.on('change', function () {
 
 //updates bike quantity and trigger change event if params{bool} trigger is set to true
 // Note: triggering change also triggrs an AJAX request
-function updateFormBikeQuantity(value, trigger = false) {
+function updateFormBikeQuantity(value) {
+    var trigger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
     if (trigger) {
         gPostDataNumPersons.val(value).change();
-        getBlocksRequest.setInitiator(getBlocksRequest.Triggers.QUANTITY_CHANGE);  // refer to ajaxSuccess / ajaxError and find wc_bookings_get_blocks to trace next action
+        getBlocksRequest.setInitiator(getBlocksRequest.Triggers.QUANTITY_CHANGE); // refer to ajaxSuccess / ajaxError and find wc_bookings_get_blocks to trace next action
     } else {
-        gPostDataNumPersons.val(value)
+        gPostDataNumPersons.val(value);
     }
 }
 
 // All hiding and showing of the prev button must be handled here...
 function updatePrevBtnVisibility() {
-    const activeTab = $j('.tabs-nav .js-tab-active');
-    const btn = $j('.prev-btn');
+    var activeTab = $j('.tabs-nav .js-tab-active');
+    var btn = $j('.prev-btn');
 
     // If its not tab-1 AND the button is hidden, then show it
     if (activeTab.children('a').attr('href') !== '#tab-1' && btn.not(':visible')) {
@@ -1206,11 +1085,11 @@ function updatePrevBtnVisibility() {
 * Don't put anything that doesn't return a string or not related to updating a text
 * reminder:  as much as possible. place all code related to setting dynamic strings here for one place access
 */
-const uiText = {
-    fullDayReturnTime(date) {
+var uiText = {
+    fullDayReturnTime: function fullDayReturnTime(date) {
         // Current rule is..bike can be returned at 6pm/18:00 on weekdays, and 5pm/17:00 on weekends.
         // Doesn't change the cost, just change the UI
-        let calendarDate = $j('.picker').datepicker("getDate");
+        var calendarDate = $j('.picker').datepicker("getDate");
 
         // If date argument is passed use it instead. if not get the current calendar date
         if (date) {
@@ -1222,10 +1101,11 @@ const uiText = {
         return isWeekend(calendarDate) ? '17:00' : '18:00';
     },
 
-    // Returns the formatted date(Mon 6 January) or returns  '' a success returns a string so return '' instead of null, undefined, false
-    displayDate() {
 
-        let month = $j('[name="wc_bookings_field_start_date_month"]').val(),
+    // Returns the formatted date(Mon 6 January) or returns  '' a success returns a string so return '' instead of null, undefined, false
+    displayDate: function displayDate() {
+
+        var month = $j('[name="wc_bookings_field_start_date_month"]').val(),
             day = $j('[name="wc_bookings_field_start_date_day"]').val(),
             year = $j('[name="wc_bookings_field_start_date_year"]').val();
 
@@ -1235,64 +1115,69 @@ const uiText = {
             return '';
         }
 
-        let dateIdx = month + '-' + day + '-' + year;
+        var dateIdx = month + '-' + day + '-' + year;
 
         return this.uiText = moment(dateIdx, 'MM-DD-YYY').locale('nl').format('dddd D MMMM');
     },
 
+
     // @params name = product name in db to be converted
-    displayProductLabel(name) {
+    displayProductLabel: function displayProductLabel(name) {
         return name.includes('Elektrische') ? mySettings.productLabel.electric : mySettings.productLabel.mtb;
     },
-
-    updateShoppingCartBookingInfo() {
+    updateShoppingCartBookingInfo: function updateShoppingCartBookingInfo() {
         //update UIs
         $j('#tab-4 .selected-time').text(uiText.displayDate());
         $j('.pickup-time').text('09:00');
         $j('.return-time').text(uiText.fullDayReturnTime());
     },
 
-    // Change default text(product name) to the resource name
-    updateOpcMessageToShowResourceName() {
 
-        const wooMsg = $j('#opc-messages .woocommerce-message');
-        const newMsg = wooMsg.text().replace("Huur mountainbikes in Schoorl", bookingTabSteps.getAddedOrRemovedItemResourceName);
+    // Change default text(product name) to the resource name
+    updateOpcMessageToShowResourceName: function updateOpcMessageToShowResourceName() {
+
+        var wooMsg = $j('#opc-messages .woocommerce-message');
+        var newMsg = wooMsg.text().replace("Huur mountainbikes in Schoorl", bookingTabSteps.getAddedOrRemovedItemResourceName);
 
         wooMsg.text(newMsg);
 
         // Render new opc msg with slidedown effect..
         wooMsg.hide().slideDown("fast");
     }
-}
+};
 
 /* Blocking user interactions. Shows loader/spinner */
-let blocker = {
-    blockContentTemp() {
+var blocker = {
+    blockContentTemp: function blockContentTemp() {
         $j('form.cart').block({
-            message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
+            message: '<svg class=\'spinner\' viewBox=\'0 0 50 50\'><circle class=\'path\' cx=\'25\' cy=\'25\' r=\'20\' fill=\'none\' /></svg>',
             overlayCSS: mySettings.spinner.blockUIOverlayCSS,
-            css: { border: 0 },
+            css: { border: 0 }
         });
     },
-
-    unblockContentTemp() {
+    unblockContentTemp: function unblockContentTemp() {
         $j('form.cart').unblock();
     },
 
+
     // @params message - just a custom msg for devs in the future to track when the block happens and ends
-    blockCalendar(msg = '') {
+    blockCalendar: function blockCalendar() {
+        var msg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
         $j('.picker').block({
-            message: `<svg class='spinner' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' /></svg>`,
+            message: '<svg class=\'spinner\' viewBox=\'0 0 50 50\'><circle class=\'path\' cx=\'25\' cy=\'25\' r=\'20\' fill=\'none\' /></svg>',
             overlayCSS: mySettings.spinner.blockUIOverlayCSS,
-            css: { border: 0 },
+            css: { border: 0 }
         });
     },
 
-    // @params message - just a custom msg for devs in the future to track when the block happens and ends
-    unblockCalendar(msg = '') {
-        $j('.picker').unblock();
-    },
 
+    // @params message - just a custom msg for devs in the future to track when the block happens and ends
+    unblockCalendar: function unblockCalendar() {
+        var msg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+        $j('.picker').unblock();
+    }
 };
 
 function isWeekend(date) {
@@ -1301,40 +1186,41 @@ function isWeekend(date) {
 
 $j('.generic-modal').on($j.modal.AFTER_CLOSE, function (event, modal) {
     // HACK.. with the generic modal it takes twice to close to really close item
-    let esc = $j.Event("keydown", { keyCode: 27 });
+    var esc = $j.Event("keydown", { keyCode: 27 });
     $j(this).trigger(esc);
 });
 
 // This can just be done via css. checkout page hide the red text and and red border on Een account aanmaken? checkbox click
 $j('.create-account').on('change', function () {
     $j('.woocommerce form .form-row.woocommerce-invalid input.input-text').css('border-color', 'rgb(221, 221, 221)');
-    $j('.woocommerce form .form-row.woocommerce-invalid label').css('color', '#444')
-})
+    $j('.woocommerce form .form-row.woocommerce-invalid label').css('color', '#444');
+});
 
 // change color and text to highlight no-availability
 function highlightNoAvailabilityItems() {
     $j('.shopping-cart-container .js-availability').each(function (idx, el) {
-        const availabilityNumTxt = $j(this);
+        var availabilityNumTxt = $j(this);
 
-        let isOutOfStock = availabilityNumTxt.data("available") < 1;
+        var isOutOfStock = availabilityNumTxt.data("available") < 1;
 
         //if there are no bikes left, show sold out msg
         if (isOutOfStock) {
             availabilityNumTxt.text("uitverhuurd");
             availabilityNumTxt.css('color', '#D83F35');
         }
-    })
+    });
 }
 
-const debounce = function (func, delay) {
+var debounce = function debounce(func, delay) {
 
-    let debounceTimer;
+    var debounceTimer = void 0;
     return function () {
-        const context = this; // Box-1 or box-2 el
-        const args = arguments;
+        var context = this; // Box-1 or box-2 el
+        var args = arguments;
         clearTimeout(debounceTimer);
-        debounceTimer
-            = setTimeout(() => func.apply(context, args), delay);
+        debounceTimer = setTimeout(function () {
+            return func.apply(context, args);
+        }, delay);
     };
 };
 
@@ -1347,16 +1233,16 @@ function removeCalendarBlockedDates() {
 }
 
 function allRequiredFieldsIsNotEmpty() {
-    const names = ["add-to-cart", "wc_bookings_field_duration", "wc_bookings_field_persons", "wc_bookings_field_resource", "wc_bookings_field_start_date_day", "wc_bookings_field_start_date_month", "wc_bookings_field_start_date_year"]
+    var names = ["add-to-cart", "wc_bookings_field_duration", "wc_bookings_field_persons", "wc_bookings_field_resource", "wc_bookings_field_start_date_day", "wc_bookings_field_start_date_month", "wc_bookings_field_start_date_year"];
 
     //check if there are falsy values- undefined, null, NaN, 0, "" (empty string)
-    return names.every(name => {
-        return Boolean($j(`[name=${name}]`).val())
-    })
+    return names.every(function (name) {
+        return Boolean($j('[name=' + name + ']').val());
+    });
 }
 
 //DISABLE ALERTS. seems that I don't need this b
 function disableAlerts() {
-    window.alert = function () { };
+    window.alert = function () {};
 }
 disableAlerts();
