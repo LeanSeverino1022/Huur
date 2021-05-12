@@ -1,41 +1,8 @@
-## Update 02/23 4:40pm
-
-🤔 what I did...
-
-1. You can see the half-day booking now... removed some of the unnecessary and complicated code.
-
-2. Bike description stuff - I updated the code that it's easy for you later on Edit it. Instead of matching the description with the resource id, I set it to match the resource name('M Elektrische mountainbike', 'L Mountainbike', etc. ) instead.
-
-3. A lot testing why sometimes the resources(bikes) are incomplete...
- - some findings: 
-
-	Here's video regarding resources not loading **test site** vs **actual site** : https://www.loom.com/share/134449c4792f40f0ac5d0ae88dccd279
-
-     - it's a 503 Service Unavailable error. Based on the definition, this indicates that a server is temporarily unable to handle the request. This may be due to the server being overloaded or down for maintenance. ).
-     - I tested it on "test website" and it doesn't fail to load all the resources there unlike in the "mountainbikehurenschoorl site". It's more on server-related stuff but I did some research and I there are things we could try  like the ones mentioned here:
-
-	1 - https://kinsta.com/blog/http-error-503/  
-	2 - https://blog.hubspot.com/marketing/http-503-server-unavailable
-
-I did try the  Heartbeat Control plugin (mentioned in the kingsta article above) but I am not sure if that's the reason why I'm no longer finding the issue with incomplete resources.
 
 
+### Resources
 
-**Here are my #nextThingsToDo**
+- [Woocommerce Bookings](https://woocommerce.com/products/woocommerce-bookings/?utm_source=google&utm_medium=cpc&utm_campaign=marketplace_search_brand_row&utm_content=woocommerce_+bookings&gclid=CjwKCAjw1uiEBhBzEiwAO9B_HQnlBwczqAL5QMsu5-BEuOFlfKB-VARqT_Q08s41imKhrw_XP9DDQRoCJUUQAvD_BwE)
 
- - However, even if the test website is NOT dealing with the 503 issue(which causes some of the resources not to load on the UI), I still find it slow, so I believe I should still try and find a way to make it faster and currently I'm trying to figure out what I can do on my end to achieve that.
-
- - The other one that I will work on next is try to update from hourly to daily booking(plugin settings and the code).
-
-
-
-
-
-
-
-
-
-
-
-
-
+   - [Live Demo](https://themes.woocommerce.com/hotel/product/woo-cottage-downtown-wooville/)
+   - [REST API](https://woocommerce.github.io/woocommerce-bookings-api-docs/#introduction?_ga=2.221980571.2083843177.1620789182-1814237378.1620789182&_gac=1.180094678.1620789183.cjwkcajw1uiebhbzeiwao9b_hqnlbwczqal5qmsu5-beuoflfkb-varqt_q08s41imkhrw_xp9ddqrocjuuqavd_bwe)
